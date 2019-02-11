@@ -69,7 +69,6 @@ void main()
 		{
 			if (moveCamBehind != true)
 			{
-				playerCamera->SetPosition(0.0f, -20.0f, 15.0f);
 				if (myEngine->KeyHeld(MoveRight))
 				{
 					playerShip->MoveLocalX(-50.0f * frameTime);
@@ -84,6 +83,7 @@ void main()
 			if (myEngine->KeyHit(camSwitch))
 			{
 				moveCamBehind = true;
+				playerCamera->SetPosition(0.0f, -20.0f, 15.0f);
 			}
 			if (moveCamBehind == true)
 			{
