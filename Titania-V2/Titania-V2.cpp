@@ -8,6 +8,7 @@ EKeyCode MoveUp = Key_Up;
 EKeyCode MoveRight = Key_Right;
 EKeyCode MoveDown = Key_Down;
 EKeyCode MoveLeft = Key_Left;
+EKeyCode Exit = Key_Escape;
 
 void main()
 {
@@ -17,17 +18,28 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\SciFi");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\SciFi");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\SkyBox");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\\Modern\\skyscraper04");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
-	IModel* playerShip;
+
+	//** Meshes ** 
 	IMesh* playerShipMesh;
-	IModel* floor;
 	IMesh* floorMesh;
-	IModel* topDownCamBlock;
 	IMesh* camBlockMesh;
+	IMesh* skyBoxMesh;
+	IMesh* towerMesh;
+	
+
+	//** Models
+	IModel* playerShip;
+	IModel* floor;
+	IModel* topDownCamBlock;
+	IModel* skyBox;
+	IModel* tower;
 
 	float countDown = 4;
 
@@ -42,7 +54,12 @@ void main()
 	playerCamera->SetLocalPosition(0.0f, 50.0f, -40.0f);
 	playerCamera->RotateLocalX(90.0f);
 	playerCamera->RotateLocalZ(180.0f);
-
+	skyBoxMesh = myEngine->LoadMesh("Skybox 01.x");
+	skyBox = skyBoxMesh->CreateModel(0.0f, -1050.0f, 0.0f);
+	towerMesh = myEngine->LoadMesh("skyscraper04.x");
+	tower = towerMesh->CreateModel(-80.0f, -130.0f, -140.0f);
+	//tower->RotateLocalY(90.0f);
+	tower->Scale(0.5f);
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
 	cameraPos = topDown;
@@ -58,7 +75,7 @@ void main()
 		// Draw the scene
 		myEngine->DrawScene();
 
-	
+
 
 
 		/* Camera Switching */
@@ -137,6 +154,12 @@ void main()
 		/******************************/
 
 		/**** Update your scene each frame here ****/
+
+		// Exit the game when running
+		if (myEngine->KeyHit(Exit))
+		{
+			myEngine->Stop();
+		}
 
 	}
 
