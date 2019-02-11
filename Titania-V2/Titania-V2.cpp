@@ -1,5 +1,6 @@
 // Titania-V2.cpp: A program using the TL-Engine
 #include <TL-Engine.h>	// TL-Engine include file and namespace
+#include <iostream>
 #include "Defs.h"
 using namespace tle;
 
@@ -39,7 +40,7 @@ void main()
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
 	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, -15.0f);
-	playerCamera->SetLocalPosition(0.0f, 50.0f, -40.0f);
+	playerCamera->SetLocalPosition(0.0f, 49.0f, -29.0f);
 	playerCamera->RotateLocalX(90.0f);
 	playerCamera->RotateLocalZ(180.0f);
 
@@ -66,15 +67,19 @@ void main()
 		{
 		case behind:
 		{
-			if (myEngine->KeyHeld(MoveRight))
+			if (moveCamBehind != true)
 			{
-				playerShip->MoveLocalX(-50.0f * frameTime);
-				playerCamera->MoveX(-50.0f * frameTime);
-			}
-			if (myEngine->KeyHeld(MoveLeft))
-			{
-				playerShip->MoveLocalX(50.0f * frameTime);
-				playerCamera->MoveX(50.0f * frameTime);
+				playerCamera->SetPosition(0.0f, -20.0f, 15.0f);
+				if (myEngine->KeyHeld(MoveRight))
+				{
+					playerShip->MoveLocalX(-50.0f * frameTime);
+					playerCamera->MoveX(-50.0f * frameTime);
+				}
+				if (myEngine->KeyHeld(MoveLeft))
+				{
+					playerShip->MoveLocalX(50.0f * frameTime);
+					playerCamera->MoveX(50.0f * frameTime);
+				}
 			}
 			if (myEngine->KeyHit(camSwitch))
 			{
@@ -85,12 +90,12 @@ void main()
 				playerCamera->LookAt(topDownCamBlock);
 				countDown -= frameTime;
 				playerCamera->MoveLocalY(21.0 * frameTime);
-				playerCamera->MoveLocalZ(-8.0 * frameTime);
+				playerCamera->MoveLocalZ(-5.0 * frameTime);
 				if (countDown <= 0)
 				{
 					moveCamBehind = false;
 					countDown = 4;
-					topDownCamBlock->DetachFromParent();
+					playerCamera->DetachFromParent();
 					cameraPos = topDown;
 				}
 			}
@@ -99,31 +104,35 @@ void main()
 		case topDown:
 		{
 			playerCamera->LookAt(topDownCamBlock);
-			if (myEngine->KeyHeld(MoveUp))
+			if (moveCamTop != true)
 			{
-				playerShip->MoveLocalZ(-50.0f * frameTime);
-			}
-			if (myEngine->KeyHeld(MoveDown))
-			{
-				playerShip->MoveLocalZ(50.0f * frameTime);
-			}
-			if (myEngine->KeyHeld(MoveRight))
-			{
-				playerShip->MoveLocalX(-50.0f * frameTime);
-			}
-			if (myEngine->KeyHeld(MoveLeft))
-			{
-				playerShip->MoveLocalX(50.0f * frameTime);
+				if (myEngine->KeyHeld(MoveUp))
+				{
+					playerShip->MoveLocalZ(-50.0f * frameTime);
+				}
+				if (myEngine->KeyHeld(MoveDown))
+				{
+					playerShip->MoveLocalZ(50.0f * frameTime);
+				}
+				if (myEngine->KeyHeld(MoveRight))
+				{
+					playerShip->MoveLocalX(-50.0f * frameTime);
+				}
+				if (myEngine->KeyHeld(MoveLeft))
+				{
+					playerShip->MoveLocalX(50.0f * frameTime);
+				}
 			}
 			if (myEngine->KeyHit(camSwitch))
 			{
 				moveCamTop = true;
+				playerCamera->ResetOrientation();
 			}
 			if (moveCamTop == true)
 			{
 				countDown -= frameTime;
 				playerCamera->MoveLocalY(-21.0 * frameTime);
-				playerCamera->MoveLocalZ(8.0 * frameTime);
+				playerCamera->MoveLocalZ(5.0 * frameTime);
 				if (countDown <= 0)
 				{
 					moveCamTop = false;
