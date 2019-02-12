@@ -19,10 +19,10 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\SciFi");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\SkyBox");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assest\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assest\\Model Packs\\Architecture\\SciFi");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assest\\SkyBox");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assest\\Model Packs\\Architecture\\Modern\\skyscraper04");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -89,12 +89,10 @@ void main()
 				if (myEngine->KeyHeld(MoveRight))
 				{
 					playerShip->MoveLocalX(-50.0f * frameTime);
-					playerCamera->MoveX(-50.0f * frameTime);
 				}
 				if (myEngine->KeyHeld(MoveLeft))
 				{
 					playerShip->MoveLocalX(50.0f * frameTime);
-					playerCamera->MoveX(50.0f * frameTime);
 				}
 			}
 			if (myEngine->KeyHit(camSwitch))
