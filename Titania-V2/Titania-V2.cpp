@@ -1,8 +1,11 @@
 // Titania-V2.cpp: A program using the TL-Engine
 #include <TL-Engine.h>	// TL-Engine include file and namespace
 #include <iostream>
+#include <sstream>
 #include "Defs.h"
 using namespace tle;
+
+enum PowerUpState { None, Speed };
 
 EKeyCode camSwitch = Key_1;
 EKeyCode MoveUp = Key_Up;
@@ -10,6 +13,8 @@ EKeyCode MoveRight = Key_Right;
 EKeyCode MoveDown = Key_Down;
 EKeyCode MoveLeft = Key_Left;
 EKeyCode Exit = Key_Escape;
+
+bool sphere2sphere(float s1xPos, float s1zPos, float s1rad, float s2xPos, float s2zPos, float s2rad); //collision function for any sphere on sphere collisions
 
 void main()
 {
@@ -23,6 +28,7 @@ void main()
 	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assest\\Model Packs\\Architecture\\SciFi");
 	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assest\\SkyBox");
 	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assest\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assest\\Model Packs\\Weapons\\Scifi\\megagatt");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -33,6 +39,7 @@ void main()
 	IMesh* camBlockMesh;
 	IMesh* skyBoxMesh;
 	IMesh* towerMesh;
+	IMesh* powerUpMesh;
 	
 
 	//** Models
@@ -42,10 +49,20 @@ void main()
 	IModel* skyBox;
 	IModel* tower;
 	IModel* Road[15];
+	IModel* placementPowerUp;
 
 	float startingz = 2.0f;
 
-	float countDown = 4;
+	float countDown = 4.0f;
+	float powerUpTimer = 5.0f;
+
+	float kPlayerShipRadius = 0.5f;
+	float kPlacementPowerUpRadius = 0.5f;
+
+	PowerUpState currentPowerUpState = None;
+
+	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
+	ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 	camBlockMesh = myEngine->LoadMesh("cube.x");
@@ -62,6 +79,9 @@ void main()
 	floorMesh = myEngine->LoadMesh("floor.x");
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
 	floor->SetSkin("pavement.jpg");
+	powerUpMesh = myEngine->LoadMesh("megagatt.x");
+	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, -70.0f);
+	placementPowerUp->Scale(10.0f);
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
 	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, -15.0f);
 	playerCamera->SetLocalPosition(0.0f, 49.0f, -29.0f);
@@ -88,7 +108,41 @@ void main()
 		// Draw the scene
 		myEngine->DrawScene();
 
+		stringstream powerUpStateText; //Text altered to present gamestate
+		string kPowerUpStateText = "PowerUp: ";
+		string kNoneText = "None";
+		string kSpeedText = "Speed";
 
+		float playerShipSpeed = 50.0f * frameTime; // Player speed
+
+		//POWERUPS - DANNY LOOK AT THIS
+
+		if (currentPowerUpState == None)
+		{
+			powerUpStateText << kPowerUpStateText << kNoneText;
+			myFont->Draw(powerUpStateText.str(), 300.0f, 670.0f); //Game state text is set to go
+			powerUpStateText.str(""); // Clear myStream
+		}
+
+		if (sphere2sphere(playerShip->GetX(), playerShip->GetZ(), kPlayerShipRadius, placementPowerUp->GetX(), placementPowerUp->GetZ(), kPlacementPowerUpRadius)) //Collision with powerup
+		{
+			currentPowerUpState = Speed;
+		}
+
+		if (currentPowerUpState == Speed)
+		{
+			powerUpStateText << kPowerUpStateText << kSpeedText;
+			myFont->Draw(powerUpStateText.str(), 300.0f, 670.0f); //Game state text is set to go
+			powerUpStateText.str(""); // Clear myStream
+
+			playerShipSpeed = 75.0f * frameTime;
+			placementPowerUp->MoveY(-0.2f);
+			powerUpTimer -= frameTime;
+			if (powerUpTimer <= 0.0f)
+			{
+				currentPowerUpState = None;
+			}
+		}
 
 
 		/* Camera Switching */
@@ -190,4 +244,14 @@ void main()
 
 	// Delete the 3D engine now we are finished with it
 	myEngine->Delete();
+}
+
+//COLLISION DETECTION
+bool sphere2sphere(float s1xPos, float s1zPos, float s1rad, float s2xPos, float s2zPos, float s2rad) //Calculates distance between two spheres and if they have collided
+{
+	float distX = s2xPos - s1xPos;
+	float distZ = s2zPos - s1zPos;
+	float distance = sqrt(distX * distX + distZ * distZ);
+
+	return (distance < (s1rad + s2rad));
 }
