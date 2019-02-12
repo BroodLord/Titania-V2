@@ -1,8 +1,8 @@
 ﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
   Titania-V2.cpp
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(107): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(108): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(149): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(150): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(122): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(123): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(167): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(168): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
   Titania-V2.vcxproj -> C:\Users\danny\Desktop\Titania-V2\Titania-V2\Titania-V2\\Titania-V2Debug.exe
   Copying DLLs & shaders...

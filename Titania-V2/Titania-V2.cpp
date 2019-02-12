@@ -41,15 +41,27 @@ void main()
 	IModel* topDownCamBlock;
 	IModel* skyBox;
 	IModel* tower;
+	IModel* Road[15];
+
+	float startingz = 2.0f;
 
 	float countDown = 4;
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 	camBlockMesh = myEngine->LoadMesh("cube.x");
 	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, -50.0f);
+	for (int i = 0; i < 15; i++)
+	{
+		Road[i] = camBlockMesh->CreateModel(2.0f, -132.0f, startingz);
+		Road[i]->SetSkin("background-1_0.png");
+		Road[i]->ScaleX(10.0f);
+		Road[i]->ScaleZ(10.0f);
+		startingz -= 100.0f;
+	}
 	topDownCamBlock->Scale(0.01f);
 	floorMesh = myEngine->LoadMesh("floor.x");
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
+	floor->SetSkin("pavement.jpg");
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
 	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, -15.0f);
 	playerCamera->SetLocalPosition(0.0f, 49.0f, -29.0f);
@@ -95,10 +107,13 @@ void main()
 					playerShip->MoveLocalX(50.0f * frameTime);
 				}
 			}
-			if (myEngine->KeyHit(camSwitch))
+			if (moveCamBehind != true)
 			{
-				moveCamBehind = true;
-				playerCamera->SetPosition(0.0f, -20.0f, 15.0f);
+				if (myEngine->KeyHit(camSwitch))
+				{
+					moveCamBehind = true;
+					playerCamera->SetPosition(0.0f, -20.0f, 15.0f);
+				}
 			}
 			if (moveCamBehind == true)
 			{
@@ -138,10 +153,13 @@ void main()
 					playerShip->MoveLocalX(50.0f * frameTime);
 				}
 			}
-			if (myEngine->KeyHit(camSwitch))
+			if (moveCamTop != true)
 			{
-				moveCamTop = true;
-				playerCamera->ResetOrientation();
+				if (myEngine->KeyHit(camSwitch))
+				{
+					moveCamTop = true;
+					playerCamera->ResetOrientation();
+				}
 			}
 			if (moveCamTop == true)
 			{
