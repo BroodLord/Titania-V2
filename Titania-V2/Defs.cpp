@@ -10,3 +10,15 @@ bool sphere2sphere(float s1xPos, float s1zPos, float s1rad, float s2xPos, float 
 	return (distance < (s1rad + s2rad));
 }
 
+// Return a random number in the range between rangeMin and rangeMax inclusive
+// range_min <= random number <= range_max
+float random(int rangeMin, int rangeMax)
+{
+	float result = (float)rand() / (float)(RAND_MAX + 1);
+	result *= (float)(rangeMax - rangeMin);
+	result += rangeMin;
+
+	return result;
+}
+
+

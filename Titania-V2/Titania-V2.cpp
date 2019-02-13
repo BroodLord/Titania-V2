@@ -2,8 +2,18 @@
 #include <TL-Engine.h>	// TL-Engine include file and namespace
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
+#include <cmath>
 #include "Defs.h"
 using namespace tle;
+
+struct particle
+{
+	IModel* flame;
+	float moveVector[3];
+};
+particle flameParticle;
+
 
 enum PowerUpState { None, Speed };
 
@@ -25,6 +35,7 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Sprites\\Fire\\Fire10\\10color");
 	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
 	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\\SciFi");
 	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\SkyBox");
@@ -41,20 +52,25 @@ void main()
 	IMesh* skyBoxMesh;
 	IMesh* towerMesh;
 	IMesh* powerUpMesh;
-	
+	IMesh* flameMesh;
 
 	//** Models
+	IModel* flame;
 	IModel* playerShip;
 	IModel* floor;
 	IModel* topDownCamBlock;
 	IModel* skyBox;
 	IModel* tower;
-	IModel* Road[25];
+	IModel* Road[20];
 	IModel* placementPowerUp;
 
 	float startingz = 802.0f;
 	float countDown = 4.0f;
 	float powerUpTimer = 5.0f;
+	float particleV = 70.0f;
+	float particleG = 50.0f;
+	float particleCount = 3.0f;
+
 
 	PowerUpState currentPowerUpState = None;
 
@@ -65,7 +81,7 @@ void main()
 	camBlockMesh = myEngine->LoadMesh("cube.x");
 
 	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, 750.0f);
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		Road[i] = camBlockMesh->CreateModel(2.0f, -132.0f, startingz);
 		Road[i]->SetSkin("background-1_0.png");
@@ -85,6 +101,10 @@ void main()
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
 	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
+
+	flameMesh = myEngine->LoadMesh("quad.x");
+	flame = flameMesh->CreateModel(0.0f, 0.0f, 5.9f);
+	flame->AttachToParent(playerShip);
 
 	playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 	playerCamera->RotateLocalX(90.0f);
@@ -235,6 +255,18 @@ void main()
 			break;
 		}
 		}
+		//flame->LookAt(playerCamera);
+		//particleV = particleV + -particleG * frameTime;
+		//flame->MoveZ(particleV * frameTime);
+		//particleCount -= frameTime;
+		//if (particleCount <= 0)
+		//{
+		//	particleV = 70.0f;
+		//	particleCount = 2.8;
+		//}
+
+
+
 		/******************************/
 
 		/**** Update your scene each frame here ****/
