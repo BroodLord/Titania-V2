@@ -35,12 +35,14 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Sprites\\Fire\\Fire10\\10color");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\SkyBox");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Sprites\\Fire\\Fire10\\10color");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\\SciFi");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\SkyBox");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assest\\UI");
+
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -115,8 +117,10 @@ void main()
 
 	towerMesh = myEngine->LoadMesh("skyscraper04.x");
 	tower = towerMesh->CreateModel(-80.0f, -130.0f, -840.0f);
-
 	tower->Scale(0.5f);
+	tower = towerMesh->CreateModel(80.0f, -130.0f, 0.0f);
+	tower->Scale(0.5f);
+	tower->RotateLocalZ(45.0f);
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
 	cameraPos = topDown;
@@ -145,8 +149,12 @@ void main()
 		if (currentPowerUpState == None)
 		{
 			powerUpStateText << kPowerUpStateText << kNoneText;
-			myFont->Draw(powerUpStateText.str(), 300.0f, 670.0f); //Game state text is set to go
+			myFont->Draw(powerUpStateText.str(), 15.0f, 670.0f); //Game state text is set to go
 			powerUpStateText.str(""); // Clear myStream
+			ISprite* backdrop;
+				
+				
+			backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
 		}
 
 		if (sphere2sphere(playerShip->GetX(), playerShip->GetZ(), PLAYERSHIPRADIUS, placementPowerUp->GetX(), placementPowerUp->GetZ(), PLACEMENTPOWERUPRADIUS)) //Collision with powerup
@@ -157,7 +165,7 @@ void main()
 		if (currentPowerUpState == Speed)
 		{
 			powerUpStateText << kPowerUpStateText << kSpeedText;
-			myFont->Draw(powerUpStateText.str(), 300.0f, 670.0f); //Game state text is set to go
+			myFont->Draw(powerUpStateText.str(), 10.0f, 670.0f); //Game state text is set to go
 			powerUpStateText.str(""); // Clear myStream
 
 			playerShipSpeed = 75.0f * frameTime;

@@ -1,9 +1,9 @@
 ﻿  Titania-V2.cpp
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(148): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(160): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(201): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(202): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(246): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(247): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-  Titania-V2.vcxproj -> D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(152): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(168): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(209): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(210): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(254): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(255): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
   Copying DLLs & shaders...
