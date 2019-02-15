@@ -1,7 +1,3 @@
 #pragma once
-#include <TL-Engine.h>	// TL-Engine include file and namespace
-using namespace tle;
 enum eCameraPos { behind, topDown };
-enum AmountLives {ThreeLives, TwoLives , OneLife};
-bool sphere2sphere(IModel* Ship, IModel* Object, float shipRad, float objectRad); //collision function for any sphere on sphere collisions
-float random(int rangeMin, int rangeMax);
+bool sphere2sphere(float s1xPos, float s1zPos, float s1rad, float s2xPos, float s2zPos, float s2rad); //collision function for any sphere on sphere collisions
