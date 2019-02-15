@@ -27,6 +27,11 @@ EKeyCode Exit = Key_Escape;
 const float PLAYERSHIPRADIUS = 2.0f;
 const float PLACEMENTPOWERUPRADIUS = 2.0f;
 
+const float kCameraMove = 0.10f; // distance for the direction keys x and z axis
+const float kMouseWheelMove = 10.0f; // distance for wheel movement z axis
+const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the camera
+bool mouseCaptureActive = false; // state of mouse capture
+
 void main()
 {
 	// Create a 3D engine (using TLX engine here) and open a window for it
@@ -157,7 +162,7 @@ void main()
 			backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
 		}
 
-		if (sphere2sphere(playerShip->GetX(), playerShip->GetZ(), PLAYERSHIPRADIUS, placementPowerUp->GetX(), placementPowerUp->GetZ(), PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+		if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 		{
 			currentPowerUpState = Speed;
 		}
@@ -278,6 +283,33 @@ void main()
 		/******************************/
 
 		/**** Update your scene each frame here ****/
+
+		if (mouseCaptureActive)
+		{
+			int mouseMoveX = myEngine->GetMouseMovementX();
+			playerCamera->RotateY(mouseMoveX * kMouseRotation); // the MouseRotation reduces the rotation speed
+
+			int mouseMoveY = myEngine->GetMouseMovementY();
+			playerCamera->RotateX(mouseMoveY * kMouseRotation); // the MouseRotation reduces the rotation speed
+
+			float mouseMoveWheel = myEngine->GetMouseWheelMovement();
+			playerCamera->MoveLocalZ(mouseMoveWheel * kMouseWheelMove); // the MouseRotation reduces the rotation speed
+		}
+
+		// toggle mouse capture
+		if (myEngine->KeyHit(Key_Tab))
+		{
+			if (mouseCaptureActive)
+			{
+				myEngine->StopMouseCapture();
+				mouseCaptureActive = false;
+			}
+			else
+			{
+				myEngine->StartMouseCapture();
+				mouseCaptureActive = true;
+			}
+		}
 
 		// Exit the game when running
 		if (myEngine->KeyHit(Exit))
