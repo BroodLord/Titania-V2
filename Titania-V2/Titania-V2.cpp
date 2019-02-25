@@ -28,11 +28,11 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder("C:\\Users\\PaulK\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("C:\\Users\\PaulK\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("C:\\Users\\PaulK\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
-	myEngine->AddMediaFolder("C:\\Users\\PaulK\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("C:\\Users\\PaulK\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -55,8 +55,13 @@ void main()
 	IModel* Road[25];
 	IModel* placementPowerUp;
 
+	bool moveCamTop = false;
+	bool barrelRollColdDown = false;
+	bool moveCamBehind = false;
+
 	float startingz = 802.0f;
 	float countDown = 4.0f;
+	float barrelRollCountDown = 2.0f;
 	float powerUpTimer = 5.0f;
 	float rollingTimer = 0.2f;
 
@@ -105,8 +110,6 @@ void main()
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
 	cameraPos = topDown;
-	bool moveCamTop = false;
-	bool moveCamBehind = false;
 
 
 	// The main game loop, repeat until engine is stopped
@@ -153,49 +156,52 @@ void main()
 				currentPowerUpState = None;
 			}
 		}
-
-		if (currentPlayerShipState == Normal)
+		if (barrelRollColdDown != true)
 		{
-			if (myEngine->KeyHit(RollRightKey))
+			if (currentPlayerShipState == Normal)
 			{
-				currentPlayerShipState = RollingRight;
+				if (myEngine->KeyHit(RollRightKey))
+				{
+					currentPlayerShipState = RollingRight;
+
+				}
+
+				if (myEngine->KeyHit(RollLeftKey))
+				{
+					currentPlayerShipState = RollingLeft;
+				}
 			}
 
-			if (myEngine->KeyHit(RollLeftKey))
+			if (currentPlayerShipState == RollingRight)
 			{
-				currentPlayerShipState = RollingLeft;
+				rollingTimer -= frameTime;
+				if (rollingTimer > 0)
+				{
+					playerShip->RotateZ(1810.0f * frameTime);
+					playerShip->MoveX(-100.0f * frameTime);
+				}
+				if (rollingTimer <= 0)
+				{
+					rollingTimer = 0.2f;
+					currentPlayerShipState = Normal;
+					//player invunerable
+				}
 			}
-		}
 
-		if (currentPlayerShipState == RollingRight)
-		{
-			rollingTimer -= frameTime;
-			if (rollingTimer > 0)
+			if (currentPlayerShipState == RollingLeft)
 			{
-				playerShip->RotateZ(1810.0f * frameTime);
-				playerShip->MoveX(-200.0f * frameTime);
-			}
-			if (rollingTimer <= 0)
-			{
-				rollingTimer = 0.2f;
-				currentPlayerShipState = Normal;
-				//player invunerable
-			}
-		}
-
-		if (currentPlayerShipState == RollingLeft)
-		{
-			rollingTimer -= frameTime;
-			if (rollingTimer > 0)
-			{
-				playerShip->RotateZ(-1810.0f * frameTime);
-				playerShip->MoveX(200.0f * frameTime);
-			}
-			if (rollingTimer <= 0)
-			{
-				rollingTimer = 0.2f;
-				currentPlayerShipState = Normal;
-				//player invunerable
+				rollingTimer -= frameTime;
+				if (rollingTimer > 0)
+				{
+					playerShip->RotateZ(-1810.0f * frameTime);
+					playerShip->MoveX(100.0f * frameTime);
+				}
+				if (rollingTimer <= 0)
+				{
+					rollingTimer = 0.2f;
+					currentPlayerShipState = Normal;
+					//player invunerable
+				}
 			}
 		}
 
@@ -285,6 +291,14 @@ void main()
 			}
 			break;
 		}
+		}
+		if (barrelRollColdDown == true)
+		{
+			if (countDown <= 0)
+			{
+				barrelRollColdDown = false;
+				barrelRollCountDown = 4.0f;
+			}
 		}
 		/******************************/
 

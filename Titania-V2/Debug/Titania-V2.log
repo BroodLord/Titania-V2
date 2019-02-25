@@ -1,9 +1,13 @@
 ﻿  Titania-V2.cpp
-c:\users\paulk\documents\github\titania-v2\titania-v2\titania-v2.cpp(133): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\paulk\documents\github\titania-v2\titania-v2\titania-v2.cpp(145): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\paulk\documents\github\titania-v2\titania-v2\titania-v2.cpp(231): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\paulk\documents\github\titania-v2\titania-v2\titania-v2.cpp(232): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\paulk\documents\github\titania-v2\titania-v2\titania-v2.cpp(277): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\paulk\documents\github\titania-v2\titania-v2\titania-v2.cpp(278): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-  Titania-V2.vcxproj -> C:\Users\PaulK\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
-  Copying DLLs & shaders...
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(32): warning C4129: 'D': unrecognized character escape sequence
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(33): warning C4129: 'D': unrecognized character escape sequence
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(34): warning C4129: 'D': unrecognized character escape sequence
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(35): warning C4129: 'D': unrecognized character escape sequence
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(133): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(145): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(231): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(232): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(277): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(278): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+  Titania-V2.vcxproj -> D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
+  Titania-V2.vcxproj -> D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)
