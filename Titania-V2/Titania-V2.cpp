@@ -6,15 +6,19 @@
 using namespace tle;
 
 enum PowerUpState { None, Speed };
+enum PlayerShipState { Normal, RollingLeft, RollingRight};
 
 EKeyCode camSwitch = Key_1;
-EKeyCode MoveUp = Key_Up;
-EKeyCode MoveRight = Key_Right;
-EKeyCode MoveDown = Key_Down;
-EKeyCode MoveLeft = Key_Left;
+EKeyCode MoveUp = Key_W;
+EKeyCode MoveRight = Key_D;
+EKeyCode MoveDown = Key_S;
+EKeyCode MoveLeft = Key_A;
 EKeyCode Exit = Key_Escape;
+EKeyCode RollRightKey = Key_E;
+EKeyCode RollLeftKey = Key_Q;
 
-bool sphere2sphere(float s1xPos, float s1zPos, float s1rad, float s2xPos, float s2zPos, float s2rad); //collision function for any sphere on sphere collisions
+const float PLAYERSHIPRADIUS = 2.0f;
+const float PLACEMENTPOWERUPRADIUS = 2.0f;
 
 void main()
 {
@@ -48,25 +52,24 @@ void main()
 	IModel* topDownCamBlock;
 	IModel* skyBox;
 	IModel* tower;
-	IModel* Road[15];
+	IModel* Road[25];
 	IModel* placementPowerUp;
 
-	float startingz = 2.0f;
-
+	float startingz = 802.0f;
 	float countDown = 4.0f;
 	float powerUpTimer = 5.0f;
-
-	float kPlayerShipRadius = 0.5f;
-	float kPlacementPowerUpRadius = 0.5f;
+	float rollingTimer = 0.2f;
 
 	PowerUpState currentPowerUpState = None;
+	PlayerShipState currentPlayerShipState = Normal;
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
-	ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
+	ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 400.0f); //Simple box used as UI to make text stand out
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 	camBlockMesh = myEngine->LoadMesh("cube.x");
-	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, -50.0f);
+
+	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, 750.0f);
 	for (int i = 0; i < 15; i++)
 	{
 		Road[i] = camBlockMesh->CreateModel(2.0f, -132.0f, startingz);
@@ -76,22 +79,28 @@ void main()
 		startingz -= 100.0f;
 	}
 	topDownCamBlock->Scale(0.01f);
+
 	floorMesh = myEngine->LoadMesh("floor.x");
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
 	floor->SetSkin("pavement.jpg");
+
 	powerUpMesh = myEngine->LoadMesh("megagatt.x");
-	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, -70.0f);
+	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, 730.0f);
 	placementPowerUp->Scale(10.0f);
+
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
-	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, -15.0f);
-	playerCamera->SetLocalPosition(0.0f, 49.0f, -29.0f);
+	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
+
+	playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 	playerCamera->RotateLocalX(90.0f);
 	playerCamera->RotateLocalZ(180.0f);
+
 	skyBoxMesh = myEngine->LoadMesh("Skybox 01.x");
 	skyBox = skyBoxMesh->CreateModel(0.0f, -1050.0f, 0.0f);
+
 	towerMesh = myEngine->LoadMesh("skyscraper04.x");
-	tower = towerMesh->CreateModel(-80.0f, -130.0f, -140.0f);
-	//tower->RotateLocalY(90.0f);
+	tower = towerMesh->CreateModel(-80.0f, -130.0f, -840.0f);
+
 	tower->Scale(0.5f);
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
@@ -116,6 +125,7 @@ void main()
 		float playerShipSpeed = 50.0f * frameTime; // Player speed
 
 		//POWERUPS - DANNY LOOK AT THIS
+		placementPowerUp->RotateY(50.0f * frameTime);
 
 		if (currentPowerUpState == None)
 		{
@@ -124,7 +134,7 @@ void main()
 			powerUpStateText.str(""); // Clear myStream
 		}
 
-		if (sphere2sphere(playerShip->GetX(), playerShip->GetZ(), kPlayerShipRadius, placementPowerUp->GetX(), placementPowerUp->GetZ(), kPlacementPowerUpRadius)) //Collision with powerup
+		if (sphere2sphere(playerShip->GetX(), playerShip->GetZ(), PLAYERSHIPRADIUS, placementPowerUp->GetX(), placementPowerUp->GetZ(), PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 		{
 			currentPowerUpState = Speed;
 		}
@@ -136,11 +146,56 @@ void main()
 			powerUpStateText.str(""); // Clear myStream
 
 			playerShipSpeed = 75.0f * frameTime;
-			placementPowerUp->MoveY(-0.2f);
+			placementPowerUp->MoveZ(0.5f);
 			powerUpTimer -= frameTime;
 			if (powerUpTimer <= 0.0f)
 			{
 				currentPowerUpState = None;
+			}
+		}
+
+		if (currentPlayerShipState == Normal)
+		{
+			if (myEngine->KeyHit(RollRightKey))
+			{
+				currentPlayerShipState = RollingRight;
+			}
+
+			if (myEngine->KeyHit(RollLeftKey))
+			{
+				currentPlayerShipState = RollingLeft;
+			}
+		}
+
+		if (currentPlayerShipState == RollingRight)
+		{
+			rollingTimer -= frameTime;
+			if (rollingTimer > 0)
+			{
+				playerShip->RotateZ(1810.0f * frameTime);
+				playerShip->MoveX(-200.0f * frameTime);
+			}
+			if (rollingTimer <= 0)
+			{
+				rollingTimer = 0.2f;
+				currentPlayerShipState = Normal;
+				//player invunerable
+			}
+		}
+
+		if (currentPlayerShipState == RollingLeft)
+		{
+			rollingTimer -= frameTime;
+			if (rollingTimer > 0)
+			{
+				playerShip->RotateZ(-1810.0f * frameTime);
+				playerShip->MoveX(200.0f * frameTime);
+			}
+			if (rollingTimer <= 0)
+			{
+				rollingTimer = 0.2f;
+				currentPlayerShipState = Normal;
+				//player invunerable
 			}
 		}
 
@@ -154,11 +209,11 @@ void main()
 			{
 				if (myEngine->KeyHeld(MoveRight))
 				{
-					playerShip->MoveLocalX(-50.0f * frameTime);
+					playerShip->MoveX(-50.0f * frameTime);
 				}
 				if (myEngine->KeyHeld(MoveLeft))
 				{
-					playerShip->MoveLocalX(50.0f * frameTime);
+					playerShip->MoveX(50.0f * frameTime);
 				}
 			}
 			if (moveCamBehind != true)
@@ -166,7 +221,7 @@ void main()
 				if (myEngine->KeyHit(camSwitch))
 				{
 					moveCamBehind = true;
-					playerCamera->SetPosition(0.0f, -20.0f, 15.0f);
+					playerCamera->SetPosition(0.0f, -20.0f, 815.0f);
 				}
 			}
 			if (moveCamBehind == true)
@@ -192,21 +247,22 @@ void main()
 			{
 				if (myEngine->KeyHeld(MoveUp))
 				{
-					playerShip->MoveLocalZ(-50.0f * frameTime);
+					playerShip->MoveZ(-playerShipSpeed);
 				}
 				if (myEngine->KeyHeld(MoveDown))
 				{
-					playerShip->MoveLocalZ(50.0f * frameTime);
+					playerShip->MoveZ(playerShipSpeed);
 				}
 				if (myEngine->KeyHeld(MoveRight))
 				{
-					playerShip->MoveLocalX(-50.0f * frameTime);
+					playerShip->MoveX(-playerShipSpeed);
 				}
 				if (myEngine->KeyHeld(MoveLeft))
 				{
-					playerShip->MoveLocalX(50.0f * frameTime);
+					playerShip->MoveX(playerShipSpeed);
 				}
 			}
+
 			if (moveCamTop != true)
 			{
 				if (myEngine->KeyHit(camSwitch))
@@ -244,14 +300,4 @@ void main()
 
 	// Delete the 3D engine now we are finished with it
 	myEngine->Delete();
-}
-
-//COLLISION DETECTION
-bool sphere2sphere(float s1xPos, float s1zPos, float s1rad, float s2xPos, float s2zPos, float s2rad) //Calculates distance between two spheres and if they have collided
-{
-	float distX = s2xPos - s1xPos;
-	float distZ = s2zPos - s1zPos;
-	float distance = sqrt(distX * distX + distZ * distZ);
-
-	return (distance < (s1rad + s2rad));
 }
