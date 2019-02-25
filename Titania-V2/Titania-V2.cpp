@@ -51,7 +51,7 @@ void main()
 	IModel* floor;
 	IModel* topDownCamBlock;
 	IModel* skyBox;
-	IModel* tower;
+	IModel* tower[20];
 	IModel* Road[25];
 	IModel* placementPowerUp;
 
@@ -60,6 +60,8 @@ void main()
 	bool moveCamBehind = false;
 
 	float startingz = 802.0f;
+	float startingZ = -840.0f;
+	float startingx = 400.0f;
 	float countDown = 4.0f;
 	float barrelRollCountDown = 2.0f;
 	float powerUpTimer = 5.0f;
@@ -75,7 +77,7 @@ void main()
 	camBlockMesh = myEngine->LoadMesh("cube.x");
 
 	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, 750.0f);
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 18; i++)
 	{
 		Road[i] = camBlockMesh->CreateModel(2.0f, -132.0f, startingz);
 		Road[i]->SetSkin("background-1_0.png");
@@ -87,7 +89,7 @@ void main()
 
 	floorMesh = myEngine->LoadMesh("floor.x");
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
-	floor->SetSkin("pavement.jpg");
+	floor->SetSkin("pavement.png");
 
 	powerUpMesh = myEngine->LoadMesh("megagatt.x");
 	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, 730.0f);
@@ -104,9 +106,28 @@ void main()
 	skyBox = skyBoxMesh->CreateModel(0.0f, -1050.0f, 0.0f);
 
 	towerMesh = myEngine->LoadMesh("skyscraper04.x");
-	tower = towerMesh->CreateModel(-80.0f, -130.0f, -840.0f);
-
-	tower->Scale(0.5f);
+	int count = 0;
+	for (int i = 0; i < 12; i++)
+	{
+		if (count == 3)
+		{
+		startingx -= 100.0f;
+		startingx -= 100;
+		}
+		else
+		{
+			startingx -= 100;
+		}
+		tower[i] = towerMesh->CreateModel(startingx, -140.0f, startingZ);
+		count++;
+		if (count == 6)
+		{
+			count = 0;
+			startingZ += 100.0f;
+			startingx = 400.0f;
+		}
+		
+	}
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
 	cameraPos = topDown;
@@ -156,148 +177,153 @@ void main()
 				currentPowerUpState = None;
 			}
 		}
-		if (barrelRollColdDown != true)
+		if (moveCamTop != true && moveCamBehind != true)
 		{
-			if (currentPlayerShipState == Normal)
+			if (barrelRollColdDown == false)
 			{
-				if (myEngine->KeyHit(RollRightKey))
+				if (currentPlayerShipState == Normal)
 				{
-					currentPlayerShipState = RollingRight;
+					if (myEngine->KeyHit(RollRightKey))
+					{
+						currentPlayerShipState = RollingRight;
+					}
 
+					if (myEngine->KeyHit(RollLeftKey))
+					{
+						currentPlayerShipState = RollingLeft;
+					}
 				}
 
-				if (myEngine->KeyHit(RollLeftKey))
+				if (currentPlayerShipState == RollingRight)
 				{
-					currentPlayerShipState = RollingLeft;
+					rollingTimer -= frameTime;
+					if (rollingTimer > 0)
+					{
+						playerShip->RotateZ(1810.0f * frameTime);
+						playerShip->MoveX(-100.0f * frameTime);
+					}
+					if (rollingTimer <= 0)
+					{
+						rollingTimer = 0.2f;
+						currentPlayerShipState = Normal;
+						barrelRollColdDown = true;
+						//player invunerable
+					}
 				}
-			}
 
-			if (currentPlayerShipState == RollingRight)
-			{
-				rollingTimer -= frameTime;
-				if (rollingTimer > 0)
+				if (currentPlayerShipState == RollingLeft)
 				{
-					playerShip->RotateZ(1810.0f * frameTime);
-					playerShip->MoveX(-100.0f * frameTime);
-				}
-				if (rollingTimer <= 0)
-				{
-					rollingTimer = 0.2f;
-					currentPlayerShipState = Normal;
-					//player invunerable
-				}
-			}
-
-			if (currentPlayerShipState == RollingLeft)
-			{
-				rollingTimer -= frameTime;
-				if (rollingTimer > 0)
-				{
-					playerShip->RotateZ(-1810.0f * frameTime);
-					playerShip->MoveX(100.0f * frameTime);
-				}
-				if (rollingTimer <= 0)
-				{
-					rollingTimer = 0.2f;
-					currentPlayerShipState = Normal;
-					//player invunerable
+					rollingTimer -= frameTime;
+					if (rollingTimer > 0)
+					{
+						playerShip->RotateZ(-1810.0f * frameTime);
+						playerShip->MoveX(100.0f * frameTime);
+					}
+					if (rollingTimer <= 0)
+					{
+						rollingTimer = 0.2f;
+						currentPlayerShipState = Normal;
+						barrelRollColdDown = true;
+						//player invunerable
+					}
 				}
 			}
 		}
 
 
 		/* Camera Switching */
-		switch (cameraPos)
-		{
-		case behind:
-		{
-			if (moveCamBehind != true)
+			switch (cameraPos)
 			{
-				if (myEngine->KeyHeld(MoveRight))
-				{
-					playerShip->MoveX(-50.0f * frameTime);
-				}
-				if (myEngine->KeyHeld(MoveLeft))
-				{
-					playerShip->MoveX(50.0f * frameTime);
-				}
-			}
-			if (moveCamBehind != true)
+			case behind:
 			{
-				if (myEngine->KeyHit(camSwitch))
+				if (moveCamBehind != true)
 				{
-					moveCamBehind = true;
-					playerCamera->SetPosition(0.0f, -20.0f, 815.0f);
+					if (myEngine->KeyHeld(MoveRight))
+					{
+						playerShip->MoveX(-50.0f * frameTime);
+					}
+					if (myEngine->KeyHeld(MoveLeft))
+					{
+						playerShip->MoveX(50.0f * frameTime);
+					}
 				}
+				if (moveCamBehind != true)
+				{
+					if (myEngine->KeyHit(camSwitch))
+					{
+						moveCamBehind = true;
+						playerCamera->SetPosition(0.0f, -20.0f, 815.0f);
+					}
+				}
+				if (moveCamBehind == true)
+				{
+					playerCamera->LookAt(topDownCamBlock);
+					countDown -= frameTime;
+					playerCamera->MoveLocalY(21.0 * frameTime);
+					playerCamera->MoveLocalZ(-5.0 * frameTime);
+					if (countDown <= 0)
+					{
+						moveCamBehind = false;
+						countDown = 4;
+						playerCamera->DetachFromParent();
+						cameraPos = topDown;
+					}
+				}
+				break;
 			}
-			if (moveCamBehind == true)
+			case topDown:
 			{
 				playerCamera->LookAt(topDownCamBlock);
-				countDown -= frameTime;
-				playerCamera->MoveLocalY(21.0 * frameTime);
-				playerCamera->MoveLocalZ(-5.0 * frameTime);
-				if (countDown <= 0)
+				if (moveCamTop != true)
 				{
-					moveCamBehind = false;
-					countDown = 4;
-					playerCamera->DetachFromParent();
-					cameraPos = topDown;
+					if (myEngine->KeyHeld(MoveUp))
+					{
+						playerShip->MoveZ(-playerShipSpeed);
+					}
+					if (myEngine->KeyHeld(MoveDown))
+					{
+						playerShip->MoveZ(playerShipSpeed);
+					}
+					if (myEngine->KeyHeld(MoveRight))
+					{
+						playerShip->MoveX(-playerShipSpeed);
+					}
+					if (myEngine->KeyHeld(MoveLeft))
+					{
+						playerShip->MoveX(playerShipSpeed);
+					}
 				}
-			}
-			break;
-		}
-		case topDown:
-		{
-			playerCamera->LookAt(topDownCamBlock);
-			if (moveCamTop != true)
-			{
-				if (myEngine->KeyHeld(MoveUp))
-				{
-					playerShip->MoveZ(-playerShipSpeed);
-				}
-				if (myEngine->KeyHeld(MoveDown))
-				{
-					playerShip->MoveZ(playerShipSpeed);
-				}
-				if (myEngine->KeyHeld(MoveRight))
-				{
-					playerShip->MoveX(-playerShipSpeed);
-				}
-				if (myEngine->KeyHeld(MoveLeft))
-				{
-					playerShip->MoveX(playerShipSpeed);
-				}
-			}
 
-			if (moveCamTop != true)
-			{
-				if (myEngine->KeyHit(camSwitch))
+				if (moveCamTop != true)
 				{
-					moveCamTop = true;
-					playerCamera->ResetOrientation();
+					if (myEngine->KeyHit(camSwitch))
+					{
+						moveCamTop = true;
+						playerCamera->ResetOrientation();
+					}
 				}
-			}
-			if (moveCamTop == true)
-			{
-				countDown -= frameTime;
-				playerCamera->MoveLocalY(-21.0 * frameTime);
-				playerCamera->MoveLocalZ(5.0 * frameTime);
-				if (countDown <= 0)
+				if (moveCamTop == true)
 				{
-					moveCamTop = false;
-					countDown = 4;
-					cameraPos = behind;
+					countDown -= frameTime;
+					playerCamera->MoveLocalY(-21.0 * frameTime);
+					playerCamera->MoveLocalZ(5.0 * frameTime);
+					if (countDown <= 0)
+					{
+						moveCamTop = false;
+						countDown = 4;
+						cameraPos = behind;
+					}
 				}
+				break;
 			}
-			break;
-		}
-		}
+			}
 		if (barrelRollColdDown == true)
 		{
-			if (countDown <= 0)
+			barrelRollCountDown -= frameTime;
+			if (barrelRollCountDown <= 0)
 			{
 				barrelRollColdDown = false;
-				barrelRollCountDown = 4.0f;
+				barrelRollCountDown = 2.0f;
 			}
 		}
 		/******************************/
