@@ -1,10 +1,9 @@
-﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  Titania-V2.cpp
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(123): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(135): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(176): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(177): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(221): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\danny\desktop\titania-v2\titania-v2\titania-v2\titania-v2.cpp(222): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-  Titania-V2.vcxproj -> C:\Users\danny\Desktop\Titania-V2\Titania-V2\Titania-V2\\Titania-V2Debug.exe
-  Copying DLLs & shaders...
+﻿  Titania-V2.cpp
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(123): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(135): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(176): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(177): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(221): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(222): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
+  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)
