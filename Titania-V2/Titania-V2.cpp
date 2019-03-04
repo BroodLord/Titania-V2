@@ -32,6 +32,9 @@ void main()
 	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
 	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
 	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
 	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
 
 	/**** Set up your scene here ****/
@@ -42,7 +45,8 @@ void main()
 	IMesh* floorMesh;
 	IMesh* camBlockMesh;
 	IMesh* skyBoxMesh;
-	IMesh* towerMesh;
+	IMesh* towerTwoMesh;
+	IMesh* towerNineMesh;
 	IMesh* powerUpMesh;
 	
 
@@ -51,7 +55,8 @@ void main()
 	IModel* floor;
 	IModel* topDownCamBlock;
 	IModel* skyBox;
-	IModel* tower[20];
+	IModel* towerNine;
+	IModel* towerTwo;
 	IModel* Road[25];
 	IModel* placementPowerUp;
 
@@ -63,9 +68,10 @@ void main()
 	float startingZ = -840.0f;
 	float startingx = 400.0f;
 	float countDown = 4.0f;
+	float currentX = 0.0f;
 	float barrelRollCountDown = 2.0f;
 	float powerUpTimer = 5.0f;
-	float rollingTimer = 0.2f;
+	float rollingTimer = 0.4f;
 
 	PowerUpState currentPowerUpState = None;
 	PlayerShipState currentPlayerShipState = Normal;
@@ -75,6 +81,8 @@ void main()
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 	camBlockMesh = myEngine->LoadMesh("cube.x");
+
+	
 
 	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, 750.0f);
 	for (int i = 0; i < 18; i++)
@@ -101,33 +109,65 @@ void main()
 	playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 	playerCamera->RotateLocalX(90.0f);
 	playerCamera->RotateLocalZ(180.0f);
-
-	skyBoxMesh = myEngine->LoadMesh("Skybox 01.x");
-	skyBox = skyBoxMesh->CreateModel(0.0f, -1050.0f, 0.0f);
-
-	towerMesh = myEngine->LoadMesh("skyscraper04.x");
 	int count = 0;
-	for (int i = 0; i < 12; i++)
+	int number = 0;
+	towerNineMesh = myEngine->LoadMesh("skyscraper04.x");
+	towerTwoMesh = myEngine->LoadMesh("skyscraper02.x");
+	for (int i = 0; i < 100; i++)
 	{
+		number++;
 		if (count == 3)
 		{
-		startingx -= 100.0f;
-		startingx -= 100;
+			startingx -= 100.0f;
+			startingx -= 100;
 		}
 		else
 		{
 			startingx -= 100;
 		}
-		tower[i] = towerMesh->CreateModel(startingx, -140.0f, startingZ);
+		if (number == 1)
+		{
+			
+			towerNine = towerNineMesh->CreateModel(startingx, -140.0f, startingZ);
+			towerNine->ScaleY(0.6);
+		}
+		if (number == 2)
+		{
+			if (count == 3)
+			{
+				startingx += 25;
+			}
+			towerTwo = towerTwoMesh->CreateModel(startingx, -140.0f, startingZ);
+			towerTwo->RotateLocalY(90);
+		}
 		count++;
+		if (count != 6)
+		{
+			if (number == 2)
+			{
+				number = 0;
+			}
+		}
 		if (count == 6)
 		{
 			count = 0;
+			if (number == 1)
+			{
+				number = 0;
+			}
+			if (number == 2)
+			{
+				number = 1;
+			}
 			startingZ += 100.0f;
 			startingx = 400.0f;
 		}
-		
+
 	}
+
+	skyBoxMesh = myEngine->LoadMesh("Skybox 01.x");
+	skyBox = skyBoxMesh->CreateModel(0.0f, -1050.0f, 0.0f);
+
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
 	cameraPos = topDown;
@@ -137,6 +177,7 @@ void main()
 	myEngine->Timer();
 	while (myEngine->IsRunning())
 	{
+		currentX = playerShip->GetLocalX();
 		float frameTime = myEngine->Timer();
 		// Draw the scene
 		myEngine->DrawScene();
@@ -199,12 +240,12 @@ void main()
 					rollingTimer -= frameTime;
 					if (rollingTimer > 0)
 					{
-						playerShip->RotateZ(1810.0f * frameTime);
-						playerShip->MoveX(-100.0f * frameTime);
+						playerShip->RotateZ(900.0f * frameTime);
+						playerShip->MoveX(-50.0f * frameTime);
 					}
 					if (rollingTimer <= 0)
 					{
-						rollingTimer = 0.2f;
+						rollingTimer = 0.4f;
 						currentPlayerShipState = Normal;
 						barrelRollColdDown = true;
 						//player invunerable
@@ -216,18 +257,27 @@ void main()
 					rollingTimer -= frameTime;
 					if (rollingTimer > 0)
 					{
-						playerShip->RotateZ(-1810.0f * frameTime);
-						playerShip->MoveX(100.0f * frameTime);
+						playerShip->RotateZ(-900.0f * frameTime);
+						playerShip->MoveX(50.0f * frameTime);
 					}
 					if (rollingTimer <= 0)
 					{
-						rollingTimer = 0.2f;
+						rollingTimer = 0.4f;
 						currentPlayerShipState = Normal;
 						barrelRollColdDown = true;
 						//player invunerable
 					}
 				}
 			}
+		}
+
+		if (currentX <= -27.0f)
+		{
+			playerShip->MoveX(50.0f * frameTime);
+		}
+		if (currentX >= 27.0f)
+		{
+			playerShip->MoveX(-50.0f * frameTime);
 		}
 
 
@@ -238,13 +288,16 @@ void main()
 			{
 				if (moveCamBehind != true)
 				{
-					if (myEngine->KeyHeld(MoveRight))
+					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 					{
-						playerShip->MoveX(-50.0f * frameTime);
-					}
-					if (myEngine->KeyHeld(MoveLeft))
-					{
-						playerShip->MoveX(50.0f * frameTime);
+						if (myEngine->KeyHeld(MoveRight))
+						{
+							playerShip->MoveX(-50.0f * frameTime);
+						}
+						if (myEngine->KeyHeld(MoveLeft))
+						{
+							playerShip->MoveX(50.0f * frameTime);
+						}
 					}
 				}
 				if (moveCamBehind != true)
@@ -276,21 +329,16 @@ void main()
 				playerCamera->LookAt(topDownCamBlock);
 				if (moveCamTop != true)
 				{
-					if (myEngine->KeyHeld(MoveUp))
+					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 					{
-						playerShip->MoveZ(-playerShipSpeed);
-					}
-					if (myEngine->KeyHeld(MoveDown))
-					{
-						playerShip->MoveZ(playerShipSpeed);
-					}
-					if (myEngine->KeyHeld(MoveRight))
-					{
-						playerShip->MoveX(-playerShipSpeed);
-					}
-					if (myEngine->KeyHeld(MoveLeft))
-					{
-						playerShip->MoveX(playerShipSpeed);
+						if (myEngine->KeyHeld(MoveRight))
+						{
+							playerShip->MoveX(-playerShipSpeed);
+						}
+						if (myEngine->KeyHeld(MoveLeft))
+						{
+							playerShip->MoveX(playerShipSpeed);
+						}
 					}
 				}
 
