@@ -40,14 +40,14 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assets\\Sprites\\Fire\\Fire10\\10color");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Assets\\UI");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Documents\\GitHub\\Titania-V2\\Media");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Sprites\\Fire\\Fire10\\10color");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\UI");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Media");
 
 
 	/**** Set up your scene here ****/

@@ -1,11 +1,2 @@
-﻿  Titania-V2.cpp
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(150): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(166): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(207): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(208): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(252): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(253): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(63): warning C4101: 'flameMesh': unreferenced local variable
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(66): warning C4101: 'flame': unreferenced local variable
-  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
-  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)
+﻿  Titania-V2.vcxproj -> D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
+  Copying DLLs & shaders...
