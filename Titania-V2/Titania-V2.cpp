@@ -12,10 +12,20 @@ struct particle
 	IModel* flame;
 	float moveVector[3];
 };
+
+struct playerShip
+{
+	IModel* playerShip;
+	const float PLAYERSHIPRADIUS = 2.0f;
+
+};
+playerShip PlayerShip;
 particle flameParticle;
 
 
 enum PowerUpState { None, Speed };
+enum PlayerShipState {Normal, RollingLeft, RollingRight};
+PlayerShipState currentPlayerShipState;
 
 EKeyCode camSwitch = Key_1;
 EKeyCode MoveUp = Key_W;
@@ -23,6 +33,8 @@ EKeyCode MoveRight = Key_D;
 EKeyCode MoveDown = Key_S;
 EKeyCode MoveLeft = Key_A;
 EKeyCode Exit = Key_Escape;
+EKeyCode RollRightKey = Key_E;
+EKeyCode RollLeftKey = Key_Q;
 
 const float PLAYERSHIPRADIUS = 2.0f;
 const float PLACEMENTPOWERUPRADIUS = 2.0f;
@@ -64,7 +76,6 @@ void main()
 
 	//** Models
 	IModel* flame;
-	IModel* playerShip;
 	IModel* floor;
 	IModel* topDownCamBlock;
 	IModel* skyBox;
@@ -97,7 +108,7 @@ void main()
 	
 
 	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, 750.0f);
-	for (int i = 0; i < 18; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		Road[i] = camBlockMesh->CreateModel(2.0f, -132.0f, startingz);
 		Road[i]->SetSkin("background-1_0.png");
@@ -111,12 +122,12 @@ void main()
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
 	floor->SetSkin("pavement.png");
 
-	powerUpMesh = myEngine->LoadMesh("phaser.x");
+	powerUpMesh = myEngine->LoadMesh("megagatt.x");
 	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, 730.0f);
 	placementPowerUp->Scale(15.0f);
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
-	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
+	PlayerShip.playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
 
 	playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 	playerCamera->RotateLocalX(90.0f);
@@ -189,7 +200,7 @@ void main()
 	myEngine->Timer();
 	while (myEngine->IsRunning())
 	{
-		currentX = playerShip->GetLocalX();
+		currentX = PlayerShip.playerShip->GetLocalX();
 		float frameTime = myEngine->Timer();
 		// Draw the scene
 		myEngine->DrawScene();
@@ -215,7 +226,7 @@ void main()
 			backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
 		}
 
-		if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+		if (sphere2sphere(PlayerShip.playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 		{
 			currentPowerUpState = Speed;
 		}
@@ -256,8 +267,8 @@ void main()
 					rollingTimer -= frameTime;
 					if (rollingTimer > 0)
 					{
-						playerShip->RotateZ(900.0f * frameTime);
-						playerShip->MoveX(-50.0f * frameTime);
+						PlayerShip.playerShip->RotateZ(900.0f * frameTime);
+						PlayerShip.playerShip->MoveX(-50.0f * frameTime);
 					}
 					if (rollingTimer <= 0)
 					{
@@ -273,8 +284,8 @@ void main()
 					rollingTimer -= frameTime;
 					if (rollingTimer > 0)
 					{
-						playerShip->RotateZ(-900.0f * frameTime);
-						playerShip->MoveX(50.0f * frameTime);
+						PlayerShip.playerShip->RotateZ(-900.0f * frameTime);
+						PlayerShip.playerShip->MoveX(50.0f * frameTime);
 					}
 					if (rollingTimer <= 0)
 					{
@@ -289,11 +300,11 @@ void main()
 
 		if (currentX <= -27.0f)
 		{
-			playerShip->MoveX(50.0f * frameTime);
+			PlayerShip.playerShip->MoveX(50.0f * frameTime);
 		}
 		if (currentX >= 27.0f)
 		{
-			playerShip->MoveX(-50.0f * frameTime);
+			PlayerShip.playerShip->MoveX(-50.0f * frameTime);
 		}
 
 
@@ -308,11 +319,11 @@ void main()
 					{
 						if (myEngine->KeyHeld(MoveRight))
 						{
-							playerShip->MoveX(-50.0f * frameTime);
+							PlayerShip.playerShip->MoveX(-50.0f * frameTime);
 						}
 						if (myEngine->KeyHeld(MoveLeft))
 						{
-							playerShip->MoveX(50.0f * frameTime);
+							PlayerShip.playerShip->MoveX(50.0f * frameTime);
 						}
 					}
 				}
@@ -349,11 +360,11 @@ void main()
 					{
 						if (myEngine->KeyHeld(MoveRight))
 						{
-							playerShip->MoveX(-playerShipSpeed);
+							PlayerShip.playerShip->MoveX(-playerShipSpeed);
 						}
 						if (myEngine->KeyHeld(MoveLeft))
 						{
-							playerShip->MoveX(playerShipSpeed);
+							PlayerShip.playerShip->MoveX(playerShipSpeed);
 						}
 					}
 				}
@@ -396,8 +407,7 @@ void main()
 		/******************************/
 
 		/**** Update your scene each frame here ****/
-#ifdef DEBUG
-
+#ifndef DEBUG
 		if (mouseCaptureActive)
 		{
 			int mouseMoveX = myEngine->GetMouseMovementX();
