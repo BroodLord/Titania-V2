@@ -2,11 +2,20 @@
 #include <TL-Engine.h>	// TL-Engine include file and namespace
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
+#include <cmath>
 #include "Defs.h"
 using namespace tle;
 
+struct particle
+{
+	IModel* flame;
+	float moveVector[3];
+};
+particle flameParticle;
+
+
 enum PowerUpState { None, Speed };
-enum PlayerShipState { Normal, RollingLeft, RollingRight};
 
 EKeyCode camSwitch = Key_1;
 EKeyCode MoveUp = Key_W;
@@ -14,11 +23,14 @@ EKeyCode MoveRight = Key_D;
 EKeyCode MoveDown = Key_S;
 EKeyCode MoveLeft = Key_A;
 EKeyCode Exit = Key_Escape;
-EKeyCode RollRightKey = Key_E;
-EKeyCode RollLeftKey = Key_Q;
 
 const float PLAYERSHIPRADIUS = 2.0f;
 const float PLACEMENTPOWERUPRADIUS = 2.0f;
+
+const float kCameraMove = 0.10f; // distance for the direction keys x and z axis
+const float kMouseWheelMove = 10.0f; // distance for wheel movement z axis
+const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the camera
+bool mouseCaptureActive = false; // state of mouse capture
 
 void main()
 {
@@ -48,9 +60,10 @@ void main()
 	IMesh* towerTwoMesh;
 	IMesh* towerNineMesh;
 	IMesh* powerUpMesh;
-	
+	IMesh* flameMesh;
 
 	//** Models
+	IModel* flame;
 	IModel* playerShip;
 	IModel* floor;
 	IModel* topDownCamBlock;
@@ -74,10 +87,9 @@ void main()
 	float rollingTimer = 0.4f;
 
 	PowerUpState currentPowerUpState = None;
-	PlayerShipState currentPlayerShipState = Normal;
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
-	ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 400.0f); //Simple box used as UI to make text stand out
+	ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 	camBlockMesh = myEngine->LoadMesh("cube.x");
@@ -99,9 +111,9 @@ void main()
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
 	floor->SetSkin("pavement.png");
 
-	powerUpMesh = myEngine->LoadMesh("megagatt.x");
+	powerUpMesh = myEngine->LoadMesh("phaser.x");
 	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, 730.0f);
-	placementPowerUp->Scale(10.0f);
+	placementPowerUp->Scale(15.0f);
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
 	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
@@ -195,11 +207,15 @@ void main()
 		if (currentPowerUpState == None)
 		{
 			powerUpStateText << kPowerUpStateText << kNoneText;
-			myFont->Draw(powerUpStateText.str(), 300.0f, 670.0f); //Game state text is set to go
+			myFont->Draw(powerUpStateText.str(), 15.0f, 670.0f); //Game state text is set to go
 			powerUpStateText.str(""); // Clear myStream
+			ISprite* backdrop;
+				
+				
+			backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
 		}
 
-		if (sphere2sphere(playerShip->GetX(), playerShip->GetZ(), PLAYERSHIPRADIUS, placementPowerUp->GetX(), placementPowerUp->GetZ(), PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+		if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 		{
 			currentPowerUpState = Speed;
 		}
@@ -207,11 +223,11 @@ void main()
 		if (currentPowerUpState == Speed)
 		{
 			powerUpStateText << kPowerUpStateText << kSpeedText;
-			myFont->Draw(powerUpStateText.str(), 300.0f, 670.0f); //Game state text is set to go
+			myFont->Draw(powerUpStateText.str(), 10.0f, 670.0f); //Game state text is set to go
 			powerUpStateText.str(""); // Clear myStream
 
 			playerShipSpeed = 75.0f * frameTime;
-			placementPowerUp->MoveZ(0.5f);
+			placementPowerUp->MoveLocalY(-0.2f);
 			powerUpTimer -= frameTime;
 			if (powerUpTimer <= 0.0f)
 			{
@@ -374,9 +390,42 @@ void main()
 				barrelRollCountDown = 2.0f;
 			}
 		}
+
+
+
 		/******************************/
 
 		/**** Update your scene each frame here ****/
+#ifdef DEBUG
+
+		if (mouseCaptureActive)
+		{
+			int mouseMoveX = myEngine->GetMouseMovementX();
+			playerCamera->RotateY(mouseMoveX * kMouseRotation); // the MouseRotation reduces the rotation speed
+
+			int mouseMoveY = myEngine->GetMouseMovementY();
+			playerCamera->RotateLocalX(mouseMoveY * kMouseRotation); // the MouseRotation reduces the rotation speed
+
+			float mouseMoveWheel = myEngine->GetMouseWheelMovement();
+			playerCamera->MoveLocalZ(mouseMoveWheel * kMouseWheelMove); // the MouseRotation reduces the rotation speed
+		}
+
+		// toggle mouse capture
+		if (myEngine->KeyHit(Key_Tab))
+		{
+			if (mouseCaptureActive)
+			{
+				myEngine->StopMouseCapture();
+				mouseCaptureActive = false;
+			}
+			else
+			{
+				myEngine->StartMouseCapture();
+				mouseCaptureActive = true;
+			}
+		}
+
+#endif // DEBUG
 
 		// Exit the game when running
 		if (myEngine->KeyHit(Exit))
