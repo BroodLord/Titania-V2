@@ -52,14 +52,14 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\SkyBox");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -105,22 +105,21 @@ void main()
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 	camBlockMesh = myEngine->LoadMesh("cube.x");
 
-	
+	floorMesh = myEngine->LoadMesh("floor.x");
+	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
+	floor->SetSkin("pavement.png");
 
 	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, 750.0f);
 	for (int i = 0; i < 20; i++)
 	{
-		Road[i] = camBlockMesh->CreateModel(2.0f, -132.0f, startingz);
+		Road[i] = camBlockMesh->CreateModel(2.0f, 0.0f, startingz);
 		Road[i]->SetSkin("background-1_0.png");
 		Road[i]->ScaleX(10.0f);
 		Road[i]->ScaleZ(10.0f);
 		startingz -= 100.0f;
+		Road[i]->AttachToParent(floor);
 	}
 	topDownCamBlock->Scale(0.01f);
-
-	floorMesh = myEngine->LoadMesh("floor.x");
-	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
-	floor->SetSkin("pavement.png");
 
 	powerUpMesh = myEngine->LoadMesh("megagatt.x");
 	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, 730.0f);
@@ -151,8 +150,9 @@ void main()
 		if (number == 1)
 		{
 			
-			towerNine = towerNineMesh->CreateModel(startingx, -140.0f, startingZ);
-			towerNine->ScaleY(0.6);
+			towerNine = towerNineMesh->CreateModel(startingx, 0.0f, startingZ);
+			towerNine->AttachToParent(floor);
+			towerNine->ScaleY(0.5);
 		}
 		if (number == 2)
 		{
@@ -160,8 +160,10 @@ void main()
 			{
 				startingx += 25;
 			}
-			towerTwo = towerTwoMesh->CreateModel(startingx, -140.0f, startingZ);
+			towerTwo = towerTwoMesh->CreateModel(startingx, 0.0f, startingZ);
+			towerTwo->AttachToParent(floor);
 			towerTwo->RotateLocalY(90);
+			towerTwo->ScaleY(0.8);
 		}
 		count++;
 		if (count != 6)
@@ -211,9 +213,9 @@ void main()
 		string kSpeedText = "Speed";
 
 		float playerShipSpeed = 50.0f * frameTime; // Player speed
+		float floorResert = floor->GetLocalZ();
 
 		//POWERUPS - DANNY LOOK AT THIS
-		placementPowerUp->RotateY(50.0f * frameTime);
 
 		if (currentPowerUpState == None)
 		{
@@ -245,6 +247,7 @@ void main()
 				currentPowerUpState = None;
 			}
 		}
+
 		if (moveCamTop != true && moveCamBehind != true)
 		{
 			if (barrelRollColdDown == false)
@@ -300,11 +303,11 @@ void main()
 
 		if (currentX <= -27.0f)
 		{
-			PlayerShip.playerShip->MoveX(50.0f * frameTime);
+			PlayerShip.playerShip->MoveX(playerShipSpeed);
 		}
 		if (currentX >= 27.0f)
 		{
-			PlayerShip.playerShip->MoveX(-50.0f * frameTime);
+			PlayerShip.playerShip->MoveX(-playerShipSpeed);
 		}
 
 
@@ -315,15 +318,22 @@ void main()
 			{
 				if (moveCamBehind != true)
 				{
+					floor->MoveLocalZ(25.0f * frameTime);
+					placementPowerUp->RotateY(50.0f * frameTime);
+					placementPowerUp->MoveZ(50.0f * frameTime);
+					if (floorResert >= 200)
+					{
+						floor->SetLocalZ(0.0f);
+					}
 					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 					{
 						if (myEngine->KeyHeld(MoveRight))
 						{
-							PlayerShip.playerShip->MoveX(-50.0f * frameTime);
+							PlayerShip.playerShip->MoveX(-playerShipSpeed);
 						}
 						if (myEngine->KeyHeld(MoveLeft))
 						{
-							PlayerShip.playerShip->MoveX(50.0f * frameTime);
+							PlayerShip.playerShip->MoveX(playerShipSpeed);
 						}
 					}
 				}
@@ -356,6 +366,13 @@ void main()
 				playerCamera->LookAt(topDownCamBlock);
 				if (moveCamTop != true)
 				{
+					floor->MoveLocalZ(25.0f * frameTime);
+					placementPowerUp->RotateY(50.0f * frameTime);
+					placementPowerUp->MoveZ(50.0f * frameTime);
+					if (floorResert >= 200)
+					{
+						floor->SetLocalZ(0.0f);
+					}
 					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 					{
 						if (myEngine->KeyHeld(MoveRight))
