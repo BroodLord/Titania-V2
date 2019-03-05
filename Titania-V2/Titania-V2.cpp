@@ -152,7 +152,7 @@ void main()
 			
 			towerNine = towerNineMesh->CreateModel(startingx, 0.0f, startingZ);
 			towerNine->AttachToParent(floor);
-			towerNine->ScaleY(0.5);
+			towerNine->ScaleY(0.4);
 		}
 		if (number == 2)
 		{
@@ -278,6 +278,7 @@ void main()
 						rollingTimer = 0.4f;
 						currentPlayerShipState = Normal;
 						barrelRollColdDown = true;
+						PlayerShip.playerShip->ResetOrientation();
 						//player invunerable
 					}
 				}
@@ -295,6 +296,7 @@ void main()
 						rollingTimer = 0.4f;
 						currentPlayerShipState = Normal;
 						barrelRollColdDown = true;
+						PlayerShip.playerShip->ResetOrientation();
 						//player invunerable
 					}
 				}
