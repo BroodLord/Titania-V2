@@ -13,18 +13,13 @@ struct particle
 	float moveVector[3];
 };
 
-struct playerShip
-{
-	IModel* playerShip;
-	const float PLAYERSHIPRADIUS = 2.0f;
 
-};
-playerShip PlayerShip;
 particle flameParticle;
 
 
 enum PowerUpState { None, Speed };
 enum PlayerShipState {Normal, RollingLeft, RollingRight};
+enum GameState { MainMenu, Play };
 PlayerShipState currentPlayerShipState;
 
 EKeyCode camSwitch = Key_1;
@@ -35,6 +30,7 @@ EKeyCode MoveLeft = Key_A;
 EKeyCode Exit = Key_Escape;
 EKeyCode RollRightKey = Key_E;
 EKeyCode RollLeftKey = Key_Q;
+EKeyCode kStartKey = Key_Return; //P key used to start the game
 
 const float PLAYERSHIPRADIUS = 2.0f;
 const float PLACEMENTPOWERUPRADIUS = 2.0f;
@@ -48,18 +44,18 @@ void main()
 {
 	// Create a 3D engine (using TLX engine here) and open a window for it
 	I3DEngine* myEngine = New3DEngine(kTLX);
-	myEngine->StartWindowed();
+	myEngine->StartWindowed(1280, 720);
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\SkyBox");
-	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
-	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
-	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
-	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -75,6 +71,7 @@ void main()
 	IMesh* flameMesh;
 
 	//** Models
+	IModel* playerShip;
 	IModel* flame;
 	IModel* floor;
 	IModel* topDownCamBlock;
@@ -91,7 +88,7 @@ void main()
 	float startingz = 802.0f;
 	float startingZ = -840.0f;
 	float startingx = 400.0f;
-	float countDown = 4.0f;
+	float countDown = 1.8f;
 	float currentX = 0.0f;
 	float barrelRollCountDown = 2.0f;
 	float powerUpTimer = 5.0f;
@@ -100,7 +97,10 @@ void main()
 	PowerUpState currentPowerUpState = None;
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
+	IFont* preGameFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
+	ISprite* backGround = myEngine->CreateSprite("background.jpg", 0.0f, 0.0f); //Simple box used as UI to make text stand out
+	
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 	camBlockMesh = myEngine->LoadMesh("cube.x");
@@ -126,7 +126,7 @@ void main()
 	placementPowerUp->Scale(15.0f);
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
-	PlayerShip.playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
+	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
 
 	playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 	playerCamera->RotateLocalX(90.0f);
@@ -195,6 +195,7 @@ void main()
 
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
+	GameState currentGameState = MainMenu;
 	cameraPos = topDown;
 
 
@@ -202,7 +203,7 @@ void main()
 	myEngine->Timer();
 	while (myEngine->IsRunning())
 	{
-		currentX = PlayerShip.playerShip->GetLocalX();
+		currentX = playerShip->GetLocalX();
 		float frameTime = myEngine->Timer();
 		// Draw the scene
 		myEngine->DrawScene();
@@ -216,111 +217,131 @@ void main()
 		float floorResert = floor->GetLocalZ();
 
 		//POWERUPS - DANNY LOOK AT THIS
+		stringstream preGameText;
 
-		if (currentPowerUpState == None)
+		string kPlayText = "Press Enter to Start";
+		string kQuitText = "Press Esc to Quit";
+
+		if (currentGameState == MainMenu)
 		{
-			powerUpStateText << kPowerUpStateText << kNoneText;
-			myFont->Draw(powerUpStateText.str(), 15.0f, 670.0f); //Game state text is set to go
-			powerUpStateText.str(""); // Clear myStream
-			ISprite* backdrop;
-				
-				
-			backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
+			playerCamera->LookAt(topDownCamBlock);
+			preGameText << kPlayText << "   " << kQuitText;
+			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f); //Game state text is set to go
+			preGameText.str(""); // Clear myStream
 		}
 
-		if (sphere2sphere(PlayerShip.playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+		if (myEngine->KeyHit(kStartKey))
 		{
-			currentPowerUpState = Speed;
+			currentGameState = Play;
+			myEngine->RemoveSprite(backGround);
 		}
 
-		if (currentPowerUpState == Speed)
+		if (currentGameState == Play)
 		{
-			powerUpStateText << kPowerUpStateText << kSpeedText;
-			myFont->Draw(powerUpStateText.str(), 10.0f, 670.0f); //Game state text is set to go
-			powerUpStateText.str(""); // Clear myStream
-
-			playerShipSpeed = 75.0f * frameTime;
-			placementPowerUp->MoveLocalY(-0.2f);
-			powerUpTimer -= frameTime;
-			if (powerUpTimer <= 0.0f)
+			if (currentPowerUpState == None)
 			{
-				currentPowerUpState = None;
+				powerUpStateText << kPowerUpStateText << kNoneText;
+				myFont->Draw(powerUpStateText.str(), 15.0f, 670.0f); //Game state text is set to go
+				powerUpStateText.str(""); // Clear myStream
+				ISprite* backdrop;
+
+
+				backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
 			}
-		}
 
-		if (moveCamTop != true && moveCamBehind != true)
-		{
-			if (barrelRollColdDown == false)
+			if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 			{
-				if (currentPlayerShipState == Normal)
-				{
-					if (myEngine->KeyHit(RollRightKey))
-					{
-						currentPlayerShipState = RollingRight;
-					}
+				currentPowerUpState = Speed;
+			}
 
-					if (myEngine->KeyHit(RollLeftKey))
-					{
-						currentPlayerShipState = RollingLeft;
-					}
-				}
+			if (currentPowerUpState == Speed)
+			{
+				powerUpStateText << kPowerUpStateText << kSpeedText;
+				myFont->Draw(powerUpStateText.str(), 10.0f, 670.0f); //Game state text is set to go
+				powerUpStateText.str(""); // Clear myStream
 
-				if (currentPlayerShipState == RollingRight)
+				playerShipSpeed = 75.0f * frameTime;
+				placementPowerUp->MoveLocalY(-0.2f);
+				powerUpTimer -= frameTime;
+				if (powerUpTimer <= 0.0f)
 				{
-					rollingTimer -= frameTime;
-					if (rollingTimer > 0)
-					{
-						PlayerShip.playerShip->RotateZ(900.0f * frameTime);
-						PlayerShip.playerShip->MoveX(-50.0f * frameTime);
-					}
-					if (rollingTimer <= 0)
-					{
-						rollingTimer = 0.4f;
-						currentPlayerShipState = Normal;
-						barrelRollColdDown = true;
-						PlayerShip.playerShip->ResetOrientation();
-						//player invunerable
-					}
-				}
-
-				if (currentPlayerShipState == RollingLeft)
-				{
-					rollingTimer -= frameTime;
-					if (rollingTimer > 0)
-					{
-						PlayerShip.playerShip->RotateZ(-900.0f * frameTime);
-						PlayerShip.playerShip->MoveX(50.0f * frameTime);
-					}
-					if (rollingTimer <= 0)
-					{
-						rollingTimer = 0.4f;
-						currentPlayerShipState = Normal;
-						barrelRollColdDown = true;
-						PlayerShip.playerShip->ResetOrientation();
-						//player invunerable
-					}
+					currentPowerUpState = None;
 				}
 			}
-		}
 
-		if (currentX <= -27.0f)
-		{
-			PlayerShip.playerShip->MoveX(playerShipSpeed);
-		}
-		if (currentX >= 27.0f)
-		{
-			PlayerShip.playerShip->MoveX(-playerShipSpeed);
-		}
+			if (moveCamTop != true && moveCamBehind != true)
+			{
+				if (barrelRollColdDown == false)
+				{
+					if (currentPlayerShipState == Normal)
+					{
+						if (myEngine->KeyHit(RollRightKey))
+						{
+							currentPlayerShipState = RollingRight;
+						}
+
+						if (myEngine->KeyHit(RollLeftKey))
+						{
+							currentPlayerShipState = RollingLeft;
+						}
+					}
+
+					if (currentPlayerShipState == RollingRight)
+					{
+						rollingTimer -= frameTime;
+						if (rollingTimer > 0)
+						{
+							playerShip->RotateZ(900.0f * frameTime);
+							playerShip->MoveX(-50.0f * frameTime);
+						}
+						if (rollingTimer <= 0)
+						{
+							rollingTimer = 0.4f;
+							currentPlayerShipState = Normal;
+							barrelRollColdDown = true;
+							playerShip->ResetOrientation();
+							//player invunerable
+						}
+					}
+
+					if (currentPlayerShipState == RollingLeft)
+					{
+						rollingTimer -= frameTime;
+						if (rollingTimer > 0)
+						{
+							playerShip->RotateZ(-900.0f * frameTime);
+							playerShip->MoveX(50.0f * frameTime);
+						}
+						if (rollingTimer <= 0)
+						{
+							rollingTimer = 0.4f;
+							currentPlayerShipState = Normal;
+							barrelRollColdDown = true;
+							playerShip->ResetOrientation();
+							//player invunerable
+						}
+					}
+				}
+			}
+
+			if (currentX <= -27.0f)
+			{
+				playerShip->MoveX(playerShipSpeed);
+			}
+			if (currentX >= 27.0f)
+			{
+				playerShip->MoveX(-playerShipSpeed);
+			}
 
 
-		/* Camera Switching */
+			/* Camera Switching */
 			switch (cameraPos)
 			{
 			case behind:
 			{
 				if (moveCamBehind != true)
 				{
-					floor->MoveLocalZ(25.0f * frameTime);
+					floor->MoveLocalZ(50.0f * frameTime);
 					placementPowerUp->RotateY(50.0f * frameTime);
 					placementPowerUp->MoveZ(50.0f * frameTime);
 					if (floorResert >= 200)
@@ -331,11 +352,11 @@ void main()
 					{
 						if (myEngine->KeyHeld(MoveRight))
 						{
-							PlayerShip.playerShip->MoveX(-playerShipSpeed);
+							playerShip->MoveX(-playerShipSpeed);
 						}
 						if (myEngine->KeyHeld(MoveLeft))
 						{
-							PlayerShip.playerShip->MoveX(playerShipSpeed);
+							playerShip->MoveX(playerShipSpeed);
 						}
 					}
 				}
@@ -344,19 +365,19 @@ void main()
 					if (myEngine->KeyHit(camSwitch))
 					{
 						moveCamBehind = true;
-						playerCamera->SetPosition(0.0f, -20.0f, 815.0f);
+						playerCamera->SetPosition(0.0f, -20.0f, 825.0f);
 					}
 				}
 				if (moveCamBehind == true)
 				{
 					playerCamera->LookAt(topDownCamBlock);
 					countDown -= frameTime;
-					playerCamera->MoveLocalY(21.0 * frameTime);
+					playerCamera->MoveLocalY(50.0 * frameTime);
 					playerCamera->MoveLocalZ(-5.0 * frameTime);
 					if (countDown <= 0)
 					{
 						moveCamBehind = false;
-						countDown = 4;
+						countDown = 1.8;
 						playerCamera->DetachFromParent();
 						cameraPos = topDown;
 					}
@@ -368,7 +389,7 @@ void main()
 				playerCamera->LookAt(topDownCamBlock);
 				if (moveCamTop != true)
 				{
-					floor->MoveLocalZ(25.0f * frameTime);
+					floor->MoveLocalZ(50.0f * frameTime);
 					placementPowerUp->RotateY(50.0f * frameTime);
 					placementPowerUp->MoveZ(50.0f * frameTime);
 					if (floorResert >= 200)
@@ -379,11 +400,11 @@ void main()
 					{
 						if (myEngine->KeyHeld(MoveRight))
 						{
-							PlayerShip.playerShip->MoveX(-playerShipSpeed);
+							playerShip->MoveX(-playerShipSpeed);
 						}
 						if (myEngine->KeyHeld(MoveLeft))
 						{
-							PlayerShip.playerShip->MoveX(playerShipSpeed);
+							playerShip->MoveX(playerShipSpeed);
 						}
 					}
 				}
@@ -399,27 +420,30 @@ void main()
 				if (moveCamTop == true)
 				{
 					countDown -= frameTime;
-					playerCamera->MoveLocalY(-21.0 * frameTime);
+					playerCamera->MoveLocalY(-50.0 * frameTime);
 					playerCamera->MoveLocalZ(5.0 * frameTime);
 					if (countDown <= 0)
 					{
 						moveCamTop = false;
-						countDown = 4;
+						countDown = 1.8;
 						cameraPos = behind;
 					}
 				}
 				break;
 			}
 			}
-		if (barrelRollColdDown == true)
-		{
-			barrelRollCountDown -= frameTime;
-			if (barrelRollCountDown <= 0)
+			if (barrelRollColdDown == true)
 			{
-				barrelRollColdDown = false;
-				barrelRollCountDown = 2.0f;
+				barrelRollCountDown -= frameTime;
+				if (barrelRollCountDown <= 0)
+				{
+					barrelRollColdDown = false;
+					barrelRollCountDown = 2.0f;
+				}
 			}
 		}
+
+		
 
 
 
