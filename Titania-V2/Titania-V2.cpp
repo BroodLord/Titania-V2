@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "Defs.h"
+#include "Hud.h"
 using namespace tle;
 
 struct particle
@@ -12,10 +13,7 @@ struct particle
 	IModel* flame;
 	float moveVector[3];
 };
-
-
 particle flameParticle;
-
 
 enum PowerUpState { None, Speed };
 enum PlayerShipState {Normal, RollingLeft, RollingRight};
@@ -48,14 +46,15 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder(".\\Media");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\SkyBox");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
+	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -96,9 +95,17 @@ void main()
 
 	PowerUpState currentPowerUpState = None;
 
+	//**** Hud Things ****
+	AmountLives Health = ThreeLives;
+	RemoveLives loseHealth = Pause;
+	
+
+	IFont* Lives = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
+
+
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	IFont* preGameFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
-	ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
+	//ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
 	ISprite* backGround = myEngine->CreateSprite("background.jpg", 0.0f, 0.0f); //Simple box used as UI to make text stand out
 	
 
@@ -234,6 +241,7 @@ void main()
 		{
 			currentGameState = Play;
 			myEngine->RemoveSprite(backGround);
+			fullHealth(myEngine, Health);
 		}
 
 		if (currentGameState == Play)
@@ -322,6 +330,21 @@ void main()
 						}
 					}
 				}
+
+				//**** Health ****
+				Lives->Draw("Lives:", 20.0f, 13.0f, kCyan);
+
+				if (myEngine->KeyHit(Key_L))
+				{
+					loseHealth = RemoveHeart;
+				}
+
+				if (loseHealth == RemoveHeart)
+				{
+					removeHeart(myEngine, Health);
+					loseHealth = Pause;
+				}
+
 			}
 
 			if (currentX <= -27.0f)
@@ -444,6 +467,8 @@ void main()
 		}
 
 		
+
+	
 
 
 

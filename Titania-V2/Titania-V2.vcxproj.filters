@@ -7,6 +7,9 @@
     <ClCompile Include="Titania-V2.cpp">
       <Filter>CPPS</Filter>
     </ClCompile>
+    <ClCompile Include="Hud.cpp">
+      <Filter>CPPS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -21,6 +24,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Defs.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Hud.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
