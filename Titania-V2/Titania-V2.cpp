@@ -13,7 +13,14 @@ struct particle
 	IModel* flame;
 	float moveVector[3];
 };
-particle flameParticle;
+
+struct BulletData
+{
+	IModel* model;
+	float xVel, yVel, zVel;
+	float life;
+};
+
 
 enum PowerUpState { None, Speed };
 enum PlayerShipState {Normal, RollingLeft, RollingRight};
@@ -32,7 +39,9 @@ EKeyCode kStartKey = Key_Return; //P key used to start the game
 
 const float PLAYERSHIPRADIUS = 2.0f;
 const float PLACEMENTPOWERUPRADIUS = 2.0f;
-
+const int maxBullets = 20;
+const float bulletSpeed = 6.0f;
+const float bulletSize = 0.008f;
 const float kCameraMove = 0.10f; // distance for the direction keys x and z axis
 const float kMouseWheelMove = 10.0f; // distance for wheel movement z axis
 const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the camera
@@ -42,19 +51,19 @@ void main()
 {
 	// Create a 3D engine (using TLX engine here) and open a window for it
 	I3DEngine* myEngine = New3DEngine(kTLX);
-	myEngine->StartWindowed(1280, 720);
+	myEngine->StartFullscreen(1920, 1080);
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
 	myEngine->AddMediaFolder(".\\Media");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\SkyBox");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
+	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -68,6 +77,7 @@ void main()
 	IMesh* towerNineMesh;
 	IMesh* powerUpMesh;
 	IMesh* flameMesh;
+	IMesh* bulletMesh;
 
 	//** Models
 	IModel* playerShip;
@@ -80,6 +90,11 @@ void main()
 	IModel* Road[25];
 	IModel* placementPowerUp;
 
+	int numBullets = 0;
+	BulletData bullets[maxBullets];
+
+	float matrix[16];
+
 	bool moveCamTop = false;
 	bool barrelRollColdDown = false;
 	bool moveCamBehind = false;
@@ -91,7 +106,9 @@ void main()
 	float currentX = 0.0f;
 	float barrelRollCountDown = 2.0f;
 	float powerUpTimer = 5.0f;
-	float rollingTimer = 0.4f;
+	float rollingTimer = 0.2f;
+
+	bool gameOver = false;
 
 	PowerUpState currentPowerUpState = None;
 
@@ -102,14 +119,16 @@ void main()
 
 	IFont* Lives = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
 
+	ISprite* backGround = myEngine->CreateSprite("background.jpg", 0.0f, 0.0f); //Simple box used as UI to make text stand out
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
+	IFont* deathFont = myEngine->LoadFont("Arial", 70); //Loading in a font to use in text strings
 	IFont* preGameFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	//ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
-	ISprite* backGround = myEngine->CreateSprite("background.jpg", 0.0f, 0.0f); //Simple box used as UI to make text stand out
 	
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
+
 	camBlockMesh = myEngine->LoadMesh("cube.x");
 
 	floorMesh = myEngine->LoadMesh("floor.x");
@@ -197,6 +216,8 @@ void main()
 
 	}
 
+	bulletMesh = myEngine->LoadMesh("Flare.x");
+
 	skyBoxMesh = myEngine->LoadMesh("Skybox 01.x");
 	skyBox = skyBoxMesh->CreateModel(0.0f, -1050.0f, 0.0f);
 
@@ -231,30 +252,111 @@ void main()
 
 		if (currentGameState == MainMenu)
 		{
+			backGround->SetPosition(0, 0);
 			playerCamera->LookAt(topDownCamBlock);
 			preGameText << kPlayText << "   " << kQuitText;
 			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f); //Game state text is set to go
 			preGameText.str(""); // Clear myStream
+			if (myEngine->KeyHit(kStartKey))
+			{
+				backGround->SetPosition(100000, 100000);
+				currentGameState = Play;
+				fullHealth(myEngine, Health);
+			}
 		}
 
-		if (myEngine->KeyHit(kStartKey))
+		if (currentGameState == Play && gameOver == false)
 		{
-			currentGameState = Play;
-			myEngine->RemoveSprite(backGround);
-			fullHealth(myEngine, Health);
-		}
+		
+			Lives->Draw("Lives:", 20.0f, 13.0f, kCyan);
 
-		if (currentGameState == Play)
-		{
+			if (Health == Dead)
+			{
+				gameOver = true;
+			}
+			if (moveCamTop != true && moveCamBehind != true)
+			{
+				for (int i = 0; i < numBullets; i++)
+				{
+					// Move bullet
+					bullets[i].model->Move(-bullets[i].xVel * frameTime, -bullets[i].yVel * frameTime,
+						-bullets[i].zVel * frameTime * 5.0f);
+
+					// Decrease life and see if bullet is dead
+					bullets[i].life -= frameTime;
+					if (bullets[i].life <= 0)
+					{
+						// Destroy bullet
+						bulletMesh->RemoveModel(bullets[i].model);
+
+						// Copy last bullet into this dead slot to keep all live bullets in one block
+						bullets[i].model = bullets[numBullets - 1].model;
+						bullets[i].xVel = bullets[numBullets - 1].xVel;
+						bullets[i].yVel = bullets[numBullets - 1].yVel;
+						bullets[i].zVel = bullets[numBullets - 1].zVel;
+						bullets[i].life = bullets[numBullets - 1].life;
+
+						// Decrease number of bullets
+						numBullets--;
+					}
+				}
+
+				if ((myEngine->KeyHit(Key_Space) || myEngine->KeyHit(Mouse_LButton)) &&
+					numBullets < maxBullets)
+				{
+					//*******************************
+					// Play shooting sound here
+					//*******************************
+
+					// Create bullet 1
+					float x = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
+					float y = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
+					float z = playerShip->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
+					bullets[numBullets].model = bulletMesh->CreateModel(x, y, z - 5.0f);
+					bullets[numBullets].model->Scale(bulletSize * 75.0f);
+
+					// Get ship direction from matrix (x and z axes)
+					playerShip->GetMatrix(matrix);
+					float bulletSpeedX = playerShipSpeed;
+					float bulletSpeedZ = playerShipSpeed + bulletSpeed;
+					bullets[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
+					bullets[numBullets].yVel = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
+					bullets[numBullets].zVel = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
+
+					// Length of bullet's life measured in seconds
+					bullets[numBullets].life = 3.0f;
+					numBullets++;
+
+					// Create bullets in pairs - enough space for one more bullet?
+					if (numBullets < maxBullets)
+					{
+						// Create bullet 2
+						x = playerShip->GetX() + 0.015f * matrix[0] + 0.01f * matrix[8];
+						y = playerShip->GetY() + 0.015f * matrix[1] + 0.01f * matrix[9];
+						z = playerShip->GetZ() + 0.015f * matrix[2] + 0.01f * matrix[10];
+						bullets[numBullets].model = bulletMesh->CreateModel(x, y, z);
+						bullets[numBullets].model->Scale(bulletSize);
+
+						// Get ship direction from matrix (x and z axes)
+						bullets[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
+						bullets[numBullets].yVel = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
+						bullets[numBullets].zVel = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
+
+						// Length of bullet's life measured in seconds
+						bullets[numBullets].life = 1.5f;
+						numBullets++;
+					}
+				}
+			}
 			if (currentPowerUpState == None)
 			{
-				powerUpStateText << kPowerUpStateText << kNoneText;
-				myFont->Draw(powerUpStateText.str(), 15.0f, 670.0f); //Game state text is set to go
+				powerUpStateText << kPowerUpStateText << kNoneText << "    Bullets: " << numBullets;
+				myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
 				ISprite* backdrop;
 
 
-				backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
+				backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 65.0f);
 			}
 
 			if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
@@ -264,8 +366,8 @@ void main()
 
 			if (currentPowerUpState == Speed)
 			{
-				powerUpStateText << kPowerUpStateText << kSpeedText;
-				myFont->Draw(powerUpStateText.str(), 10.0f, 670.0f); //Game state text is set to go
+				powerUpStateText << kPowerUpStateText << kSpeedText << "   Bullets: " << numBullets;;
+				myFont->Draw(powerUpStateText.str(), 10.0f, 70.0f); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
 
 				playerShipSpeed = 75.0f * frameTime;
@@ -274,6 +376,7 @@ void main()
 				if (powerUpTimer <= 0.0f)
 				{
 					currentPowerUpState = None;
+					powerUpTimer = 5.0f;
 				}
 			}
 
@@ -300,11 +403,11 @@ void main()
 						if (rollingTimer > 0)
 						{
 							playerShip->RotateZ(900.0f * frameTime);
-							playerShip->MoveX(-50.0f * frameTime);
+							playerShip->MoveX(-80.0f * frameTime);
 						}
 						if (rollingTimer <= 0)
 						{
-							rollingTimer = 0.4f;
+							rollingTimer = 0.2f;
 							currentPlayerShipState = Normal;
 							barrelRollColdDown = true;
 							playerShip->ResetOrientation();
@@ -318,11 +421,11 @@ void main()
 						if (rollingTimer > 0)
 						{
 							playerShip->RotateZ(-900.0f * frameTime);
-							playerShip->MoveX(50.0f * frameTime);
+							playerShip->MoveX(80.0f * frameTime);
 						}
 						if (rollingTimer <= 0)
 						{
-							rollingTimer = 0.4f;
+							rollingTimer = 0.2f;
 							currentPlayerShipState = Normal;
 							barrelRollColdDown = true;
 							playerShip->ResetOrientation();
@@ -332,7 +435,6 @@ void main()
 				}
 
 				//**** Health ****
-				Lives->Draw("Lives:", 20.0f, 13.0f, kCyan);
 
 				if (myEngine->KeyHit(Key_L))
 				{
@@ -364,7 +466,7 @@ void main()
 			{
 				if (moveCamBehind != true)
 				{
-					floor->MoveLocalZ(50.0f * frameTime);
+					floor->MoveLocalZ(80.0f * frameTime);
 					placementPowerUp->RotateY(50.0f * frameTime);
 					placementPowerUp->MoveZ(50.0f * frameTime);
 					if (floorResert >= 200)
@@ -412,7 +514,7 @@ void main()
 				playerCamera->LookAt(topDownCamBlock);
 				if (moveCamTop != true)
 				{
-					floor->MoveLocalZ(50.0f * frameTime);
+					floor->MoveLocalZ(80.0f * frameTime);
 					placementPowerUp->RotateY(50.0f * frameTime);
 					placementPowerUp->MoveZ(50.0f * frameTime);
 					if (floorResert >= 200)
@@ -464,6 +566,18 @@ void main()
 					barrelRollCountDown = 2.0f;
 				}
 			}
+		}
+		if (gameOver == true && Health == Dead)
+		{
+				deathFont->Draw("Game Over", 800.0f, 500.0f, kBlack);
+				if (myEngine->KeyHit(Key_Return))
+				{
+					placementPowerUp->SetPosition(0.0f, -30.0f, 730.0f);
+					currentGameState = MainMenu;
+					Health = ThreeLives;
+					gameOver = false;
+
+				}
 		}
 
 		
