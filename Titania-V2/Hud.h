@@ -7,4 +7,5 @@ extern enum RemoveLives { RemoveHeart, Pause };
 
 void fullHealth(I3DEngine*& myEngine, AmountLives Health);
 void removeHeart(I3DEngine*& myEngine, AmountLives& Health);
-
+void speedPowerUP(I3DEngine*& myEngine);
+void NoPowerUP(I3DEngine*& myEngine);

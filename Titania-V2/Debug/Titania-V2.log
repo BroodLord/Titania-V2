@@ -1,15 +1,14 @@
 ﻿  Titania-V2.cpp
-d:\kclifford1\desktop\titania-v2\titania-v2\hud.h(5): warning C4091: 'extern ': ignored on left of 'AmountLives' when no variable is declared
-d:\kclifford1\desktop\titania-v2\titania-v2\hud.h(6): warning C4091: 'extern ': ignored on left of 'RemoveLives' when no variable is declared
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(236): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(252): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(268): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(335): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(398): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(399): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(446): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(447): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(70): warning C4101: 'flameMesh': unreferenced local variable
-d:\kclifford1\desktop\titania-v2\titania-v2\titania-v2.cpp(74): warning C4101: 'flame': unreferenced local variable
-  Titania-V2.vcxproj -> D:\KClifford1\Desktop\Titania-V2\Titania-V2\\Titania-V2Debug.exe
-  Titania-V2.vcxproj -> D:\KClifford1\Desktop\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)
+d:\kclifford1\documents\github\titania-v2\titania-v2\hud.h(5): warning C4091: 'extern ': ignored on left of 'AmountLives' when no variable is declared
+d:\kclifford1\documents\github\titania-v2\titania-v2\hud.h(6): warning C4091: 'extern ': ignored on left of 'RemoveLives' when no variable is declared
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(230): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(329): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(392): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(393): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(440): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(441): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(62): warning C4101: 'flameMesh': unreferenced local variable
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(66): warning C4101: 'flame': unreferenced local variable
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(248): warning C4101: 'backdrop': unreferenced local variable
+  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
+  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)

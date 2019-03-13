@@ -45,16 +45,8 @@ void main()
 	myEngine->StartWindowed(1280, 720);
 
 	// Add default folder for meshes and other media
-	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
+	//myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
 	myEngine->AddMediaFolder(".\\Media");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\SkyBox");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
-	myEngine->AddMediaFolder("D:\\KClifford1\\Desktop\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
@@ -214,11 +206,13 @@ void main()
 		float frameTime = myEngine->Timer();
 		// Draw the scene
 		myEngine->DrawScene();
+		NoPowerUP(myEngine);
+		//speedPowerUP(myEngine);
 
-		stringstream powerUpStateText; //Text altered to present gamestate
-		string kPowerUpStateText = "PowerUp: ";
-		string kNoneText = "None";
-		string kSpeedText = "Speed";
+		//stringstream powerUpStateText; //Text altered to present gamestate
+		//string kPowerUpStateText = "PowerUp: ";
+		//string kNoneText = "None";
+		//string kSpeedText = "Speed";
 
 		float playerShipSpeed = 50.0f * frameTime; // Player speed
 		float floorResert = floor->GetLocalZ();
@@ -248,13 +242,13 @@ void main()
 		{
 			if (currentPowerUpState == None)
 			{
-				powerUpStateText << kPowerUpStateText << kNoneText;
-				myFont->Draw(powerUpStateText.str(), 15.0f, 670.0f); //Game state text is set to go
-				powerUpStateText.str(""); // Clear myStream
+				//powerUpStateText << kPowerUpStateText << kNoneText;
+				//myFont->Draw(powerUpStateText.str(), 15.0f, 670.0f); //Game state text is set to go
+				//powerUpStateText.str(""); // Clear myStream
 				ISprite* backdrop;
 
 
-				backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
+				//backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 657.0f);
 			}
 
 			if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
@@ -264,9 +258,9 @@ void main()
 
 			if (currentPowerUpState == Speed)
 			{
-				powerUpStateText << kPowerUpStateText << kSpeedText;
-				myFont->Draw(powerUpStateText.str(), 10.0f, 670.0f); //Game state text is set to go
-				powerUpStateText.str(""); // Clear myStream
+				//powerUpStateText << kPowerUpStateText << kSpeedText;
+				//myFont->Draw(powerUpStateText.str(), 10.0f, 670.0f); //Game state text is set to go
+				//powerUpStateText.str(""); // Clear myStream
 
 				playerShipSpeed = 75.0f * frameTime;
 				placementPowerUp->MoveLocalY(-0.2f);
