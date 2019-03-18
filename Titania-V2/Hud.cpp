@@ -55,7 +55,7 @@ void NoPowerUP(I3DEngine*& myEngine)
 	NoshieldPup = myEngine->CreateSprite("NoShield.png", 145.0f, 600.0f, 0.9f);
 	
 
-	//	speedPup = myEngine->CreateSprite("Speed.png", 15.0f, 600.0f);
-	//shieldPup = myEngine->CreateSprite("test.png", 145.0f, 600.0f);
+		speedPup = myEngine->CreateSprite("Speed.png", 15.0f, 600.0f);
+	shieldPup = myEngine->CreateSprite("test.png", 145.0f, 600.0f);
 	//speedPup->s
 }
