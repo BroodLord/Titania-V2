@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
+#include <SFML/Audio.hpp>
 #include <cmath>
 #include "Defs.h"
 #include "Hud.h"
@@ -21,9 +22,18 @@ struct BulletData
 	float life;
 };
 
+sf::SoundBuffer shootingBuffer;
+sf::Sound shootingSound;
+sf::SoundBuffer mainMenuBuffer;
+sf::Sound menuMusic;
+sf::SoundBuffer battleBuffer;
+sf::Sound battleMusic;
+sf::SoundBuffer powerUpBuffer;
+sf::Sound powerUpMusic;
+
 
 enum PowerUpState { None, Speed };
-enum PlayerShipState {Normal, RollingLeft, RollingRight};
+enum PlayerShipState { Normal, RollingLeft, RollingRight };
 enum GameState { MainMenu, Play };
 PlayerShipState currentPlayerShipState;
 
@@ -39,7 +49,7 @@ EKeyCode kStartKey = Key_Return; //P key used to start the game
 
 const float PLAYERSHIPRADIUS = 2.0f;
 const float PLACEMENTPOWERUPRADIUS = 2.0f;
-const int maxBullets = 20;
+const int maxBullets = 30;
 const float bulletSpeed = 6.0f;
 const float bulletSize = 0.008f;
 const float kCameraMove = 0.10f; // distance for the direction keys x and z axis
@@ -100,6 +110,8 @@ void main()
 	float powerUpTimer = 5.0f;
 	float rollingTimer = 0.2f;
 
+
+
 	bool gameOver = false;
 
 	PowerUpState currentPowerUpState = None;
@@ -107,7 +119,25 @@ void main()
 	//**** Hud Things ****
 	AmountLives Health = ThreeLives;
 	RemoveLives loseHealth = Pause;
-	
+
+	mainMenuBuffer.loadFromFile("Sound Affects\\mainMusic.wav");
+	menuMusic.setBuffer(mainMenuBuffer);
+	menuMusic.setVolume(30.0f);
+	menuMusic.setLoop(true);
+
+	battleBuffer.loadFromFile("Sound Affects\\Night.ogg");
+	battleMusic.setBuffer(battleBuffer);
+	battleMusic.setVolume(30.0f);
+	battleMusic.setLoop(true);
+
+	shootingBuffer.loadFromFile("Sound Affects\\shoot.wav");
+	shootingSound.setBuffer(shootingBuffer);
+	shootingSound.setPitch(0.5);
+	shootingSound.setVolume(20.0f);
+
+	powerUpBuffer.loadFromFile("Sound Affects\\Power.wav");
+	powerUpMusic.setBuffer(powerUpBuffer);
+	powerUpMusic.setVolume(50.0f);
 
 	IFont* Lives = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
 
@@ -117,7 +147,7 @@ void main()
 	IFont* deathFont = myEngine->LoadFont("Arial", 70); //Loading in a font to use in text strings
 	IFont* preGameFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	//ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
-	
+
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 
@@ -140,7 +170,7 @@ void main()
 	topDownCamBlock->Scale(0.01f);
 
 	powerUpMesh = myEngine->LoadMesh("megagatt.x");
-	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, 730.0f);
+	placementPowerUp = powerUpMesh->CreateModel(0.0f, -30.0f, 600.0f);
 	placementPowerUp->Scale(15.0f);
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
@@ -167,7 +197,7 @@ void main()
 		}
 		if (number == 1)
 		{
-			
+
 			towerNine = towerNineMesh->CreateModel(startingx, 0.0f, startingZ);
 			towerNine->AttachToParent(floor);
 			towerNine->ScaleY(0.4);
@@ -242,12 +272,19 @@ void main()
 		string kPlayText = "Press Enter to Start";
 		string kQuitText = "Press Esc to Quit";
 
+
 		if (currentGameState == MainMenu)
 		{
+			battleMusic.stop();
+			if (menuMusic.getStatus() == menuMusic.Stopped)
+			{
+				menuMusic.play();
+			}
+			menuMusic.setLoop(true);
 			backGround->SetPosition(0, 0);
 			playerCamera->LookAt(topDownCamBlock);
 			preGameText << kPlayText << "   " << kQuitText;
-			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f); //Game state text is set to go
+			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f, kWhite); //Game state text is set to go
 			preGameText.str(""); // Clear myStream
 			if (myEngine->KeyHit(kStartKey))
 			{
@@ -259,7 +296,12 @@ void main()
 
 		if (currentGameState == Play && gameOver == false)
 		{
-		
+			menuMusic.stop();
+			if (battleMusic.getStatus() == battleMusic.Stopped)
+			{
+				battleMusic.play();
+			}
+
 			Lives->Draw("Lives:", 20.0f, 13.0f, kCyan);
 
 			if (Health == Dead)
@@ -273,6 +315,7 @@ void main()
 					// Move bullet
 					bullets[i].model->Move(-bullets[i].xVel * frameTime, -bullets[i].yVel * frameTime,
 						-bullets[i].zVel * frameTime * 5.0f);
+					bullets[i].model->RotateZ(500.0f * frameTime);
 
 					// Decrease life and see if bullet is dead
 					bullets[i].life -= frameTime;
@@ -296,6 +339,10 @@ void main()
 				if ((myEngine->KeyHit(Key_Space) || myEngine->KeyHit(Mouse_LButton)) &&
 					numBullets < maxBullets)
 				{
+					//if (shootingSound.getStatus() == shootingSound.Stopped)
+					//{
+					shootingSound.play();
+					//}
 					//*******************************
 					// Play shooting sound here
 					//*******************************
@@ -317,7 +364,9 @@ void main()
 
 					// Length of bullet's life measured in seconds
 					bullets[numBullets].life = 3.0f;
-					numBullets++;
+					++numBullets;
+
+
 
 					// Create bullets in pairs - enough space for one more bullet?
 					if (numBullets < maxBullets)
@@ -326,8 +375,10 @@ void main()
 						x = playerShip->GetX() + 0.015f * matrix[0] + 0.01f * matrix[8];
 						y = playerShip->GetY() + 0.015f * matrix[1] + 0.01f * matrix[9];
 						z = playerShip->GetZ() + 0.015f * matrix[2] + 0.01f * matrix[10];
+
 						bullets[numBullets].model = bulletMesh->CreateModel(x, y, z);
 						bullets[numBullets].model->Scale(bulletSize);
+
 
 						// Get ship direction from matrix (x and z axes)
 						bullets[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
@@ -342,7 +393,8 @@ void main()
 			}
 			if (currentPowerUpState == None)
 			{
-				powerUpStateText << kPowerUpStateText << kNoneText << "    Bullets: " << numBullets;
+				powerUpMusic.stop();
+				powerUpStateText << kPowerUpStateText << kNoneText << "    Bullets: " << numBullets / 2;
 				myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
 				ISprite* backdrop;
@@ -354,22 +406,24 @@ void main()
 			if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 			{
 				currentPowerUpState = Speed;
+				powerUpMusic.play();
 			}
 
 			if (currentPowerUpState == Speed)
 			{
-				powerUpStateText << kPowerUpStateText << kSpeedText << "   Bullets: " << numBullets;;
+				powerUpStateText << kPowerUpStateText << kSpeedText << "   Bullets: " << numBullets / 2;
 				myFont->Draw(powerUpStateText.str(), 10.0f, 70.0f); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
 
 				playerShipSpeed = 75.0f * frameTime;
-				placementPowerUp->MoveLocalY(-0.2f);
+				placementPowerUp->MoveLocalY(50.0f);
 				powerUpTimer -= frameTime;
 				if (powerUpTimer <= 0.0f)
 				{
 					currentPowerUpState = None;
 					powerUpTimer = 5.0f;
 				}
+
 			}
 
 			if (moveCamTop != true && moveCamBehind != true)
@@ -460,7 +514,7 @@ void main()
 				{
 					floor->MoveLocalZ(80.0f * frameTime);
 					placementPowerUp->RotateY(50.0f * frameTime);
-					placementPowerUp->MoveZ(50.0f * frameTime);
+					placementPowerUp->MoveLocalZ(50.0f * frameTime);
 					if (floorResert >= 200)
 					{
 						floor->SetLocalZ(0.0f);
@@ -561,20 +615,20 @@ void main()
 		}
 		if (gameOver == true && Health == Dead)
 		{
-				deathFont->Draw("Game Over", 800.0f, 500.0f, kBlack);
-				if (myEngine->KeyHit(Key_Return))
-				{
-					placementPowerUp->SetPosition(0.0f, -30.0f, 730.0f);
-					currentGameState = MainMenu;
-					Health = ThreeLives;
-					gameOver = false;
+			deathFont->Draw("Game Over", 800.0f, 500.0f, kBlack);
+			if (myEngine->KeyHit(Key_Return))
+			{
+				placementPowerUp->SetPosition(0.0f, -30.0f, 730.0f);
+				currentGameState = MainMenu;
+				Health = ThreeLives;
+				gameOver = false;
 
-				}
+			}
 		}
 
-		
 
-	
+
+
 
 
 

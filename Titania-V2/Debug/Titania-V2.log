@@ -1,2 +1,16 @@
-﻿  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2\\Titania-V2Debug.exe
-  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)
+﻿  Titania-V2.cpp
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\hud.h(5): warning C4091: 'extern ': ignored on left of 'AmountLives' when no variable is declared
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\hud.h(6): warning C4091: 'extern ': ignored on left of 'RemoveLives' when no variable is declared
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(287): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(305): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(398): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(415): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(546): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(547): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(594): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(595): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(618): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(81): warning C4101: 'flameMesh': unreferenced local variable
+d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(86): warning C4101: 'flame': unreferenced local variable
+  Titania-V2.vcxproj -> D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
+  Titania-V2.vcxproj -> D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)
