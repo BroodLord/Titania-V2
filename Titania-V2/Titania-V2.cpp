@@ -55,15 +55,7 @@ void main()
 
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
-	myEngine->AddMediaFolder(".\\Media");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Vehicles\\Sci-Fi Gunships\\Sci-Fi_Gunships_collection");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\SciFi");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\SkyBox");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper04");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper02");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper09");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Architecture\\Modern\\skyscraper13");
-	myEngine->AddMediaFolder("D:\\DKavanagh2\\Documents\\GitHub\\Titania-V2\\Assets\\Model Packs\\Weapons\\Scifi\\megagatt");
+	myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Media");
 
 	/**** Set up your scene here ****/
 	ICamera* playerCamera = myEngine->CreateCamera(kManual);
