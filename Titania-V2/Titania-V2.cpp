@@ -36,7 +36,8 @@ struct HeavyEnemyShip
 	int Health = 6;
 };
 
-int spawnArray[30] = {1,3,2,1,2,3,3,1,2,1,3,2,2,1,3,2,1,1,3,2,3,2,1,2,3,1,2,3,2,1,};
+int spawnArray[30] = { 1,3,2,1,2,3,3,1,2,1,3,2,2,1,3,2,1,1,3,2,3,2,1,2,3,1,2,3,2,1, };
+int spawnCounter = 0;
 
 sf::SoundBuffer shootingBuffer;
 sf::Sound shootingSound;
@@ -52,8 +53,10 @@ sf::Sound powerDownMusic;
 
 enum PowerUpState { None, Speed };
 enum PlayerShipState { Normal, RollingLeft, RollingRight };
+enum EnemyShipState {Spawning, Active, Deactivated};
 enum GameState { MainMenu, Play };
 PlayerShipState currentPlayerShipState;
+EnemyShipState currentEnemyShipState;
 
 EKeyCode camSwitch = Key_1;
 EKeyCode MoveUp = Key_W;
@@ -65,8 +68,11 @@ EKeyCode RollRightKey = Key_E;
 EKeyCode RollLeftKey = Key_Q;
 EKeyCode kStartKey = Key_Return; //P key used to start the game
 
-const float PLAYERSHIPRADIUS = 2.0f;
+const float PLAYERSHIPRADIUS = 3.0f;
 const float PLACEMENTPOWERUPRADIUS = 2.0f;
+const float ENEMYSHIPRADIUS = 8.0f;
+const float BULLETRADIUS = 8.0f;
+
 const int maxBullets = 30;
 const float bulletSpeed = 6.0f;
 const float bulletSize = 0.008f;
@@ -134,6 +140,7 @@ void main()
 	float barrelRollCountDown = 2.0f;
 	float powerUpTimer = 5.0f;
 	float rollingTimer = 0.4f;
+	float closeCounter = 2, farCounter = 2.8, MidCounter = 2.4;
 
 
 
@@ -172,7 +179,7 @@ void main()
 	IFont* Lives = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
 
 	ISprite* backGround = myEngine->CreateSprite("background.jpg", 0.0f, 0.0f); //Simple box used as UI to make text stand out
-	
+
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	IFont* deathFont = myEngine->LoadFont("Arial", 70); //Loading in a font to use in text strings
@@ -190,20 +197,20 @@ void main()
 	{
 		heavyShip.HeavyShip[i] = lightMesh->CreateModel(120.0f, -30.0f, 700.0f);
 		heavyShip.HeavyShip[i]->Scale(2);
-		heavyShip.HeavyShip[i]->RotateLocalY(180);
+		heavyShip.HeavyShip[i]->RotateY(180);
 	}
 	for (int i = 0; i < 30; i++)
 	{
 		mediumShip.MediumShip[i] = MediumMesh->CreateModel(-120.0f, -30.0f, 700.0f);
 		mediumShip.MediumShip[i]->Scale(1.5);
-		mediumShip.MediumShip[i]->RotateLocalY(180);
+		mediumShip.MediumShip[i]->RotateY(180);
 
 	}
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		lightShip.lightShip[i] = HeavyMesh->CreateModel(120.0f, -30.0f, 700.0f);
 		lightShip.lightShip[i]->Scale(1.5);
-		lightShip.lightShip[i]->RotateLocalY(180);
+		lightShip.lightShip[i]->RotateY(180);
 	}
 
 
@@ -301,6 +308,7 @@ void main()
 	eCameraPos cameraPos;
 	GameState currentGameState = MainMenu;
 	cameraPos = topDown;
+	currentEnemyShipState = Active;
 
 	NoPowerUP(myEngine);
 
@@ -353,6 +361,99 @@ void main()
 		if (currentGameState == Play && gameOver == false)
 		{
 			menuMusic.stop();
+			static int lightCounter = 0;
+			static int MedCounter = 0;
+			static int HeavyCounter = 0;
+
+			if (currentEnemyShipState == Active)
+			{
+				for (int i = 0; i < 50; i++)
+				{
+					for (int j = 0; j < numBullets; j++)
+					{
+						if (sphere2sphere(bullets[j].model, lightShip.lightShip[i], PLAYERSHIPRADIUS, BULLETRADIUS))
+						{
+							currentEnemyShipState = Deactivated;
+						}
+						if (currentEnemyShipState == Deactivated)
+						{
+							lightShip.lightShip[i]->MoveLocalZ(-1000.0f);
+							currentEnemyShipState = Active;
+						}
+					}
+				}
+				for (int i = 0; i < 30; i++)
+				{
+					for (int j = 0; j < numBullets; j++)
+					{
+						if (sphere2sphere(bullets[j].model, mediumShip.MediumShip[i], PLAYERSHIPRADIUS, BULLETRADIUS))
+						{
+							currentEnemyShipState = Deactivated;
+						}
+						if (currentEnemyShipState == Deactivated)
+						{
+							mediumShip.MediumShip[i]->MoveLocalZ(-1000.0f);
+							currentEnemyShipState = Active;
+						}
+					}
+				}
+				for (int i = 0; i < 20; i++)
+				{
+					for (int j = 0; j < numBullets; j++)
+					{
+						if (sphere2sphere(bullets[j].model, heavyShip.HeavyShip[i], PLAYERSHIPRADIUS, BULLETRADIUS))
+						{
+							currentEnemyShipState = Deactivated;
+						}
+						if (currentEnemyShipState == Deactivated)
+						{
+							heavyShip.HeavyShip[i]->MoveLocalZ(-1000.0f);
+							currentEnemyShipState = Active;
+						}
+					}
+				}
+			}
+			if (moveCamTop != true && moveCamBehind != true)
+			{
+				if (spawnArray[spawnCounter] == 1)
+				{
+					closeCounter -= frameTime;
+					if (closeCounter >= 0)
+					{
+						lightShip.lightShip[lightCounter]->MoveX(-50 * frameTime);
+					}
+
+					MidCounter -= frameTime;
+					if (MidCounter >= 0)
+					{
+						heavyShip.HeavyShip[HeavyCounter]->MoveX(-50 * frameTime);
+					}
+					if (closeCounter >= 0)
+					{
+						mediumShip.MediumShip[MedCounter]->MoveX(50 * frameTime);
+	
+					}
+					if (closeCounter < -1 && MidCounter < -1)
+					{
+						if (MedCounter != 29)
+						{
+							MedCounter++;
+						}
+						if (HeavyCounter != 19)
+						{
+							HeavyCounter++;
+						}
+						if (lightCounter != 49)
+						{
+							lightCounter++;
+						}
+						closeCounter = 2;
+						MidCounter = 2.4;
+					}
+				}
+			}
+
+
 			if (battleMusic.getStatus() == battleMusic.Stopped)
 			{
 				battleMusic.play();

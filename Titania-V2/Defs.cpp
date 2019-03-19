@@ -10,7 +10,7 @@ bool sphere2sphere( IModel* Ship, IModel* Object, float shipRad, float objectRad
 	int s1yPos = Ship->GetLocalY();
 	int s1zPos = Ship->GetLocalZ();
 
-	int s2xPos = Object->GetLocalX();
+   	int s2xPos = Object->GetLocalX();
 	int s2yPos = Object->GetLocalY();
 	int s2zPos = Object->GetLocalZ();
 
