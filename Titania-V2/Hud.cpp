@@ -11,9 +11,9 @@ void fullHealth(I3DEngine*& myEngine, AmountLives Health)
 {
 	if (Health == ThreeLives)
 	{
-		firstHeart = myEngine->CreateSprite("Heart2.png", 105.0f, 15.0f);
-		secondHeart = myEngine->CreateSprite("Heart2.png", 135.0f, 15.0f);
-		thirdHeart = myEngine->CreateSprite("Heart2.png", 165.0f, 15.0f);
+		firstHeart = myEngine->CreateSprite("Heart2.png", 140.0f, 25.0f);
+		secondHeart = myEngine->CreateSprite("Heart2.png", 170.0f, 25.0f);
+		thirdHeart = myEngine->CreateSprite("Heart2.png", 200.0f, 25.0f);
 	}
 }
 

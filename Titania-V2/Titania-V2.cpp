@@ -21,8 +21,26 @@ struct BulletData
 	float xVel, yVel, zVel;
 	float life;
 };
+struct LightEnemyShip
+{
+	IModel* lightShip[50];
+	int firingSpeed = 5.0f;
+	int Health = 2;
+};
+struct MediumEnemyShip
+{
+	IModel* MediumShip[30];
+	int firingSpeed = 3.0f;
+	int Health = 4;
+};
+struct HeavyEnemyShip
+{
+	IModel* HeavyShip[20];
+	int firingSpeed = 1.5f;
+	int Health = 6;
+};
 
-
+int spawnArray[30] = {1,3,2,1,2,3,3,1,2,1,3,2,2,1,3,2,1,1,3,2,3,2,1,2,3,1,2,3,2,1,};
 
 sf::SoundBuffer shootingBuffer;
 sf::Sound shootingSound;
@@ -84,7 +102,9 @@ void main()
 	IMesh* powerUpMesh;
 	IMesh* flameMesh;
 	IMesh* bulletMesh;
-	IMesh* enemyOneMesh;
+	IMesh* lightMesh;
+	IMesh* MediumMesh;
+	IMesh* HeavyMesh;
 
 	//** Models
 	IModel* playerShip;
@@ -96,10 +116,13 @@ void main()
 	IModel* towerTwo;
 	IModel* Road[25];
 	IModel* placementPowerUp;
-	IModel* enemyOne;
 
 	int numBullets = 0;
 	BulletData bullets[maxBullets];
+	HeavyEnemyShip heavyShip;
+	MediumEnemyShip mediumShip;
+	LightEnemyShip lightShip;
+	//BulletData bullets2[maxBullets];
 
 	float matrix[16];
 
@@ -149,19 +172,43 @@ void main()
 	powerDownMusic.setBuffer(powerDownBuffer);
 	powerDownMusic.setVolume(50.0f);
 
+
 	IFont* Lives = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
 
 	ISprite* backGround = myEngine->CreateSprite("background.jpg", 0.0f, 0.0f); //Simple box used as UI to make text stand out
+	
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	IFont* deathFont = myEngine->LoadFont("Arial", 70); //Loading in a font to use in text strings
 	IFont* preGameFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
-	ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -120.0f, -120.0f); //Simple box used as UI to make text stand out
 
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 
 	camBlockMesh = myEngine->LoadMesh("cube.x");
+	lightMesh = myEngine->LoadMesh("enemyShip.x");
+	MediumMesh = myEngine->LoadMesh("enemyShip1.x");
+	HeavyMesh = myEngine->LoadMesh("enemyShip2.x");
+
+	for (int i = 0; i < 20; i++)
+	{
+		heavyShip.HeavyShip[i] = lightMesh->CreateModel(120.0f, -30.0f, 700.0f);
+		heavyShip.HeavyShip[i]->Scale(2);
+		heavyShip.HeavyShip[i]->RotateLocalY(180);
+	}
+	for (int i = 0; i < 30; i++)
+	{
+		mediumShip.MediumShip[i] = MediumMesh->CreateModel(-120.0f, -30.0f, 700.0f);
+		mediumShip.MediumShip[i]->Scale(1.5);
+		mediumShip.MediumShip[i]->RotateLocalY(180);
+
+	}
+	for (int i = 0; i < 30; i++)
+	{
+		lightShip.lightShip[i] = HeavyMesh->CreateModel(120.0f, -30.0f, 700.0f);
+		lightShip.lightShip[i]->Scale(1.5);
+		lightShip.lightShip[i]->RotateLocalY(180);
+	}
 
 
 	floorMesh = myEngine->LoadMesh("floor.x");
@@ -302,6 +349,7 @@ void main()
 				backGround->SetPosition(100000, 100000);
 				currentGameState = Play;
 				fullHealth(myEngine, Health);
+				ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -30.0f, -15.0f); //Simple box used as UI to make text stand out
 			}
 		}
 
@@ -313,7 +361,7 @@ void main()
 				battleMusic.play();
 			}
 
-			Lives->Draw("Lives:", 20.0f, 13.0f, kCyan);
+			Lives->Draw("Lives:", 70.0f, 23.0f, kCyan);
 
 			if (Health == Dead)
 			{
@@ -359,7 +407,7 @@ void main()
 					float x = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
 					float y = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
 					float z = playerShip->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
-					bullets[numBullets].model = bulletMesh->CreateModel(x, y - 1, z - 4.5f);
+					bullets[numBullets].model = bulletMesh->CreateModel(x - 1.5, y - 1, z - 4.5f);
 					bullets[numBullets].model->Scale(bulletSize * 75.0f);
 
 
@@ -398,18 +446,141 @@ void main()
 						bullets[numBullets].life = 1.5f;
 						numBullets++;
 					}
+					for (int i = 0; i < numBullets; i++)
+					{
+						// Move bullet
+						bullets[i].model->Move(-bullets[i].xVel * frameTime, -bullets[i].yVel * frameTime,
+							-bullets[i].zVel * frameTime * 5.0f);
+						bullets[i].model->RotateZ(500.0f * frameTime);
+
+						// Decrease life and see if bullet is dead
+						bullets[i].life -= frameTime;
+						if (bullets[i].life <= 0)
+						{
+							// Destroy bullet
+							bulletMesh->RemoveModel(bullets[i].model);
+
+							// Copy last bullet into this dead slot to keep all live bullets in one block
+							bullets[i].model = bullets[numBullets - 1].model;
+							bullets[i].xVel = bullets[numBullets - 1].xVel;
+							bullets[i].yVel = bullets[numBullets - 1].yVel;
+							bullets[i].zVel = bullets[numBullets - 1].zVel;
+							bullets[i].life = bullets[numBullets - 1].life;
+
+							// Decrease number of bullets
+							numBullets--;
+						}
+					}
+
+					//for (int i = 0; i < numBullets; i++)
+					//{
+					//	// Move bullet
+					//	bullets2[i].model->Move(-bullets2[i].xVel * frameTime, -bullets2[i].yVel * frameTime,
+					//		-bullets2[i].zVel * frameTime * 5.0f);
+					//	bullets2[i].model->RotateZ(500.0f * frameTime);
+					//
+					//	// Decrease life and see if bullet is dead
+					//	bullets2[i].life -= frameTime;
+					//	if (bullets2[i].life <= 0)
+					//	{
+					//		// Destroy bullet
+					//		bulletMesh->RemoveModel(bullets2[i].model);
+					//
+					//		// Copy last bullet into this dead slot to keep all live bullets in one block
+					//		bullets2[i].model = bullets2[numBullets - 1].model;
+					//		bullets2[i].xVel = bullets2[numBullets - 1].xVel;
+					//		bullets2[i].yVel = bullets2[numBullets - 1].yVel;
+					//		bullets2[i].zVel = bullets2[numBullets - 1].zVel;
+					//		bullets2[i].life = bullets2[numBullets - 1].life;
+					//
+					//		// Decrease number of bullets
+					//		numBullets--;
+					//	}
+					//}
+					//	shootingSound.play();
+					//	//*******************************
+					//	// Play shooting sound here
+					//	//*******************************
+					//
+					//	// Create bullet 1
+					//	float x2 = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
+					//	float y2 = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
+					//	float z2 = playerShip->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
+					//	bullets2[numBullets].model = bulletMesh->CreateModel(x + 1.5, y - 1, z - 4.5f);
+					//	bullets2[numBullets].model->Scale(bulletSize * 75.0f);
+					//
+					//
+					//	// Get ship direction from matrix (x and z axes)
+					//	playerShip->GetMatrix(matrix);
+					//	float bulletSpeedX2 = playerShipSpeed;
+					//	float bulletSpeedZ2 = playerShipSpeed + bulletSpeed;
+					//	bullets2[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
+					//	bullets2[numBullets].yVel = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
+					//	bullets2[numBullets].zVel = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
+					//
+					//	// Length of bullet's life measured in seconds
+					//	bullets2[numBullets].life = 3.0f;
+					//	++numBullets;
+					//
+					//
+					//
+					//	// Create bullets in pairs - enough space for one more bullet?
+					//	if (numBullets < maxBullets)
+					//	{
+					//		// Create bullet 2
+					//		x = playerShip->GetX() + 0.015f * matrix[0] + 0.01f * matrix[8];
+					//		y = playerShip->GetY() + 0.015f * matrix[1] + 0.01f * matrix[9];
+					//		z = playerShip->GetZ() + 0.015f * matrix[2] + 0.01f * matrix[10];
+					//
+					//		bullets2[numBullets].model = bulletMesh->CreateModel(x, y, z);
+					//		bullets2[numBullets].model->Scale(bulletSize);
+					//
+					//
+					//		// Get ship direction from matrix (x and z axes)
+					//		bullets2[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
+					//		bullets2[numBullets].yVel = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
+					//		bullets2[numBullets].zVel = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
+					//
+					//		// Length of bullet's life measured in seconds
+					//		bullets2[numBullets].life = 1.5f;
+					//		numBullets++;
+					//	}
+					//	for (int i = 0; i < numBullets; i++)
+					//	{
+					//		// Move bullet
+					//		bullets2[i].model->Move(-bullets2[i].xVel * frameTime, -bullets2[i].yVel * frameTime,
+					//			-bullets2[i].zVel * frameTime * 5.0f);
+					//		bullets2[i].model->RotateZ(500.0f * frameTime);
+					//
+					//		// Decrease life and see if bullet is dead
+					//		bullets2[i].life -= frameTime;
+					//		if (bullets2[i].life <= 0)
+					//		{
+					//			// Destroy bullet
+					//			bulletMesh->RemoveModel(bullets[i].model);
+					//
+					//			// Copy last bullet into this dead slot to keep all live bullets in one block
+					//			bullets2[i].model = bullets2[numBullets - 1].model;
+					//			bullets2[i].xVel = bullets2[numBullets - 1].xVel;
+					//			bullets2[i].yVel = bullets2[numBullets - 1].yVel;
+					//			bullets2[i].zVel = bullets2[numBullets - 1].zVel;
+					//			bullets2[i].life = bullets2[numBullets - 1].life;
+					//
+					//			// Decrease number of bullets
+					//			numBullets--;
+					//		}
+					//}
 				}
 			}
 			if (currentPowerUpState == None)
 			{
 
 				powerUpStateText << kPowerUpStateText << kNoneText << "    Bullets: " << numBullets / 2;
-				myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f); //Game state text is set to go
+				myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f, kWhite); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
-				ISprite* backdrop;
 
 
-				backdrop = myEngine->CreateSprite("backdrop.png", 5.0f, 65.0f);
+
 			}
 
 			if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
@@ -421,7 +592,7 @@ void main()
 			if (currentPowerUpState == Speed)
 			{
 				powerUpStateText << kPowerUpStateText << kSpeedText << "   Bullets: " << numBullets / 2;
-				myFont->Draw(powerUpStateText.str(), 10.0f, 70.0f); //Game state text is set to go
+				myFont->Draw(powerUpStateText.str(), 10.0f, 70.0f, kWhite); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
 
 				playerShipSpeed = 75.0f * frameTime;
