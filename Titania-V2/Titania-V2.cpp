@@ -22,6 +22,8 @@ struct BulletData
 	float life;
 };
 
+
+
 sf::SoundBuffer shootingBuffer;
 sf::Sound shootingSound;
 sf::SoundBuffer mainMenuBuffer;
@@ -30,6 +32,8 @@ sf::SoundBuffer battleBuffer;
 sf::Sound battleMusic;
 sf::SoundBuffer powerUpBuffer;
 sf::Sound powerUpMusic;
+sf::SoundBuffer powerDownBuffer;
+sf::Sound powerDownMusic;
 
 
 enum PowerUpState { None, Speed };
@@ -80,6 +84,7 @@ void main()
 	IMesh* powerUpMesh;
 	IMesh* flameMesh;
 	IMesh* bulletMesh;
+	IMesh* enemyOneMesh;
 
 	//** Models
 	IModel* playerShip;
@@ -91,6 +96,7 @@ void main()
 	IModel* towerTwo;
 	IModel* Road[25];
 	IModel* placementPowerUp;
+	IModel* enemyOne;
 
 	int numBullets = 0;
 	BulletData bullets[maxBullets];
@@ -108,7 +114,7 @@ void main()
 	float currentX = 0.0f;
 	float barrelRollCountDown = 2.0f;
 	float powerUpTimer = 5.0f;
-	float rollingTimer = 0.2f;
+	float rollingTimer = 0.4f;
 
 
 
@@ -135,9 +141,13 @@ void main()
 	shootingSound.setPitch(0.5);
 	shootingSound.setVolume(20.0f);
 
-	powerUpBuffer.loadFromFile("Sound Affects\\Power.wav");
+	powerUpBuffer.loadFromFile("Sound Affects\\Plug-in.wav");
 	powerUpMusic.setBuffer(powerUpBuffer);
 	powerUpMusic.setVolume(50.0f);
+
+	powerDownBuffer.loadFromFile("Sound Affects\\Plug-out.wav");
+	powerDownMusic.setBuffer(powerDownBuffer);
+	powerDownMusic.setVolume(50.0f);
 
 	IFont* Lives = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
 
@@ -146,12 +156,13 @@ void main()
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	IFont* deathFont = myEngine->LoadFont("Arial", 70); //Loading in a font to use in text strings
 	IFont* preGameFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
-	//ISprite* myUI = myEngine->CreateSprite("ui_backdrop.jpg", 280.0f, 660.0f); //Simple box used as UI to make text stand out
+	ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -120.0f, -120.0f); //Simple box used as UI to make text stand out
 
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 
 	camBlockMesh = myEngine->LoadMesh("cube.x");
+
 
 	floorMesh = myEngine->LoadMesh("floor.x");
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
@@ -339,10 +350,7 @@ void main()
 				if ((myEngine->KeyHit(Key_Space) || myEngine->KeyHit(Mouse_LButton)) &&
 					numBullets < maxBullets)
 				{
-					//if (shootingSound.getStatus() == shootingSound.Stopped)
-					//{
 					shootingSound.play();
-					//}
 					//*******************************
 					// Play shooting sound here
 					//*******************************
@@ -351,8 +359,9 @@ void main()
 					float x = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
 					float y = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
 					float z = playerShip->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
-					bullets[numBullets].model = bulletMesh->CreateModel(x, y, z - 5.0f);
+					bullets[numBullets].model = bulletMesh->CreateModel(x, y - 1, z - 4.5f);
 					bullets[numBullets].model->Scale(bulletSize * 75.0f);
+
 
 					// Get ship direction from matrix (x and z axes)
 					playerShip->GetMatrix(matrix);
@@ -393,7 +402,7 @@ void main()
 			}
 			if (currentPowerUpState == None)
 			{
-				powerUpMusic.stop();
+
 				powerUpStateText << kPowerUpStateText << kNoneText << "    Bullets: " << numBullets / 2;
 				myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
@@ -421,6 +430,10 @@ void main()
 				if (powerUpTimer <= 0.0f)
 				{
 					currentPowerUpState = None;
+					if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+					{
+						powerDownMusic.play();
+					}
 					powerUpTimer = 5.0f;
 				}
 
@@ -449,11 +462,11 @@ void main()
 						if (rollingTimer > 0)
 						{
 							playerShip->RotateZ(900.0f * frameTime);
-							playerShip->MoveX(-80.0f * frameTime);
+							playerShip->MoveX(-playerShipSpeed);
 						}
 						if (rollingTimer <= 0)
 						{
-							rollingTimer = 0.2f;
+							rollingTimer = 0.4f;
 							currentPlayerShipState = Normal;
 							barrelRollColdDown = true;
 							playerShip->ResetOrientation();
@@ -467,11 +480,11 @@ void main()
 						if (rollingTimer > 0)
 						{
 							playerShip->RotateZ(-900.0f * frameTime);
-							playerShip->MoveX(80.0f * frameTime);
+							playerShip->MoveX(50.0f * frameTime);
 						}
 						if (rollingTimer <= 0)
 						{
-							rollingTimer = 0.2f;
+							rollingTimer = 0.4f;
 							currentPlayerShipState = Normal;
 							barrelRollColdDown = true;
 							playerShip->ResetOrientation();
@@ -514,7 +527,7 @@ void main()
 				{
 					floor->MoveLocalZ(80.0f * frameTime);
 					placementPowerUp->RotateY(50.0f * frameTime);
-					placementPowerUp->MoveLocalZ(50.0f * frameTime);
+					placementPowerUp->MoveZ(50.0f * frameTime);
 					if (floorResert >= 200)
 					{
 						floor->SetLocalZ(0.0f);
@@ -562,7 +575,7 @@ void main()
 				{
 					floor->MoveLocalZ(80.0f * frameTime);
 					placementPowerUp->RotateY(50.0f * frameTime);
-					placementPowerUp->MoveZ(50.0f * frameTime);
+					placementPowerUp->MoveZ(playerShipSpeed);
 					if (floorResert >= 200)
 					{
 						floor->SetLocalZ(0.0f);
