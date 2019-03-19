@@ -8,6 +8,7 @@
 #include "Defs.h"
 #include "Hud.h"
 #include "Shooting.h"
+#include <deque>
 using namespace tle;
 
 struct particle
@@ -15,7 +16,6 @@ struct particle
 	IModel* flame;
 	float moveVector[3];
 };
-
 
 struct LightEnemyShip
 {
@@ -73,13 +73,15 @@ const float PLACEMENTPOWERUPRADIUS = 2.0f;
 const float ENEMYSHIPRADIUS = 8.0f;
 const float BULLETRADIUS = 8.0f;
 
-const int maxBullets = 30;
 const float bulletSpeed = 6.0f;
 const float bulletSize = 0.008f;
 const float kCameraMove = 0.10f; // distance for the direction keys x and z axis
 const float kMouseWheelMove = 10.0f; // distance for wheel movement z axis
 const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the camera
 bool mouseCaptureActive = false; // state of mouse capture
+
+deque <BulletData> bullets;
+//deque <BulletData> bullets2;
 
 void main()
 {
@@ -360,6 +362,11 @@ void main()
 
 		if (currentGameState == Play && gameOver == false)
 		{
+			if (Health != Dead)
+			{
+				Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, numBullets, bulletMesh, playerShipSpeed, shootingSound, bullets);
+			}
+
 			menuMusic.stop();
 			static int lightCounter = 0;
 			static int MedCounter = 0;
@@ -371,9 +378,12 @@ void main()
 				{
 					for (int j = 0; j < numBullets; j++)
 					{
-						if (sphere2sphere(bullets[j].model, lightShip.lightShip[i], PLAYERSHIPRADIUS, BULLETRADIUS))
+						float mama = bullets[j].model->GetLocalX();
+
+						if (sphere2sphere(lightShip.lightShip[i], bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 						{
 							currentEnemyShipState = Deactivated;
+							
 						}
 						if (currentEnemyShipState == Deactivated)
 						{
@@ -386,7 +396,7 @@ void main()
 				{
 					for (int j = 0; j < numBullets; j++)
 					{
-						if (sphere2sphere(bullets[j].model, mediumShip.MediumShip[i], PLAYERSHIPRADIUS, BULLETRADIUS))
+						if (sphere2sphere(mediumShip.MediumShip[i], bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 						{
 							currentEnemyShipState = Deactivated;
 						}
@@ -401,7 +411,7 @@ void main()
 				{
 					for (int j = 0; j < numBullets; j++)
 					{
-						if (sphere2sphere(bullets[j].model, heavyShip.HeavyShip[i], PLAYERSHIPRADIUS, BULLETRADIUS))
+						if (sphere2sphere(heavyShip.HeavyShip[i], bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 						{
 							currentEnemyShipState = Deactivated;
 						}
@@ -467,10 +477,7 @@ void main()
 				gameOver = true;
 			}
 
-			if (Health != Dead)
-			{
-			Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, numBullets, bulletMesh, playerShipSpeed, shootingSound);
-			}
+			
 
 			if (currentPowerUpState == None)
 			{

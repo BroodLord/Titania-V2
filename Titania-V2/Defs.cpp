@@ -6,7 +6,7 @@ using namespace tle;
 //COLLISION DETECTION
 bool sphere2sphere( IModel* Ship, IModel* Object, float shipRad, float objectRad) //Calculates distance between two spheres and if they have collided
 {
-	int s1xPos = Ship->GetLocalX();	
+ 	int s1xPos = Ship->GetLocalX();	
 	int s1yPos = Ship->GetLocalY();
 	int s1zPos = Ship->GetLocalZ();
 
