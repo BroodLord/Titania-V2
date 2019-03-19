@@ -127,6 +127,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
   <ItemGroup>
     <ClCompile Include="Defs.cpp" />
     <ClCompile Include="Hud.cpp" />
+    <ClCompile Include="Shooting.cpp" />
     <ClCompile Include="Titania-V2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +136,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
   <ItemGroup>
     <ClInclude Include="Defs.h" />
     <ClInclude Include="Hud.h" />
+    <ClInclude Include="Shooting.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

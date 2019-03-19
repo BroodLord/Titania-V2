@@ -7,6 +7,7 @@
 #include <cmath>
 #include "Defs.h"
 #include "Hud.h"
+#include "Shooting.h"
 using namespace tle;
 
 struct particle
@@ -15,12 +16,7 @@ struct particle
 	float moveVector[3];
 };
 
-struct BulletData
-{
-	IModel* model;
-	float xVel, yVel, zVel;
-	float life;
-};
+
 struct LightEnemyShip
 {
 	IModel* lightShip[50];
@@ -118,7 +114,7 @@ void main()
 	IModel* placementPowerUp;
 
 	int numBullets = 0;
-	BulletData bullets[maxBullets];
+	//BulletData bullets[maxBullets];
 	HeavyEnemyShip heavyShip;
 	MediumEnemyShip mediumShip;
 	LightEnemyShip lightShip;
@@ -306,6 +302,7 @@ void main()
 	GameState currentGameState = MainMenu;
 	cameraPos = topDown;
 
+	NoPowerUP(myEngine);
 
 	// The main game loop, repeat until engine is stopped
 	myEngine->Timer();
@@ -349,7 +346,7 @@ void main()
 				backGround->SetPosition(100000, 100000);
 				currentGameState = Play;
 				fullHealth(myEngine, Health);
-				ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -30.0f, -15.0f); //Simple box used as UI to make text stand out
+				ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -30.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out
 			}
 		}
 
@@ -359,6 +356,7 @@ void main()
 			if (battleMusic.getStatus() == battleMusic.Stopped)
 			{
 				battleMusic.play();
+				
 			}
 
 			Lives->Draw("Lives:", 70.0f, 23.0f, kCyan);
@@ -367,231 +365,30 @@ void main()
 			{
 				gameOver = true;
 			}
-			if (moveCamTop != true && moveCamBehind != true)
+
+			if (Health != Dead)
 			{
-				for (int i = 0; i < numBullets; i++)
-				{
-					// Move bullet
-					bullets[i].model->Move(-bullets[i].xVel * frameTime, -bullets[i].yVel * frameTime,
-						-bullets[i].zVel * frameTime * 5.0f);
-					bullets[i].model->RotateZ(500.0f * frameTime);
-
-					// Decrease life and see if bullet is dead
-					bullets[i].life -= frameTime;
-					if (bullets[i].life <= 0)
-					{
-						// Destroy bullet
-						bulletMesh->RemoveModel(bullets[i].model);
-
-						// Copy last bullet into this dead slot to keep all live bullets in one block
-						bullets[i].model = bullets[numBullets - 1].model;
-						bullets[i].xVel = bullets[numBullets - 1].xVel;
-						bullets[i].yVel = bullets[numBullets - 1].yVel;
-						bullets[i].zVel = bullets[numBullets - 1].zVel;
-						bullets[i].life = bullets[numBullets - 1].life;
-
-						// Decrease number of bullets
-						numBullets--;
-					}
-				}
-
-				if ((myEngine->KeyHit(Key_Space) || myEngine->KeyHit(Mouse_LButton)) &&
-					numBullets < maxBullets)
-				{
-					shootingSound.play();
-					//*******************************
-					// Play shooting sound here
-					//*******************************
-
-					// Create bullet 1
-					float x = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
-					float y = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
-					float z = playerShip->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
-					bullets[numBullets].model = bulletMesh->CreateModel(x - 1.5, y - 1, z - 4.5f);
-					bullets[numBullets].model->Scale(bulletSize * 75.0f);
-
-
-					// Get ship direction from matrix (x and z axes)
-					playerShip->GetMatrix(matrix);
-					float bulletSpeedX = playerShipSpeed;
-					float bulletSpeedZ = playerShipSpeed + bulletSpeed;
-					bullets[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
-					bullets[numBullets].yVel = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
-					bullets[numBullets].zVel = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
-
-					// Length of bullet's life measured in seconds
-					bullets[numBullets].life = 3.0f;
-					++numBullets;
-
-
-
-					// Create bullets in pairs - enough space for one more bullet?
-					if (numBullets < maxBullets)
-					{
-						// Create bullet 2
-						x = playerShip->GetX() + 0.015f * matrix[0] + 0.01f * matrix[8];
-						y = playerShip->GetY() + 0.015f * matrix[1] + 0.01f * matrix[9];
-						z = playerShip->GetZ() + 0.015f * matrix[2] + 0.01f * matrix[10];
-
-						bullets[numBullets].model = bulletMesh->CreateModel(x, y, z);
-						bullets[numBullets].model->Scale(bulletSize);
-
-
-						// Get ship direction from matrix (x and z axes)
-						bullets[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
-						bullets[numBullets].yVel = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
-						bullets[numBullets].zVel = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
-
-						// Length of bullet's life measured in seconds
-						bullets[numBullets].life = 1.5f;
-						numBullets++;
-					}
-					for (int i = 0; i < numBullets; i++)
-					{
-						// Move bullet
-						bullets[i].model->Move(-bullets[i].xVel * frameTime, -bullets[i].yVel * frameTime,
-							-bullets[i].zVel * frameTime * 5.0f);
-						bullets[i].model->RotateZ(500.0f * frameTime);
-
-						// Decrease life and see if bullet is dead
-						bullets[i].life -= frameTime;
-						if (bullets[i].life <= 0)
-						{
-							// Destroy bullet
-							bulletMesh->RemoveModel(bullets[i].model);
-
-							// Copy last bullet into this dead slot to keep all live bullets in one block
-							bullets[i].model = bullets[numBullets - 1].model;
-							bullets[i].xVel = bullets[numBullets - 1].xVel;
-							bullets[i].yVel = bullets[numBullets - 1].yVel;
-							bullets[i].zVel = bullets[numBullets - 1].zVel;
-							bullets[i].life = bullets[numBullets - 1].life;
-
-							// Decrease number of bullets
-							numBullets--;
-						}
-					}
-
-					//for (int i = 0; i < numBullets; i++)
-					//{
-					//	// Move bullet
-					//	bullets2[i].model->Move(-bullets2[i].xVel * frameTime, -bullets2[i].yVel * frameTime,
-					//		-bullets2[i].zVel * frameTime * 5.0f);
-					//	bullets2[i].model->RotateZ(500.0f * frameTime);
-					//
-					//	// Decrease life and see if bullet is dead
-					//	bullets2[i].life -= frameTime;
-					//	if (bullets2[i].life <= 0)
-					//	{
-					//		// Destroy bullet
-					//		bulletMesh->RemoveModel(bullets2[i].model);
-					//
-					//		// Copy last bullet into this dead slot to keep all live bullets in one block
-					//		bullets2[i].model = bullets2[numBullets - 1].model;
-					//		bullets2[i].xVel = bullets2[numBullets - 1].xVel;
-					//		bullets2[i].yVel = bullets2[numBullets - 1].yVel;
-					//		bullets2[i].zVel = bullets2[numBullets - 1].zVel;
-					//		bullets2[i].life = bullets2[numBullets - 1].life;
-					//
-					//		// Decrease number of bullets
-					//		numBullets--;
-					//	}
-					//}
-					//	shootingSound.play();
-					//	//*******************************
-					//	// Play shooting sound here
-					//	//*******************************
-					//
-					//	// Create bullet 1
-					//	float x2 = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
-					//	float y2 = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
-					//	float z2 = playerShip->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
-					//	bullets2[numBullets].model = bulletMesh->CreateModel(x + 1.5, y - 1, z - 4.5f);
-					//	bullets2[numBullets].model->Scale(bulletSize * 75.0f);
-					//
-					//
-					//	// Get ship direction from matrix (x and z axes)
-					//	playerShip->GetMatrix(matrix);
-					//	float bulletSpeedX2 = playerShipSpeed;
-					//	float bulletSpeedZ2 = playerShipSpeed + bulletSpeed;
-					//	bullets2[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
-					//	bullets2[numBullets].yVel = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
-					//	bullets2[numBullets].zVel = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
-					//
-					//	// Length of bullet's life measured in seconds
-					//	bullets2[numBullets].life = 3.0f;
-					//	++numBullets;
-					//
-					//
-					//
-					//	// Create bullets in pairs - enough space for one more bullet?
-					//	if (numBullets < maxBullets)
-					//	{
-					//		// Create bullet 2
-					//		x = playerShip->GetX() + 0.015f * matrix[0] + 0.01f * matrix[8];
-					//		y = playerShip->GetY() + 0.015f * matrix[1] + 0.01f * matrix[9];
-					//		z = playerShip->GetZ() + 0.015f * matrix[2] + 0.01f * matrix[10];
-					//
-					//		bullets2[numBullets].model = bulletMesh->CreateModel(x, y, z);
-					//		bullets2[numBullets].model->Scale(bulletSize);
-					//
-					//
-					//		// Get ship direction from matrix (x and z axes)
-					//		bullets2[numBullets].xVel = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
-					//		bullets2[numBullets].yVel = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
-					//		bullets2[numBullets].zVel = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
-					//
-					//		// Length of bullet's life measured in seconds
-					//		bullets2[numBullets].life = 1.5f;
-					//		numBullets++;
-					//	}
-					//	for (int i = 0; i < numBullets; i++)
-					//	{
-					//		// Move bullet
-					//		bullets2[i].model->Move(-bullets2[i].xVel * frameTime, -bullets2[i].yVel * frameTime,
-					//			-bullets2[i].zVel * frameTime * 5.0f);
-					//		bullets2[i].model->RotateZ(500.0f * frameTime);
-					//
-					//		// Decrease life and see if bullet is dead
-					//		bullets2[i].life -= frameTime;
-					//		if (bullets2[i].life <= 0)
-					//		{
-					//			// Destroy bullet
-					//			bulletMesh->RemoveModel(bullets[i].model);
-					//
-					//			// Copy last bullet into this dead slot to keep all live bullets in one block
-					//			bullets2[i].model = bullets2[numBullets - 1].model;
-					//			bullets2[i].xVel = bullets2[numBullets - 1].xVel;
-					//			bullets2[i].yVel = bullets2[numBullets - 1].yVel;
-					//			bullets2[i].zVel = bullets2[numBullets - 1].zVel;
-					//			bullets2[i].life = bullets2[numBullets - 1].life;
-					//
-					//			// Decrease number of bullets
-					//			numBullets--;
-					//		}
-					//}
-				}
+			Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, numBullets, bulletMesh, playerShipSpeed, shootingSound);
 			}
+
 			if (currentPowerUpState == None)
 			{
 
-				powerUpStateText << kPowerUpStateText << kNoneText << "    Bullets: " << numBullets / 2;
+				powerUpStateText <<  "    Bullets: " << numBullets / 2;
 				myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f, kWhite); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
-
-
-
 			}
 
 			if (sphere2sphere(playerShip, placementPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 			{
 				currentPowerUpState = Speed;
 				powerUpMusic.play();
+				SpeedPowerUP(myEngine);
 			}
 
 			if (currentPowerUpState == Speed)
 			{
-				powerUpStateText << kPowerUpStateText << kSpeedText << "   Bullets: " << numBullets / 2;
+				powerUpStateText << "   Bullets: " << numBullets / 2;
 				myFont->Draw(powerUpStateText.str(), 10.0f, 70.0f, kWhite); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
 
@@ -606,6 +403,7 @@ void main()
 						powerDownMusic.play();
 					}
 					powerUpTimer = 5.0f;
+					RemoveSpeedPowerUP(myEngine);
 				}
 
 			}
