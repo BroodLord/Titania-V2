@@ -82,13 +82,14 @@ void main()
 	IMesh* skyBoxMesh;
 	IMesh* towerTwoMesh;
 	IMesh* towerNineMesh;
-	IMesh* speedPowerUpMesh;
 	IMesh* flameMesh;
 	IMesh* bulletMesh;
 	IMesh* lightMesh;
 	IMesh* MediumMesh;
 	IMesh* HeavyMesh;
+	IMesh* speedPowerUpMesh;
 	IMesh* shieldPowerUpMesh;
+	IMesh* bulletPowerUpMesh;
 	IMesh* sphereMesh;
 
 	//** Models
@@ -102,6 +103,7 @@ void main()
 	IModel* Road[25];
 	IModel* speedPowerUp;
 	IModel* shieldPowerUp;
+	IModel* bulletPowerUp;
 	IModel* shield;
 
 	int numBullets = 0;
@@ -123,15 +125,18 @@ void main()
 	float barrelRollCountDown = 2.0f;
 	float shieldPowerUpTimer = 9.0f;
 	float speedPowerUpTimer = 5.0f;
+	float bulletPowerUpTimer = 5.0f;
 	float rollingTimer = 0.4f;
 	
 	int speedDisplay = 0;
 	int shieldDisplay = 0;
+	int bulletDisplay = 0;
 
 	bool gameOver = false;
 
 	PowerUpState currentSpeedPowerUpState = None;
 	PowerUpState currentShieldPowerUpState = None;
+	PowerUpState currentBulletPowerUpState = None;
 
 	//**** Hud Things ****
 	AmountLives Health = ThreeLives;
@@ -209,6 +214,11 @@ void main()
 	shieldPowerUp->Scale(0.5f);
 	shieldPowerUp->RotateLocalX(-90.0f);
 
+	bulletPowerUpMesh = myEngine->LoadMesh("BulletPowerUp.x");
+	bulletPowerUp = bulletPowerUpMesh->CreateModel(0.0f, -30.0f, 500.0f);
+	bulletPowerUp->ScaleZ(0.01f);
+	bulletPowerUp->Scale(0.5f);
+	bulletPowerUp->RotateLocalX(-90.0f);
 
 	
 	//powerupthing = myEngine->LoadMesh("PowerUpMiddle.x");
@@ -235,6 +245,7 @@ sphereMesh = myEngine->LoadMesh("Sphere.x");
 	int number = 0;
 	towerNineMesh = myEngine->LoadMesh("skyscraper04.x");
 	towerTwoMesh = myEngine->LoadMesh("skyscraper02.x");
+
 	for (int i = 0; i < 100; i++)
 	{
 		number++;
@@ -374,83 +385,129 @@ sphereMesh = myEngine->LoadMesh("Sphere.x");
 				gameOver = true;
 			}
 
+			//**** Hud Stuff ****
 				powerUpStateText <<  "    Bullets: " << numBullets;
 			myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f, kWhite); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
+				
 
-				// Speed
-			if (sphere2sphere(playerShip, speedPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
-			{
-				speedPowerUp->MoveY(50.0f);
-				currentSpeedPowerUpState = Speed;
-				powerUpMusic.play();
-				SpeedPowerUP(myEngine);
-			}		
+				powerUpStateText << bulletDisplay;
+				myFont->Draw(powerUpStateText.str(), 168.95f, 155.0f, kWhite); //Game state text is set to go
+				powerUpStateText.str(""); // Clear myStream
 
+				powerUpStateText << shieldDisplay;
+				myFont->Draw(powerUpStateText.str(), 103.0f, 155.0f, kWhite); //Game state text is set to go
+				powerUpStateText.str(""); // Clear myStream
 
-			powerUpStateText << speedDisplay;
+				powerUpStateText << speedDisplay;
 				myFont->Draw(powerUpStateText.str(), 37.5f, 155.0f, kWhite); //Game state text is set to go
 				powerUpStateText.str(""); // Clear myStream
 
-			if (currentSpeedPowerUpState == Speed)
-			{
-				speedDisplay = speedPowerUpTimer + 1;
-				if (speedPowerUpTimer > 0.0f)
+				if (moveCamTop != true && moveCamBehind != true)
 				{
-					playerShipSpeed = 75.0f * frameTime;
-					speedPowerUpTimer -= frameTime;
-					if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+					// Speed
+					if (sphere2sphere(playerShip, speedPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 					{
-						powerDownMusic.play();
-					}							
-				}
-				else if (speedPowerUpTimer < 0.0f)
-				{
-					RemoveSpeedPowerUP(myEngine);
-					currentSpeedPowerUpState = None;
-				speedPowerUpTimer = 5.0f;
-				speedDisplay = 0;
-				}
-			}
+						speedPowerUp->MoveY(50.0f);
+						currentSpeedPowerUpState = Speed;
+						powerUpMusic.play();
+						SpeedPowerUP(myEngine);
+					}
 
-			//Shield
-			if (sphere2sphere(playerShip, shieldPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
-			{
-				shieldPowerUp->MoveY(50.0f);
-				currentShieldPowerUpState = Shield;
-				powerUpMusic.play();
-				ShieldPowerUP(myEngine);
 
-			}
+					
 
-			powerUpStateText << shieldDisplay;
-			myFont->Draw(powerUpStateText.str(), 103.0f, 155.0f, kWhite); //Game state text is set to go
-			powerUpStateText.str(""); // Clear myStream
-
-			if (currentShieldPowerUpState == Shield)
-			{
-				shieldDisplay = shieldPowerUpTimer + 1;
-				
-				shield->SetY(-30.0f);
-				shield->RotateLocalY(250.0f * frameTime);
-
-				if (shieldPowerUpTimer > 0.0f)
-				{
-					shieldPowerUpTimer -= frameTime;
-					if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+					if (currentSpeedPowerUpState == Speed)
 					{
-						powerDownMusic.play();
+						speedDisplay = speedPowerUpTimer + 1;
+						if (speedPowerUpTimer > 0.0f)
+						{
+							playerShipSpeed = 75.0f * frameTime;
+							speedPowerUpTimer -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (speedPowerUpTimer < 0.0f)
+						{
+							RemoveSpeedPowerUP(myEngine);
+							currentSpeedPowerUpState = None;
+							speedPowerUpTimer = 5.0f;
+							speedDisplay = 0;
+						}
+					}
+
+					//Shield
+					if (sphere2sphere(playerShip, shieldPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+					{
+						shieldPowerUp->MoveY(50.0f);
+						currentShieldPowerUpState = Shield;
+						powerUpMusic.play();
+						ShieldPowerUP(myEngine);
+
+					}
+
+					
+
+					if (currentShieldPowerUpState == Shield)
+					{
+						shieldDisplay = shieldPowerUpTimer + 1;
+
+						shield->SetY(-30.0f);
+						shield->RotateLocalY(250.0f * frameTime);
+
+						if (shieldPowerUpTimer > 0.0f)
+						{
+							shieldPowerUpTimer -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (shieldPowerUpTimer < 0.0f)
+						{
+							RemoveShieldPowerUP(myEngine);
+							currentShieldPowerUpState = None;
+							shieldPowerUpTimer = 9.0f;
+							shieldDisplay = 0;
+							shield->SetY(500.0f);
+						}
+					}
+
+					// Bullets
+					if (sphere2sphere(playerShip, bulletPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+					{
+						bulletPowerUp->MoveY(50.0f);
+						currentBulletPowerUpState = Bullet;
+						powerUpMusic.play();
+						BulletPowerUP(myEngine);
+					}
+
+
+					
+
+					if (currentBulletPowerUpState == Bullet)
+					{
+						bulletDisplay = bulletPowerUpTimer + 1;
+						if (bulletPowerUpTimer > 0.0f)
+						{
+							bulletPowerUpTimer -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (bulletPowerUpTimer < 0.0f)
+						{
+							RemoveBulletPowerUP(myEngine);
+							currentBulletPowerUpState = None;
+							bulletPowerUpTimer = 5.0f;
+							bulletDisplay = 0;
+						}
 					}
 				}
-				else if (shieldPowerUpTimer < 0.0f)
-				{
-					RemoveShieldPowerUP(myEngine);
-					currentShieldPowerUpState = None;
-				shieldPowerUpTimer = 9.0f;
-				shieldDisplay = 0;
-				shield->SetY(500.0f);
-				}
-			}
+
 
 			if (moveCamTop != true && moveCamBehind != true)
 			{
@@ -545,6 +602,9 @@ sphereMesh = myEngine->LoadMesh("Sphere.x");
 					shieldPowerUp->RotateLocalY(50.0f * frameTime);
 					shieldPowerUp->MoveZ(playerShipSpeed);
 
+					bulletPowerUp->RotateY(50.0f * frameTime);
+					bulletPowerUp->MoveZ(playerShipSpeed);
+
 					if (floorResert >= 200)
 					{
 						floor->SetLocalZ(0.0f);
@@ -577,6 +637,7 @@ sphereMesh = myEngine->LoadMesh("Sphere.x");
 					playerCamera->MoveLocalZ(-5.0 * frameTime);
 					shieldPowerUp->RotateLocalX(-50.0f * frameTime);
 					speedPowerUp->RotateLocalX(50.0f * frameTime);
+					bulletPowerUp->RotateLocalX(50.0f * frameTime);
 					if (countDown <= 0)
 					{
 						moveCamBehind = false;
@@ -601,6 +662,9 @@ sphereMesh = myEngine->LoadMesh("Sphere.x");
 
 					shieldPowerUp->RotateY(50.0f * frameTime);
 					shieldPowerUp->MoveZ(playerShipSpeed);
+
+					bulletPowerUp->RotateY(50.0f * frameTime);
+					bulletPowerUp->MoveZ(playerShipSpeed);
 
 					if (floorResert >= 200)
 					{
@@ -634,6 +698,8 @@ sphereMesh = myEngine->LoadMesh("Sphere.x");
 					playerCamera->MoveLocalZ(5.0 * frameTime);
 					shieldPowerUp->RotateLocalX(50.0f * frameTime);
 					speedPowerUp->RotateLocalX(-50.0f * frameTime);
+					bulletPowerUp->RotateLocalX(-50.0f * frameTime);
+
 					if (countDown <= 0)
 					{
 						moveCamTop = false;

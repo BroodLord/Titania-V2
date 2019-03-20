@@ -6,8 +6,11 @@ ISprite* secondHeart;
 ISprite* thirdHeart;
 ISprite* speedPup;
 ISprite* shieldPup;
+ISprite* bulletPup;
 ISprite* NospeedPup;
 ISprite* NoshieldPup;
+ISprite* NobulletPup;
+
 
 const float POWER_UP_COORDS = 150.0f;
 
@@ -46,6 +49,8 @@ void SpawnSprites(I3DEngine*& myEngine)
 	shieldPup = myEngine->CreateSprite("Shield2.png", 85.0f, POWER_UP_COORDS, 1.0f);
 	NospeedPup = myEngine->CreateSprite("NoSpeed2.png", 15.0f, POWER_UP_COORDS, 0.8f);
 	NoshieldPup = myEngine->CreateSprite("NoShield2.png", 85.0f, POWER_UP_COORDS, 0.8f);
+	NobulletPup = myEngine->CreateSprite("NoBullets2.png", 155.0f, POWER_UP_COORDS, 0.8f);
+	bulletPup = myEngine->CreateSprite("Bullets2.png", 155.0f, POWER_UP_COORDS, 1.0f);
 }
 
 void SpeedPowerUP(I3DEngine*& myEngine)
@@ -56,6 +61,16 @@ void SpeedPowerUP(I3DEngine*& myEngine)
 void RemoveSpeedPowerUP(I3DEngine*& myEngine)
 {
 	speedPup->SetZ(1.0f);
+}
+
+void BulletPowerUP(I3DEngine*& myEngine)
+{
+	bulletPup->SetZ(0.7f);
+}
+
+void RemoveBulletPowerUP(I3DEngine*& myEngine)
+{
+	bulletPup->SetZ(1.0f);
 }
 
 void NoPowerUP(I3DEngine*& myEngine)

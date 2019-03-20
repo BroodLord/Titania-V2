@@ -4,7 +4,7 @@
 using namespace tle;
 
 enum eCameraPos { behind, topDown };
-enum PowerUpState { None, Speed, Shield };
+enum PowerUpState { None, Speed, Shield, Bullet };
 bool sphere2sphere(IModel* Ship, IModel* Object, float shipRad, float objectRad); //collision function for any sphere on sphere collisions
 float random(int rangeMin, int rangeMax);
 
