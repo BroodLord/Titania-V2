@@ -89,6 +89,7 @@ void main()
 	IMesh* MediumMesh;
 	IMesh* HeavyMesh;
 	IMesh* shieldPowerUpMesh;
+	IMesh* sphereMesh;
 
 	//** Models
 	IModel* playerShip;
@@ -101,6 +102,7 @@ void main()
 	IModel* Road[25];
 	IModel* speedPowerUp;
 	IModel* shieldPowerUp;
+	IModel* shield;
 
 	int numBullets = 0;
 	//BulletData bullets[maxBullets];
@@ -119,7 +121,7 @@ void main()
 	float countDown = 1.8f;
 	float currentX = 0.0f;
 	float barrelRollCountDown = 2.0f;
-	float shieldPowerUpTimer = 5.0f;
+	float shieldPowerUpTimer = 9.0f;
 	float speedPowerUpTimer = 5.0f;
 	float rollingTimer = 0.4f;
 	
@@ -177,10 +179,6 @@ void main()
 	HeavyMesh = myEngine->LoadMesh("enemyShip2.x");
 	shieldPowerUpMesh = myEngine->LoadMesh("PowerUp.x");
 
-	//cubetest = powerupthing->CreateModel(0.0f - 1.5f, -35.0f - 1.0f, 750.0f - 4.5f);
-	//cubetest->ScaleZ(0.01f);
-
-	//cubetest->SetSkin("test2.png");
 	CreateEnemies(myEngine, lightMesh, MediumMesh, HeavyMesh);
 
 	floorMesh = myEngine->LoadMesh("floor.x");
@@ -209,8 +207,10 @@ void main()
 	shieldPowerUp = shieldPowerUpMesh->CreateModel(0.0f, -30.0f, 300.0f);
 	shieldPowerUp->ScaleZ(0.01f);
 	shieldPowerUp->Scale(0.5f);
-	shieldPowerUp->RotateLocalX(90.0f);
+	shieldPowerUp->RotateLocalX(-90.0f);
 
+
+	
 	//powerupthing = myEngine->LoadMesh("PowerUpMiddle.x");
 	//cubetest = powerupthing->CreateModel(0.0f, 0.0f, 0.0f);
 	//cubetest->ScaleX(0.1f);
@@ -223,6 +223,10 @@ void main()
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
 	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
+
+sphereMesh = myEngine->LoadMesh("Sphere.x");
+	shield = sphereMesh->CreateModel(0.0f, 500.0f, 0.0f);
+	shield->AttachToParent(playerShip);
 
 	playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 	playerCamera->RotateLocalX(90.0f);
@@ -427,6 +431,8 @@ void main()
 			{
 				shieldDisplay = shieldPowerUpTimer + 1;
 				
+				shield->SetY(-30.0f);
+				shield->RotateLocalY(250.0f * frameTime);
 
 				if (shieldPowerUpTimer > 0.0f)
 				{
@@ -440,8 +446,9 @@ void main()
 				{
 					RemoveShieldPowerUP(myEngine);
 					currentShieldPowerUpState = None;
-				shieldPowerUpTimer = 5.0f;
+				shieldPowerUpTimer = 9.0f;
 				shieldDisplay = 0;
+				shield->SetY(500.0f);
 				}
 			}
 
@@ -568,7 +575,7 @@ void main()
 					countDown -= frameTime;
 					playerCamera->MoveLocalY(50.0 * frameTime);
 					playerCamera->MoveLocalZ(-5.0 * frameTime);
-					shieldPowerUp->RotateLocalX(50.0f * frameTime);
+					shieldPowerUp->RotateLocalX(-50.0f * frameTime);
 					speedPowerUp->RotateLocalX(50.0f * frameTime);
 					if (countDown <= 0)
 					{
@@ -625,7 +632,7 @@ void main()
 					countDown -= frameTime;
 					playerCamera->MoveLocalY(-50.0 * frameTime);
 					playerCamera->MoveLocalZ(5.0 * frameTime);
-					shieldPowerUp->RotateLocalX(-50.0f * frameTime);
+					shieldPowerUp->RotateLocalX(50.0f * frameTime);
 					speedPowerUp->RotateLocalX(-50.0f * frameTime);
 					if (countDown <= 0)
 					{
