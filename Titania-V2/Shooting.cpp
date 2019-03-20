@@ -98,7 +98,7 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 				// Create bullet 2
 				
 
-				temp2.model = bulletMesh->CreateModel(x + 1.5f, y + 1.0f, z - 4.5f);
+				temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
 				temp2.model->Scale(bulletSize * 75.0f);
 
 
