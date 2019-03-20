@@ -34,3 +34,26 @@ float random(int rangeMin, int rangeMax)
 }
 
 
+CBulletData::CBulletData()
+{
+}
+
+CBulletData::~CBulletData()
+{
+}
+
+CTripleBullet::CTripleBullet()
+{
+}
+
+CTripleBullet::~CTripleBullet()
+{
+}
+
+CNormalBullet::CNormalBullet()
+{
+}
+
+CNormalBullet::~CNormalBullet()
+{
+}

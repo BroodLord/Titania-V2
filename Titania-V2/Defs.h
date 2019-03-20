@@ -14,9 +14,38 @@ const float PLACEMENTPOWERUPRADIUS = 2.0f;
 const float ENEMYSHIPRADIUS = 8.0f;
 const float BULLETRADIUS = 8.0f;
 
-struct BulletData
+class CBulletData
 {
+public:
+	CBulletData();
+	~CBulletData();
 	IModel* model;
 	float xVel, yVel, zVel;
 	float life = 3.0;
 };
+
+
+
+class CTripleBullet : public CBulletData
+{
+public:
+	CTripleBullet();
+	~CTripleBullet();
+	float fireRate = 20.0f;
+private:
+
+};
+
+
+
+class CNormalBullet : public CBulletData
+{
+public:
+	CNormalBullet();
+	~CNormalBullet();
+	float fireRate = 20.0f;
+private:
+
+};
+
+

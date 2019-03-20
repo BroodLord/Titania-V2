@@ -4,7 +4,7 @@ float matrix[16];
 const float bulletSize = 0.008f;
 const float bulletSpeed = 6.0f;
 
-void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IModel* playerShip, int& numBullets, IMesh*& bulletMesh, float playerShipSpeed, sf::Sound& shootingSound, deque <BulletData>& bullets)
+void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IModel* playerShip, int& numBullets, IMesh*& bulletMesh, float playerShipSpeed, sf::Sound& shootingSound, deque <CBulletData>& bullets)
 {
 	float x = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
 	float y = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
@@ -20,12 +20,12 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 	float zSpeed = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
 
 
-		if (moveCamTop != true && moveCamBehind != true)
+	if (moveCamTop != true && moveCamBehind != true)
 	{
 
 
-		BulletData temp;
-		BulletData temp2;
+		CBulletData temp;
+		CBulletData temp2;
 
 		for (int i = 0; i < numBullets; i++)
 		{
@@ -59,49 +59,48 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 		if ((myEngine->KeyHit(Key_Space) || myEngine->KeyHit(Mouse_LButton)) && numBullets < maxBullets)
 		{
-			shootingSound.play();
-			//*******************************
-			// Play shooting sound here
-			//*******************************
-						
-			// Create bullet 1
-			
-			temp.model = bulletMesh->CreateModel(x - 1.5f, y - 1.0f, z - 4.5f);
-			temp.model->Scale(bulletSize * 75.0f);
 
+				shootingSound.play();
+				//*******************************
+				// Play shooting sound here
+				//*******************************
 
-			// Get ship direction from matrix (x and z axes)
-			
-			
-			temp.xVel = xSpeed;
-			temp.yVel = ySpeed;
-			temp.zVel = zSpeed;
+				// Create bullet 1
 
-			// Length of bullet's life measured in seconds
-			numBullets++;
-			bullets.push_back(temp);
-
-
-			// Create bullets in pairs - enough space for one more bullet?
-			if (numBullets < maxBullets)
-			{
-				// Create bullet 2
-				
-
-				temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
-				temp2.model->Scale(bulletSize * 75.0f);
+				temp.model = bulletMesh->CreateModel(x - 1.5f, y - 1.0f, z - 4.5f);
+				temp.model->Scale(bulletSize * 75.0f);
 
 
 				// Get ship direction from matrix (x and z axes)
 
-				temp2.xVel = xSpeed;
-				temp2.yVel = ySpeed;
-				temp2.zVel = zSpeed;
+
+				temp.xVel = xSpeed;
+				temp.yVel = ySpeed;
+				temp.zVel = zSpeed;
 
 				// Length of bullet's life measured in seconds
 				numBullets++;
-				bullets.push_back(temp2);
-			}			
+				bullets.push_back(temp);
+
+
+				// Create bullets in pairs - enough space for one more bullet?
+				if (numBullets < maxBullets)
+				{
+					// Create bullet 2
+					temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
+					temp2.model->Scale(bulletSize * 75.0f);
+
+					// Get ship direction from matrix (x and z axes)
+
+					temp2.xVel = xSpeed;
+					temp2.yVel = ySpeed;
+					temp2.zVel = zSpeed;
+
+					// Length of bullet's life measured in seconds
+					numBullets++;
+					bullets.push_back(temp2);
+				}
+			}
 		}
-	}
+	
 }

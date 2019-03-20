@@ -28,4 +28,4 @@ struct HeavyEnemyShip
 
 
 void CreateEnemies(I3DEngine*& myEngine, IMesh* lightMesh, IMesh* MediumMesh, IMesh* HeavyMesh);
-void SpawnEnemies(int numBullets, deque <BulletData> bullets, bool moveCamTop, bool moveCamBehind, float frameTime);
+void SpawnEnemies(int numBullets, deque <CBulletData> bullets, bool moveCamTop, bool moveCamBehind, float frameTime);
