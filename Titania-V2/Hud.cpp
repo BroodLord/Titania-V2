@@ -40,20 +40,35 @@ void removeHeart(I3DEngine*& myEngine, AmountLives& Health)
 	}
 }
 
+void SpawnSprites(I3DEngine*& myEngine)
+{
+	speedPup = myEngine->CreateSprite("Speed2.png", 15.0f, POWER_UP_COORDS, 1.0f);
+	shieldPup = myEngine->CreateSprite("Shield2.png", 85.0f, POWER_UP_COORDS, 1.0f);
+	NospeedPup = myEngine->CreateSprite("NoSpeed2.png", 15.0f, POWER_UP_COORDS, 0.8f);
+	NoshieldPup = myEngine->CreateSprite("NoShield2.png", 85.0f, POWER_UP_COORDS, 0.8f);
+}
+
 void SpeedPowerUP(I3DEngine*& myEngine)
 {
-	speedPup = myEngine->CreateSprite("Speed2.png", 15.0f, POWER_UP_COORDS, 0.7f);
-	shieldPup = myEngine->CreateSprite("test2.png", 85.0f, POWER_UP_COORDS, 0.7f);
+	speedPup->SetZ(0.7f);
 }
 
 void RemoveSpeedPowerUP(I3DEngine*& myEngine)
 {
-	myEngine->RemoveSprite(speedPup);
-	myEngine->RemoveSprite(shieldPup);
+	speedPup->SetZ(1.0f);
 }
 
 void NoPowerUP(I3DEngine*& myEngine)
 {
-	NospeedPup = myEngine->CreateSprite("NoSpeed2.png", 15.0f, POWER_UP_COORDS, 0.8f);
-	NoshieldPup = myEngine->CreateSprite("NoShield2.png", 85.0f, POWER_UP_COORDS, 0.8f);
+	
+}
+
+void ShieldPowerUP(I3DEngine*& myEngine)
+{
+	shieldPup->SetZ(0.7f);
+}
+
+void RemoveShieldPowerUP(I3DEngine*& myEngine)
+{
+	shieldPup->SetZ(1.0f);
 }

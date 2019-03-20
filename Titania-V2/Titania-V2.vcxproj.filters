@@ -13,6 +13,12 @@
     <ClCompile Include="Shooting.cpp">
       <Filter>CPPS</Filter>
     </ClCompile>
+    <ClCompile Include="Spawn.cpp">
+      <Filter>CPPS</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUp.cpp">
+      <Filter>CPPS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -33,6 +39,12 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Shooting.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Spawn.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUp.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

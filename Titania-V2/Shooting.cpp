@@ -1,25 +1,15 @@
 #include "Shooting.h"
 
-
 float matrix[16];
 const float bulletSize = 0.008f;
 const float bulletSpeed = 6.0f;
-
-
-
-//x = playerShip->GetX() + 0.015f * matrix[0] + 0.01f * matrix[8];
-//y = playerShip->GetY() + 0.015f * matrix[1] + 0.01f * matrix[9];
-//z = playerShip->GetZ() + 0.015f * matrix[2] + 0.01f * matrix[10];
-//
-//bullets2[num2Bullets].model = bulletMesh->CreateModel(x, y, z);
-//bullets2[num2Bullets].model->Scale(bulletSize);
-
 
 void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IModel* playerShip, int& numBullets, IMesh*& bulletMesh, float playerShipSpeed, sf::Sound& shootingSound, deque <BulletData>& bullets)
 {
 	float x = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
 	float y = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
 	float z = playerShip->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
+	
 	
 	float bulletSpeedX = playerShipSpeed;
 	float bulletSpeedZ = playerShipSpeed + bulletSpeed;
