@@ -3,6 +3,7 @@
 float matrix[16];
 const float bulletSize = 0.008f;
 const float bulletSpeed = 6.0f;
+extern bool tripleBullet;
 
 void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IModel* playerShip, int& numBullets, IMesh*& bulletMesh, float playerShipSpeed, sf::Sound& shootingSound, deque <CBulletData>& bullets)
 {
@@ -26,6 +27,7 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 		CBulletData temp;
 		CBulletData temp2;
+		CBulletData temp3;
 
 		for (int i = 0; i < numBullets; i++)
 		{
@@ -100,6 +102,27 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 					numBullets++;
 					bullets.push_back(temp2);
 				}
+
+				if (tripleBullet == true && numBullets < maxBullets)
+				{
+					// bullet 3
+					temp3.model = bulletMesh->CreateModel(x, y - 1.0f, z - 4.5f);
+					temp3.model->Scale(bulletSize * 75.0f);
+
+
+					// Get ship direction from matrix (x and z axes)
+
+
+					temp3.xVel = xSpeed;
+					temp3.yVel = ySpeed;
+					temp3.zVel = zSpeed;
+
+					// Length of bullet's life measured in seconds
+					numBullets++;
+					bullets.push_back(temp3);
+
+				}
+
 			}
 		}
 	

@@ -56,6 +56,7 @@ const float kCameraMove = 0.10f; // distance for the direction keys x and z axis
 const float kMouseWheelMove = 10.0f; // distance for wheel movement z axis
 const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the camera
 bool mouseCaptureActive = false; // state of mouse capture
+bool tripleBullet = false;
 
 deque <CBulletData> bullets;
 
@@ -129,9 +130,12 @@ void main()
 	float countDown = 1.8f;
 	float currentX = 0.0f;
 	float barrelRollCountDown = 2.0f;
-	float shieldPowerUpTimer = 9.0f;
-	float speedPowerUpTimer = 5.0f;
-	float bulletPowerUpTimer = 5.0f;
+	//float shieldPowerUpTimer = 9.0f;
+	//float speedPowerUpTimer = 5.0f;
+	//float bulletPowerUpTimer = 5.0f;
+	float shieldPowerUpTimer = 0.0f;
+	float speedPowerUpTimer = 0.0f;
+	float bulletPowerUpTimer = 0.0f;
 	float rollingTimer = 0.4f;
 
 
@@ -433,7 +437,7 @@ void main()
 				for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 				{
 
-					// Speed
+					//** Power Up Collision **
 					if (sphere2sphere(playerShip, (*it)->mModel, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 					{
 						(*it)->mModel->MoveY(50.0f);
@@ -448,14 +452,17 @@ void main()
 					if (currentPowerUpState == Speed)
 					{
 						currentSpeedPowerUpState = Speed;
+						speedPowerUpTimer = 5.0f;
 					}
 					else if (currentPowerUpState == Shield)
 					{
 						currentShieldPowerUpState = Shield;
+						shieldPowerUpTimer = 9.0f;
 					}
 					else if (currentPowerUpState == Bullet)
 					{
 						currentBulletPowerUpState = Bullet;
+						bulletPowerUpTimer = 5.0f;
 					}
 				}
 
@@ -477,7 +484,7 @@ void main()
 					else if (speedPowerUpTimer < 0.0f)
 					{
 						RemoveSpeedPowerUP(myEngine);
-						speedPowerUpTimer = 5.0f;
+						//speedPowerUpTimer = 5.0f;
 						speedDisplay = 0;
 						currentSpeedPowerUpState = None;
 					}
@@ -501,7 +508,7 @@ void main()
 					else if (shieldPowerUpTimer < 0.0f)
 					{
 						RemoveShieldPowerUP(myEngine);
-						shieldPowerUpTimer = 9.0f;
+						//shieldPowerUpTimer = 9.0f;
 						shieldDisplay = 0;
 						shield->SetY(500.0f);
 						currentShieldPowerUpState = None;
@@ -510,6 +517,7 @@ void main()
 
 				if (currentBulletPowerUpState == Bullet)
 				{
+					tripleBullet = true;
 					bulletDisplay = bulletPowerUpTimer + 1;
 					if (bulletPowerUpTimer > 0.0f)
 					{
@@ -522,9 +530,10 @@ void main()
 					else if (bulletPowerUpTimer < 0.0f)
 					{
 						RemoveBulletPowerUP(myEngine);
-						bulletPowerUpTimer = 5.0f;
+						//bulletPowerUpTimer = 5.0f;
 						bulletDisplay = 0;
 						currentBulletPowerUpState = None;
+						tripleBullet = false;
 					}
 				}
 
