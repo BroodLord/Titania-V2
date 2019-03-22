@@ -8,7 +8,7 @@ using namespace tle;
 
 enum eCameraPos { behind, topDown };
 enum PowerUpState { None, Speed, Shield, Bullet };
-bool sphere2sphere(IModel* Ship, IModel* Object, float shipRad, float objectRad); //collision function for any sphere on sphere collisions
+bool sphere2sphere(IModel*& Ship, IModel*& Object, float shipRad, float objectRad); //collision function for any sphere on sphere collisions
 float random(int rangeMin, int rangeMax);
 
 
@@ -27,24 +27,24 @@ public:
 	float life = 3.0;
 };
 
-class CTripleBullet : public CBulletData
-{
-public:
-	CTripleBullet();
-	~CTripleBullet();
-	float fireRate = 20.0f;
-private:
-
-};
-
-class CNormalBullet : public CBulletData
-{
-public:
-	CNormalBullet();
-	~CNormalBullet();
-	float fireRate = 20.0f;
-private:
-
-};
+//class CTripleBullet : public CBulletData
+//{
+//public:
+//	CTripleBullet();
+//	~CTripleBullet();
+//	float fireRate = 20.0f;
+//private:
+//
+//};
+//
+//class CNormalBullet : public CBulletData
+//{
+//public:
+//	CNormalBullet();
+//	~CNormalBullet();
+//	float fireRate = 20.0f;
+//private:
+//
+//};
 
 

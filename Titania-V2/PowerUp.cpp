@@ -2,30 +2,30 @@
 
 float PowerUpTimer = 0.0f;
 
-extern deque <CPowerUp*> SpeedList;
-extern deque <CPowerUp*> ShieldList;
-extern deque <CPowerUp*> TripleList;
-extern deque <CPowerUp*> CurrentlySpawned;
+extern deque <unique_ptr <CPowerUp>> SpeedList;
+extern deque <unique_ptr <CPowerUp>> ShieldList;
+extern deque <unique_ptr <CPowerUp>> TripleList;
+extern deque <unique_ptr <CPowerUp>> CurrentlySpawned;
 
 
-void SpawnPowerUp(int randNum, IModel* enemeyShip, I3DEngine*& myEngine)
+void SpawnPowerUp(int randNum, IModel*& enemeyShip, I3DEngine*& myEngine)
 {
 	if (randNum == 1)
 	{
 		SpeedList.front()->mModel->SetPosition(enemeyShip->GetX(), enemeyShip->GetY(), enemeyShip->GetZ());
-		CurrentlySpawned.push_back(move(SpeedList[0]));
+		CurrentlySpawned.push_back(move(SpeedList.front()));
 		SpeedList.pop_front();
 	}
 	else if (randNum == 2)
 	{
 		ShieldList.front()->mModel->SetPosition(enemeyShip->GetX(), enemeyShip->GetY(), enemeyShip->GetZ());
-		CurrentlySpawned.push_back(move(ShieldList[0]));
+		CurrentlySpawned.push_back(move(ShieldList.front()));
 		ShieldList.pop_front();
 	}
 	else if (randNum == 3)
 	{
 		TripleList.front()->mModel->SetPosition(enemeyShip->GetX(), enemeyShip->GetY(), enemeyShip->GetZ());
-		CurrentlySpawned.push_back(move(TripleList[0]));
+		CurrentlySpawned.push_back(move(TripleList.front()));
 		TripleList.pop_front();
 	}
 

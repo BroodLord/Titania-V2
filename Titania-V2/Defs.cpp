@@ -4,7 +4,7 @@
 using namespace tle;
 
 //COLLISION DETECTION
-bool sphere2sphere( IModel* Ship, IModel* Object, float shipRad, float objectRad) //Calculates distance between two spheres and if they have collided
+bool sphere2sphere( IModel*& Ship, IModel*& Object, float shipRad, float objectRad) //Calculates distance between two spheres and if they have collided
 {
  	int s1xPos = Ship->GetLocalX();	
 	int s1yPos = Ship->GetLocalY();
@@ -42,18 +42,18 @@ CBulletData::~CBulletData()
 {
 }
 
-CTripleBullet::CTripleBullet()
-{
-}
-
-CTripleBullet::~CTripleBullet()
-{
-}
-
-CNormalBullet::CNormalBullet()
-{
-}
-
-CNormalBullet::~CNormalBullet()
-{
-}
+//CTripleBullet::CTripleBullet()
+//{
+//}
+//
+//CTripleBullet::~CTripleBullet()
+//{
+//}
+//
+//CNormalBullet::CNormalBullet()
+//{
+//}
+//
+//CNormalBullet::~CNormalBullet()
+//{
+//}

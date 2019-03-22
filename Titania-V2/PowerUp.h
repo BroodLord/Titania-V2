@@ -7,9 +7,6 @@
 using namespace tle;
 
 
-
-//void ActivatePower(float frameTime, PowerUpState& currentPowerUpState, float powerTime, I3DEngine*& myEngine, sf::Sound powerDownMusic);
-
 class CPowerUp
 {
 public:
@@ -102,4 +99,4 @@ private:
 //{
 //}
 
-void SpawnPowerUp(int randNum, IModel* enemeyShip, I3DEngine*& myEngine);
+void SpawnPowerUp(int randNum, IModel*& enemeyShip, I3DEngine*& myEngine);

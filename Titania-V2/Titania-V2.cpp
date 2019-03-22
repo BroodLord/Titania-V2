@@ -60,14 +60,15 @@ bool tripleBullet = false;
 
 deque <CBulletData> bullets;
 
-deque <CPowerUp*> SpeedList;
-deque <CPowerUp*> ShieldList;
-deque <CPowerUp*> TripleList;
-deque <CPowerUp*> CurrentlySpawned;
+deque <unique_ptr <CPowerUp>> SpeedList;
+deque <unique_ptr <CPowerUp>> ShieldList;
+deque <unique_ptr <CPowerUp>> TripleList;
+deque <unique_ptr <CPowerUp>> CurrentlySpawned;
 
-void Erase(deque <CPowerUp*> current, PowerUpState Type);
-
-
+deque <unique_ptr <CShips>> HeavyShipList;
+deque <unique_ptr <CShips>> MediumShipList;
+deque <unique_ptr <CShips>> LightShipList;
+deque <unique_ptr <CShips>> SpawnedShipList;
 
 void main()
 {
@@ -196,7 +197,7 @@ void main()
 	HeavyMesh = myEngine->LoadMesh("enemyShip2.x");
 	//shieldPowerUpMesh = myEngine->LoadMesh("PowerUp.x");
 
-	CreateEnemies(myEngine, lightMesh, MediumMesh, HeavyMesh);
+	CreateEnemies(myEngine);
 
 	floorMesh = myEngine->LoadMesh("floor.x");
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
@@ -206,7 +207,8 @@ void main()
 
 	for (int i = 0; i < 5; i++)
 	{
-		CSpeed* speedTemp = new CSpeed(myEngine);
+		
+			unique_ptr <CSpeed> speedTemp (new CSpeed(myEngine));
 
 		speedTemp->mModel = speedTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
 		speedTemp->mModel->ScaleZ(0.01f);
@@ -214,14 +216,14 @@ void main()
 		speedTemp->mModel->RotateLocalX(90.0f);
 		SpeedList.push_back(move(speedTemp));
 
-		CShield* shieldTemp = new CShield(myEngine);
+		unique_ptr <CShield> shieldTemp (new CShield(myEngine));
 		shieldTemp->mModel = shieldTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
 		shieldTemp->mModel->ScaleZ(0.01f);
 		shieldTemp->mModel->Scale(0.5f);
 		shieldTemp->mModel->RotateLocalX(-90.0f);
 		ShieldList.push_back(move(shieldTemp));
 
-		CTriple* tripleTemp = new CTriple(myEngine);
+		unique_ptr <CTriple> tripleTemp (new CTriple(myEngine));
 		tripleTemp->mModel = tripleTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
 		tripleTemp->mModel->ScaleZ(0.01f);
 		tripleTemp->mModel->Scale(0.5f);
@@ -257,6 +259,7 @@ void main()
 	sphereMesh = myEngine->LoadMesh("Sphere.x");
 	shield = sphereMesh->CreateModel(0.0f, 500.0f, 0.0f);
 	shield->AttachToParent(playerShip);
+	shield->Scale(0.6f);
 
 	playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 	playerCamera->RotateLocalX(90.0f);
@@ -332,6 +335,7 @@ void main()
 	cameraPos = topDown;
 
 
+
 	//NoPowerUP(myEngine);
 	SpawnSprites(myEngine);
 
@@ -343,7 +347,7 @@ void main()
 		currentX = playerShip->GetLocalX();
 		float frameTime = myEngine->Timer();
 		// Draw the scene
-
+		SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, bulletMesh, myEngine);
 		stringstream powerUpStateText; //Text altered to present gamestate
 		stringstream speedText; //Text altered to present gamestate
 		stringstream shieldText; //Text altered to present gamestate
@@ -398,7 +402,10 @@ void main()
 
 			menuMusic.stop();
 
-			SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, myEngine);
+		
+			ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine);
+
+
 
 			if (battleMusic.getStatus() == battleMusic.Stopped)
 			{
@@ -440,7 +447,7 @@ void main()
 					//** Power Up Collision **
 					if (sphere2sphere(playerShip, (*it)->mModel, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 					{
-						(*it)->mModel->MoveY(50.0f);
+						(*it)->mModel->SetY(500.0f);
 						currentPowerUpState = (*it)->mPowerType;
 						powerUpMusic.play();
 						(*it)->Power(myEngine, i);
@@ -877,20 +884,4 @@ void main()
 
 	// Delete the 3D engine now we are finished with it
 	myEngine->Delete();
-}
-
-void Erase(deque <CPowerUp*> current, PowerUpState Type)
-{
-	auto p = current.begin(); // set p to the beginning of the loop
-	while (p != current.end()) // while not at the end of the loop
-	{
-		if ((*p)->mPowerType = Type)
-		{
-			cout << "found" << endl;
-			current.erase(p);
-			break;
-		}
-		p++;
-
-	}
 }
