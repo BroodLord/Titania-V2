@@ -1,7 +1,10 @@
 #pragma once
 #include <TL-Engine.h>	// TL-Engine include file and namespace
 #include <SFML/Audio.hpp>
+#include <deque>
 using namespace tle;
+
+
 
 enum eCameraPos { behind, topDown };
 enum PowerUpState { None, Speed, Shield, Bullet };
@@ -24,8 +27,6 @@ public:
 	float life = 3.0;
 };
 
-
-
 class CTripleBullet : public CBulletData
 {
 public:
@@ -35,8 +36,6 @@ public:
 private:
 
 };
-
-
 
 class CNormalBullet : public CBulletData
 {

@@ -228,7 +228,7 @@ Frame {
 			0.220000;0.220000;0.220000;;
 			0.000000;0.000000;0.000000;;
 			TextureFilename {
-				"Shield.png";
+				"ShieldTile.png";
 			}
 		}
 

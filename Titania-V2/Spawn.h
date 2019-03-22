@@ -2,6 +2,7 @@
 #include <TL-Engine.h>
 #include <deque>
 #include "Defs.h"
+#include "PowerUp.h"
 using namespace tle;
 
 enum EnemyShipState { Spawning, Active, Deactivated };
@@ -25,7 +26,6 @@ struct HeavyEnemyShip
 	int Health = 6;
 };
 
-
-
 void CreateEnemies(I3DEngine*& myEngine, IMesh* lightMesh, IMesh* MediumMesh, IMesh* HeavyMesh);
-void SpawnEnemies(int numBullets, deque <CBulletData> bullets, bool moveCamTop, bool moveCamBehind, float frameTime);
+void SpawnEnemies(int numBullets, deque <CBulletData> bullets, bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine);
+

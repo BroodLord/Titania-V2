@@ -20,8 +20,6 @@ struct particle
 
 
 
-
-
 sf::SoundBuffer shootingBuffer;
 sf::Sound shootingSound;
 sf::SoundBuffer mainMenuBuffer;
@@ -60,7 +58,15 @@ const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the 
 bool mouseCaptureActive = false; // state of mouse capture
 
 deque <CBulletData> bullets;
-//deque <BulletData> bullets2;
+
+deque <CPowerUp*> SpeedList;
+deque <CPowerUp*> ShieldList;
+deque <CPowerUp*> TripleList;
+deque <CPowerUp*> CurrentlySpawned;
+
+void Erase(deque <CPowerUp*> current, PowerUpState Type);
+
+
 
 void main()
 {
@@ -87,9 +93,9 @@ void main()
 	IMesh* lightMesh;
 	IMesh* MediumMesh;
 	IMesh* HeavyMesh;
-	IMesh* speedPowerUpMesh;
-	IMesh* shieldPowerUpMesh;
-	IMesh* bulletPowerUpMesh;
+	//IMesh* speedPowerUpMesh;
+	//IMesh* shieldPowerUpMesh;
+	//IMesh* bulletPowerUpMesh;
 	IMesh* sphereMesh;
 
 	//** Models
@@ -101,9 +107,9 @@ void main()
 	IModel* towerNine;
 	IModel* towerTwo;
 	IModel* Road[25];
-	IModel* speedPowerUp;
-	IModel* shieldPowerUp;
-	IModel* bulletPowerUp;
+	//IModel* speedPowerUp;
+	//IModel* shieldPowerUp;
+	//IModel* bulletPowerUp;
 	IModel* shield;
 
 	int numBullets = 0;
@@ -127,7 +133,7 @@ void main()
 	float speedPowerUpTimer = 5.0f;
 	float bulletPowerUpTimer = 5.0f;
 	float rollingTimer = 0.4f;
-	
+
 
 	int speedDisplay = 0;
 	int shieldDisplay = 0;
@@ -138,6 +144,7 @@ void main()
 	PowerUpState currentSpeedPowerUpState = None;
 	PowerUpState currentShieldPowerUpState = None;
 	PowerUpState currentBulletPowerUpState = None;
+	PowerUpState currentPowerUpState = None;
 
 	//**** Hud Things ****
 	AmountLives Health = ThreeLives;
@@ -183,7 +190,7 @@ void main()
 	lightMesh = myEngine->LoadMesh("enemyShip.x");
 	MediumMesh = myEngine->LoadMesh("enemyShip1.x");
 	HeavyMesh = myEngine->LoadMesh("enemyShip2.x");
-	shieldPowerUpMesh = myEngine->LoadMesh("PowerUp.x");
+	//shieldPowerUpMesh = myEngine->LoadMesh("PowerUp.x");
 
 	CreateEnemies(myEngine, lightMesh, MediumMesh, HeavyMesh);
 
@@ -192,6 +199,32 @@ void main()
 	floor->SetSkin("pavement.png");
 
 	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, 750.0f);
+
+	for (int i = 0; i < 5; i++)
+	{
+		CSpeed* speedTemp = new CSpeed(myEngine);
+
+		speedTemp->mModel = speedTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
+		speedTemp->mModel->ScaleZ(0.01f);
+		speedTemp->mModel->Scale(0.5f);
+		speedTemp->mModel->RotateLocalX(90.0f);
+		SpeedList.push_back(move(speedTemp));
+
+		CShield* shieldTemp = new CShield(myEngine);
+		shieldTemp->mModel = shieldTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
+		shieldTemp->mModel->ScaleZ(0.01f);
+		shieldTemp->mModel->Scale(0.5f);
+		shieldTemp->mModel->RotateLocalX(-90.0f);
+		ShieldList.push_back(move(shieldTemp));
+
+		CTriple* tripleTemp = new CTriple(myEngine);
+		tripleTemp->mModel = tripleTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
+		tripleTemp->mModel->ScaleZ(0.01f);
+		tripleTemp->mModel->Scale(0.5f);
+		tripleTemp->mModel->RotateLocalX(90.0f);
+		TripleList.push_back(move(tripleTemp));
+	}
+
 	for (int i = 0; i < 20; i++)
 	{
 		Road[i] = camBlockMesh->CreateModel(2.0f, 0.0f, startingz);
@@ -203,23 +236,6 @@ void main()
 	}
 	topDownCamBlock->Scale(0.01f);
 
-	speedPowerUpMesh = myEngine->LoadMesh("SpeedPowerUp.x");
-	speedPowerUp = speedPowerUpMesh->CreateModel(0.0f, -30.0f, 600.0f);
-	speedPowerUp->ScaleZ(0.01f);
-	speedPowerUp->Scale(0.5f);
-	speedPowerUp->RotateLocalX(90.0f);
-
-	shieldPowerUpMesh = myEngine->LoadMesh("ShieldPowerUp.x");
-	shieldPowerUp = shieldPowerUpMesh->CreateModel(0.0f, -30.0f, 300.0f);
-	shieldPowerUp->ScaleZ(0.01f);
-	shieldPowerUp->Scale(0.5f);
-	shieldPowerUp->RotateLocalX(-90.0f);
-
-	bulletPowerUpMesh = myEngine->LoadMesh("BulletPowerUp.x");
-	bulletPowerUp = bulletPowerUpMesh->CreateModel(0.0f, -30.0f, 500.0f);
-	bulletPowerUp->ScaleZ(0.01f);
-	bulletPowerUp->Scale(0.5f);
-	bulletPowerUp->RotateLocalX(90.0f);
 
 	//powerupthing = myEngine->LoadMesh("PowerUpMiddle.x");
 	//cubetest = powerupthing->CreateModel(0.0f, 0.0f, 0.0f);
@@ -325,6 +341,10 @@ void main()
 		// Draw the scene
 
 		stringstream powerUpStateText; //Text altered to present gamestate
+		stringstream speedText; //Text altered to present gamestate
+		stringstream shieldText; //Text altered to present gamestate
+		stringstream tripleText; //Text altered to present gamestate
+
 		string kPowerUpStateText = "PowerUp: ";
 		string kNoneText = "None";
 		string kSpeedText = "Speed";
@@ -352,6 +372,7 @@ void main()
 			preGameText << kPlayText << "   " << kQuitText;
 			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f, kWhite); //Game state text is set to go
 			preGameText.str(""); // Clear myStream
+
 			if (myEngine->KeyHit(kStartKey))
 			{
 				backGround->SetPosition(100000, 100000);
@@ -364,16 +385,16 @@ void main()
 
 		if (currentGameState == Play && gameOver == false)
 		{
-			
-				if (Health != Dead)
-				{
-					Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, numBullets, bulletMesh, playerShipSpeed, shootingSound, bullets);
-				}
-				
-			
+
+			if (Health != Dead)
+			{
+				Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, numBullets, bulletMesh, playerShipSpeed, shootingSound, bullets);
+			}
+
+
 			menuMusic.stop();
 
-			SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime);
+			SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, myEngine);
 
 			if (battleMusic.getStatus() == battleMusic.Stopped)
 			{
@@ -394,31 +415,52 @@ void main()
 			powerUpStateText.str(""); // Clear myStream
 
 
-			powerUpStateText << bulletDisplay;
-			myFont->Draw(powerUpStateText.str(), 168.95f, 155.0f, kWhite); //Game state text is set to go
-			powerUpStateText.str(""); // Clear myStream
+			tripleText << bulletDisplay;
+			myFont->Draw(tripleText.str(), 168.95f, 155.0f, kWhite); //Game state text is set to go
+			tripleText.str(""); // Clear myStream
 
-			powerUpStateText << shieldDisplay;
-			myFont->Draw(powerUpStateText.str(), 103.0f, 155.0f, kWhite); //Game state text is set to go
-			powerUpStateText.str(""); // Clear myStream
+			shieldText << shieldDisplay;
+			myFont->Draw(shieldText.str(), 103.0f, 155.0f, kWhite); //Game state text is set to go
+			shieldText.str(""); // Clear myStream
 
-			powerUpStateText << speedDisplay;
-			myFont->Draw(powerUpStateText.str(), 37.5f, 155.0f, kWhite); //Game state text is set to go
-			powerUpStateText.str(""); // Clear myStream
+			speedText << speedDisplay;
+			myFont->Draw(speedText.str(), 37.5f, 155.0f, kWhite); //Game state text is set to go
+			speedText.str(""); // Clear myStream
 
 			if (moveCamTop != true && moveCamBehind != true)
 			{
-				// Speed
-				if (sphere2sphere(playerShip, speedPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+				int i = 0;
+				for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 				{
-					speedPowerUp->MoveY(50.0f);
-					currentSpeedPowerUpState = Speed;
-					powerUpMusic.play();
-					SpeedPowerUP(myEngine);
+
+					// Speed
+					if (sphere2sphere(playerShip, (*it)->mModel, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+					{
+						(*it)->mModel->MoveY(50.0f);
+						currentPowerUpState = (*it)->mPowerType;
+						powerUpMusic.play();
+						(*it)->Power(myEngine, i);
+						//Erase(CurrentlySpawned, (*it)->mPowerType);
+						//CurrentlySpawned.pop_front();
+					}
+
+					i++;
+					if (currentPowerUpState == Speed)
+					{
+						currentSpeedPowerUpState = Speed;
+					}
+					else if (currentPowerUpState == Shield)
+					{
+						currentShieldPowerUpState = Shield;
+					}
+					else if (currentPowerUpState == Bullet)
+					{
+						currentBulletPowerUpState = Bullet;
+					}
 				}
 
 
-
+				currentPowerUpState = None;
 
 				if (currentSpeedPowerUpState == Speed)
 				{
@@ -435,23 +477,11 @@ void main()
 					else if (speedPowerUpTimer < 0.0f)
 					{
 						RemoveSpeedPowerUP(myEngine);
-						currentSpeedPowerUpState = None;
 						speedPowerUpTimer = 5.0f;
 						speedDisplay = 0;
+						currentSpeedPowerUpState = None;
 					}
 				}
-
-				//Shield
-				if (sphere2sphere(playerShip, shieldPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
-				{
-					shieldPowerUp->MoveY(50.0f);
-					currentShieldPowerUpState = Shield;
-					powerUpMusic.play();
-					ShieldPowerUP(myEngine);
-
-				}
-
-
 
 				if (currentShieldPowerUpState == Shield)
 				{
@@ -471,24 +501,12 @@ void main()
 					else if (shieldPowerUpTimer < 0.0f)
 					{
 						RemoveShieldPowerUP(myEngine);
-						currentShieldPowerUpState = None;
 						shieldPowerUpTimer = 9.0f;
 						shieldDisplay = 0;
 						shield->SetY(500.0f);
+						currentShieldPowerUpState = None;
 					}
 				}
-
-				// Bullets
-				if (sphere2sphere(playerShip, bulletPowerUp, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
-				{
-					bulletPowerUp->MoveY(50.0f);
-					currentBulletPowerUpState = Bullet;
-					powerUpMusic.play();
-					BulletPowerUP(myEngine);
-				}
-
-
-
 
 				if (currentBulletPowerUpState == Bullet)
 				{
@@ -504,11 +522,53 @@ void main()
 					else if (bulletPowerUpTimer < 0.0f)
 					{
 						RemoveBulletPowerUP(myEngine);
-						currentBulletPowerUpState = None;
 						bulletPowerUpTimer = 5.0f;
 						bulletDisplay = 0;
+						currentBulletPowerUpState = None;
 					}
 				}
+
+				//if (behind)
+				//{
+				//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+				//	{						
+				//		//(*it)->mModel->RotateLocalX(50.0f * frameTime);
+				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+				//	}
+				//}
+				//else if (topDown)
+				//{
+				//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
+				//	}
+				//}
+
+
+				if (!CurrentlySpawned.empty())
+				{
+					if (CurrentlySpawned.front()->mModel->GetZ() > 800.0f)
+					{
+						if (CurrentlySpawned.front()->mPowerType == Speed)
+						{
+							CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
+							SpeedList.push_back(move(CurrentlySpawned.front()));
+						}
+						else if (CurrentlySpawned.front()->mPowerType == Shield)
+						{
+							CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
+							ShieldList.push_back(move(CurrentlySpawned.front()));
+						}
+						else if (CurrentlySpawned.front()->mPowerType == Bullet)
+						{
+							CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
+							TripleList.push_back(move(CurrentlySpawned.front()));
+						}
+
+						CurrentlySpawned.pop_front();
+					}
+				}
+
 			}
 
 
@@ -599,14 +659,12 @@ void main()
 				if (moveCamBehind != true)
 				{
 					floor->MoveLocalZ(80.0f * frameTime);
-					speedPowerUp->RotateLocalY(50.0f * frameTime);
-					speedPowerUp->MoveZ(playerShipSpeed);
 
-					shieldPowerUp->RotateLocalY(50.0f * frameTime);
-					shieldPowerUp->MoveZ(playerShipSpeed);
-
-					bulletPowerUp->RotateY(50.0f * frameTime);
-					bulletPowerUp->MoveZ(playerShipSpeed);
+					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					{
+						(*it)->mModel->RotateLocalY(50.0f * frameTime);
+						(*it)->mModel->MoveZ(playerShipSpeed);
+					}
 
 					if (floorResert >= 200)
 					{
@@ -638,9 +696,27 @@ void main()
 					countDown -= frameTime;
 					playerCamera->MoveLocalY(50.0 * frameTime);
 					playerCamera->MoveLocalZ(-5.0 * frameTime);
-					shieldPowerUp->RotateLocalX(-50.0f * frameTime);
-					speedPowerUp->RotateLocalX(50.0f * frameTime);
-					bulletPowerUp->RotateLocalX(50.0f * frameTime);
+
+					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					{
+						(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+					}
+
+					for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+					{
+						(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+					}
+
+					for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+					{
+						(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+					}
+
+					for (auto it = TripleList.begin(); it != TripleList.end(); it++)
+					{
+						(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+					}
+
 					if (countDown <= 0)
 					{
 						moveCamBehind = false;
@@ -660,14 +736,11 @@ void main()
 				if (moveCamTop != true)
 				{
 					floor->MoveLocalZ(80.0f * frameTime);
-					speedPowerUp->RotateY(50.0f * frameTime);
-					speedPowerUp->MoveZ(playerShipSpeed);
-
-					shieldPowerUp->RotateY(50.0f * frameTime);
-					shieldPowerUp->MoveZ(playerShipSpeed);
-
-					bulletPowerUp->RotateY(50.0f * frameTime);
-					bulletPowerUp->MoveZ(playerShipSpeed);
+					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					{
+						(*it)->mModel->RotateY(50.0f * frameTime);
+						(*it)->mModel->MoveZ(playerShipSpeed);
+					}
 
 					if (floorResert >= 200)
 					{
@@ -699,10 +772,26 @@ void main()
 					countDown -= frameTime;
 					playerCamera->MoveLocalY(-50.0 * frameTime);
 					playerCamera->MoveLocalZ(5.0 * frameTime);
-					shieldPowerUp->RotateLocalX(50.0f * frameTime);
-					speedPowerUp->RotateLocalX(-50.0f * frameTime);
-					bulletPowerUp->RotateLocalX(-50.0f * frameTime);
 
+					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					{
+						(*it)->mModel->RotateLocalX(50.0f * frameTime);
+					}
+
+					for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+					{
+						(*it)->mModel->RotateLocalX(50.0f * frameTime);
+					}
+
+					for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+					{
+						(*it)->mModel->RotateLocalX(50.0f * frameTime);
+					}
+
+					for (auto it = TripleList.begin(); it != TripleList.end(); it++)
+					{
+						(*it)->mModel->RotateLocalX(50.0f * frameTime);
+					}
 					if (countDown <= 0)
 					{
 						moveCamTop = false;
@@ -728,19 +817,13 @@ void main()
 			deathFont->Draw("Game Over", 800.0f, 500.0f, kBlack);
 			if (myEngine->KeyHit(Key_Return))
 			{
-				speedPowerUp->SetPosition(0.0f, -30.0f, 730.0f);
+				//speedPowerUp->SetPosition(0.0f, -30.0f, 730.0f);
 				currentGameState = MainMenu;
 				Health = ThreeLives;
 				gameOver = false;
 
 			}
 		}
-
-
-
-
-
-
 
 		/******************************/
 
@@ -785,4 +868,20 @@ void main()
 
 	// Delete the 3D engine now we are finished with it
 	myEngine->Delete();
+}
+
+void Erase(deque <CPowerUp*> current, PowerUpState Type)
+{
+	auto p = current.begin(); // set p to the beginning of the loop
+	while (p != current.end()) // while not at the end of the loop
+	{
+		if ((*p)->mPowerType = Type)
+		{
+			cout << "found" << endl;
+			current.erase(p);
+			break;
+		}
+		p++;
+
+	}
 }

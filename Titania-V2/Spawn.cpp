@@ -11,6 +11,10 @@ LightEnemyShip lightShip;
 
 EnemyShipState currentEnemyShipState;
 
+extern deque <CPowerUp*> SpeedList;
+extern deque <CPowerUp*> ShieldList;
+extern deque <CPowerUp*> TripleList;
+extern deque <CPowerUp*> CurrentlySpawned;
 
 int spawnArray[30] = { 1,3,2,1,2,3,3,1,2,1,3,2,2,1,3,2,1,1,3,2,3,2,1,2,3,1,2,3,2,1, };
 
@@ -43,7 +47,7 @@ void CreateEnemies(I3DEngine*& myEngine, IMesh* lightMesh, IMesh* MediumMesh, IM
 	}
 }
 
-void SpawnEnemies(int numBullets, deque <CBulletData> bullets, bool moveCamTop, bool moveCamBehind, float frameTime)
+void SpawnEnemies(int numBullets, deque <CBulletData> bullets, bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine)
 {
 	if (currentEnemyShipState == Active)
 	{
@@ -56,7 +60,7 @@ void SpawnEnemies(int numBullets, deque <CBulletData> bullets, bool moveCamTop, 
 				if (sphere2sphere(lightShip.lightShip[i], bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 				{
 					currentEnemyShipState = Deactivated;
-
+					SpawnPowerUp(random(0, 6), lightShip.lightShip[i], myEngine);
 				}
 				if (currentEnemyShipState == Deactivated)
 				{
@@ -72,6 +76,7 @@ void SpawnEnemies(int numBullets, deque <CBulletData> bullets, bool moveCamTop, 
 				if (sphere2sphere(mediumShip.MediumShip[i], bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 				{
 					currentEnemyShipState = Deactivated;
+					SpawnPowerUp(random(0, 6), mediumShip.MediumShip[i], myEngine);
 				}
 				if (currentEnemyShipState == Deactivated)
 				{
@@ -87,6 +92,7 @@ void SpawnEnemies(int numBullets, deque <CBulletData> bullets, bool moveCamTop, 
 				if (sphere2sphere(heavyShip.HeavyShip[i], bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 				{
 					currentEnemyShipState = Deactivated;
+					SpawnPowerUp(random(0, 6), heavyShip.HeavyShip[i], myEngine);
 				}
 				if (currentEnemyShipState == Deactivated)
 				{
