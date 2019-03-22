@@ -18,6 +18,7 @@ public:
 	int mHealth;
 	float mFireRate;
 	EnemyShipState mDead = Active;
+	int mScore;
 
 private:
 
@@ -40,6 +41,7 @@ public:
 	mShipMesh = myEngine->LoadMesh("enemyShip.x");
 	mHealth = 2;
 	mFireRate = 5.0f;
+	mScore = 1;
 }
 	//~CLightEnemyShip();
 
@@ -62,6 +64,7 @@ public:
 		mShipMesh = myEngine->LoadMesh("enemyShip1.x");
 		mHealth = 4;
 		mFireRate = 3.0f;
+		mScore = 2;
 	}
 	//~CMediumEnemyShip();
 
@@ -82,6 +85,7 @@ public:
 		mShipMesh = myEngine->LoadMesh("enemyShip2.x");
 		mHealth = 4;
 		mFireRate = 3.0f;
+		mScore = 4;
 	}
 	//~CHeavyEnemyShip();
 
@@ -117,6 +121,6 @@ private:
 
 void CreateEnemies(I3DEngine*& myEngine);
 void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop, bool moveCamBehind, float frameTime, IMesh*& bulletMesh, I3DEngine*& myEngine);
-void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine);
+void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IMesh*& bulletMesh);
 //bool FindActive(deque <unique_ptr<CShips>>& current, string& active);
 void Erase(deque <CBulletData>& bullets, IModel* newBullet);

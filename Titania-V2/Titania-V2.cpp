@@ -18,8 +18,6 @@ struct particle
 	float moveVector[3];
 };
 
-
-
 sf::SoundBuffer shootingBuffer;
 sf::Sound shootingSound;
 sf::SoundBuffer mainMenuBuffer;
@@ -31,12 +29,10 @@ sf::Sound powerUpMusic;
 sf::SoundBuffer powerDownBuffer;
 sf::Sound powerDownMusic;
 
-
 enum PlayerShipState { Normal, RollingLeft, RollingRight };
 
 enum GameState { MainMenu, Play };
 PlayerShipState currentPlayerShipState;
-
 
 EKeyCode camSwitch = Key_1;
 EKeyCode MoveUp = Key_W;
@@ -48,8 +44,6 @@ EKeyCode RollRightKey = Key_E;
 EKeyCode RollLeftKey = Key_Q;
 EKeyCode kStartKey = Key_Return; //P key used to start the game
 
-
-
 const float bulletSpeed = 6.0f;
 const float bulletSize = 0.008f;
 const float kCameraMove = 0.10f; // distance for the direction keys x and z axis
@@ -59,7 +53,11 @@ bool mouseCaptureActive = false; // state of mouse capture
 bool tripleBullet = false;
 
 deque <CBulletData> bullets;
+deque <CBulletData> lightBullets;
+deque <CBulletData>  mediumBullets;
+deque <CBulletData> heavyBullets;
 
+int gPlayerScore = 0;
 deque <unique_ptr <CPowerUp>> SpeedList;
 deque <unique_ptr <CPowerUp>> ShieldList;
 deque <unique_ptr <CPowerUp>> TripleList;
@@ -115,6 +113,7 @@ void main()
 	IModel* shield;
 
 	int numBullets = 0;
+	int enemyBullets = 0;
 	//BulletData bullets[maxBullets];
 
 	//BulletData bullets2[maxBullets];
@@ -397,13 +396,14 @@ void main()
 			if (Health != Dead)
 			{
 				Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, numBullets, bulletMesh, playerShipSpeed, shootingSound, bullets);
+				ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
 			}
 
 
 			menuMusic.stop();
 
 		
-			ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine);
+			
 
 
 
@@ -423,6 +423,10 @@ void main()
 			//**** Hud Stuff ****
 			powerUpStateText << "    Bullets: " << numBullets;
 			myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f, kWhite); //Game state text is set to go
+			powerUpStateText.str(""); // Clear myStream
+
+			powerUpStateText << "    Score: " << gPlayerScore;
+			myFont->Draw(powerUpStateText.str(), 15.0f, 100.0f, kWhite); //Game state text is set to go
 			powerUpStateText.str(""); // Clear myStream
 
 

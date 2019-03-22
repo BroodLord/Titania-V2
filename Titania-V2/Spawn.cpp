@@ -1,5 +1,6 @@
 #include "Spawn.h"
 #include "Defs.h"
+#include "Shooting.h"
 
 static int lightCounter = 0;
 static int MedCounter = 0;
@@ -23,6 +24,7 @@ int spawnCounter = 0;
 
 float closeCounter = 2, farCounter = 2.8, MidCounter = 2.4;
 
+extern int gPlayerScore;
 
 void CreateEnemies(I3DEngine*& myEngine)
 {
@@ -82,168 +84,129 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop
 
 	/*if (currentEnemyShipState == Active)
 	{*/
-		for (auto it = LightShipList.begin(); it != LightShipList.end(); it++)
+	for (auto it = LightShipList.begin(); it != LightShipList.end(); it++)
+	{
+		for (int j = 0; j < numBullets; j++)
 		{
-			for (int j = 0; j < numBullets; j++)
+			float mama = bullets[j].model->GetLocalX();
+
+			if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 			{
-				float mama = bullets[j].model->GetLocalX();
-
-				if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
+				bulletMesh->RemoveModel(bullets[j].model);
+				Erase(bullets, bullets[j].model);
+				(*it)->mHealth = (*it)->mHealth - 1;
+				if ((*it)->mHealth <= 0)
 				{
-					bulletMesh->RemoveModel(bullets[j].model);
-					Erase(bullets, bullets[j].model);
-					(*it)->mHealth = (*it)->mHealth - 1;
-					if ((*it)->mHealth <= 0)
-					{
-						(*it)->mDead = Deactivated;
-						SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
-					}
-
-					if ((*it)->mDead == Deactivated)
-					{
-						(*it)->mShipModel->MoveLocalZ(-1000.0f);
-						(*it)->mDead = Active;
-						(*it)->mHealth = 2;
-
-					}
-					numBullets--;
-					break;
+					(*it)->mDead = Deactivated;
+					SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
 				}
+
+				if ((*it)->mDead == Deactivated)
+				{
+					(*it)->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
+					(*it)->mDead = Active;
+					(*it)->mHealth = 2;
+					gPlayerScore = gPlayerScore + (*it)->mScore;
+
+				}
+				numBullets--;
+				break;
 			}
 		}
-		for (auto it = MediumShipList.begin(); it != MediumShipList.end(); it++)
+	}
+	for (auto it = MediumShipList.begin(); it != MediumShipList.end(); it++)
+	{
+		for (int j = 0; j < numBullets; j++)
 		{
-			for (int j = 0; j < numBullets; j++)
+			if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 			{
-				if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
+				bulletMesh->RemoveModel(bullets[j].model);
+				Erase(bullets, bullets[j].model);
+				(*it)->mHealth = (*it)->mHealth - 1;
+				if ((*it)->mHealth <= 0)
 				{
-					bulletMesh->RemoveModel(bullets[j].model);
-					Erase(bullets, bullets[j].model);
-					(*it)->mHealth = (*it)->mHealth - 1;
-					if ((*it)->mHealth <= 0)
-					{
-						(*it)->mDead = Deactivated;
-						SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
-					}
-					if ((*it)->mDead == Deactivated)
-					{
-						(*it)->mShipModel->MoveLocalZ(-1000.0f);
-						(*it)->mDead = Active;
-						(*it)->mHealth = 4;
-					}
-					numBullets--;
-					break;
+					(*it)->mDead = Deactivated;
+					SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
 				}
+				if ((*it)->mDead == Deactivated)
+				{
+					(*it)->mShipModel->SetPosition(-120.0f, -30.0f, 700.0f);
+					(*it)->mDead = Active;
+					(*it)->mHealth = 4;
+					gPlayerScore = gPlayerScore + (*it)->mScore;
+				}
+				numBullets--;
+				break;
 			}
 		}
-		for (auto it = HeavyShipList.begin(); it != HeavyShipList.end(); it++)
+	}
+	for (auto it = HeavyShipList.begin(); it != HeavyShipList.end(); it++)
+	{
+		for (int j = 0; j < numBullets; j++)
 		{
-			for (int j = 0; j < numBullets; j++)
+			if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
 			{
-				if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
+				bulletMesh->RemoveModel(bullets[j].model);
+				Erase(bullets, bullets[j].model);
+				(*it)->mHealth = (*it)->mHealth - 1;
+				if ((*it)->mHealth <= 0)
 				{
-					bulletMesh->RemoveModel(bullets[j].model);
-					Erase(bullets, bullets[j].model);
-					(*it)->mHealth = (*it)->mHealth - 1;
-					if ((*it)->mHealth <= 0)
-					{
-						(*it)->mDead = Deactivated;
-						SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
-					}
+					(*it)->mDead = Deactivated;
+					SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
+				}
 
-					if ((*it)->mDead == Deactivated)
-					{
-						(*it)->mShipModel->MoveLocalZ(-1000.0f);
-						(*it)->mDead = Active;
-						(*it)->mHealth = 4;
-					}
-					numBullets--;
-					break;
+				if ((*it)->mDead == Deactivated)
+				{
+					(*it)->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
+					(*it)->mDead = Active;
+					(*it)->mHealth = 4;
+					gPlayerScore = gPlayerScore + (*it)->mScore;
 				}
+				numBullets--;
+				break;
 			}
 		}
+	}
 	//}
 
 }
 
-void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine)
+void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IMesh*& bulletMesh)
 {
-
 	if (moveCamTop != true && moveCamBehind != true)
 	{
-		if (spawnArray[spawnCounter] == 1)
+		if (LightShipList.front()->mShipModel->GetX() > 20.0f)
 		{
-			closeCounter -= frameTime;
-			if (closeCounter >= 0 && LightShipList.front()->mShipModel->GetX() > 20.0f)
-			{
-					LightShipList.front()->mShipModel->MoveX(-50 * frameTime);				
-			}
-
-			MidCounter -= frameTime;
 			
-				if (MidCounter >= 0 && HeavyShipList.front()->mShipModel->GetX() > 0.0f)
-				{
-					HeavyShipList.front()->mShipModel->MoveX(-50 * frameTime);
-				}
+			LightShipList.front()->mShipModel->MoveX(-50.0f * frameTime);
+		}
+		else
+		{
+			LightShipList.front()->mShipModel->SetX(20.0f);
+			//EnemyShooting(moveCamTop, moveCamBehind, frameTime, myEngine, LightShipList.front()->mShipModel, bulletMesh);
+
+		}
+
+		if (HeavyShipList.front()->mShipModel->GetX() > 0.0f)
+		{
 			
-
-			if (closeCounter >= 0 && MediumShipList.front()->mShipModel->GetX() < -20.0f)
-			{				
-					MediumShipList.front()->mShipModel->MoveX(50 * frameTime);
-			}
-
-			if (closeCounter < -1 && MidCounter < -1)
-			{
-				if (MedCounter != 29)
-				{
-					MedCounter++;
-				}
-				if (HeavyCounter != 19)
-				{
-					HeavyCounter++;
-				}
-				if (lightCounter != 49)
-				{
-					lightCounter++;
-				}
-				closeCounter = 2;
-				MidCounter = 2.4;
-			}
+			HeavyShipList.front()->mShipModel->MoveX(-50.0f * frameTime);
+		}
+		else
+		{
+			HeavyShipList.front()->mShipModel->SetX(0.0f);
 		}
 
-		/*if (!FindActive(SpawnedShipList, LightShipList.front()->mName))
+		if (MediumShipList.front()->mShipModel->GetX() < -20.0f)
 		{
-			while (LightShipList.front()->mShipModel->GetX() > -20.f)
-			{
-				LightShipList.front()->mShipModel->MoveX(-0.01 * frameTime);
-			}
-
-			SpawnedShipList.push_back(move(LightShipList.front()));
-			LightShipList.pop_front();
-
-
-			SpawnedShipList[0]->mDead = Active;
+			
+			MediumShipList.front()->mShipModel->MoveX(50.0f * frameTime);
 		}
-
-		if (!FindActive(SpawnedShipList, HeavyShipList.front()->mName))
+		else
 		{
-			SpawnedShipList.push_back(move(HeavyShipList.front()));
-			HeavyShipList.pop_front();
-			SpawnedShipList[0]->mShipModel->MoveX(-50 * frameTime);
-			SpawnedShipList[0]->mDead = Active;
+			MediumShipList.front()->mShipModel->SetX(-20.0f);
 		}
-
-		if (!FindActive(SpawnedShipList, MediumShipList.front()->mName))
-		{
-			SpawnedShipList.push_back(move(MediumShipList.front()));
-			MediumShipList.pop_front();
-			SpawnedShipList[0]->mShipModel->MoveX(50 * frameTime);
-			SpawnedShipList[0]->mDead = Active;
-		}*/
-
-
 	}
-
 }
 
 //bool FindActive(deque <unique_ptr<CShips>>& current, EnemyShipState& ship)
