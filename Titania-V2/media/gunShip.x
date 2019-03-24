@@ -13272,7 +13272,7 @@ Frame Root {
            96.078431;
            0.449020; 0.449020; 0.449020;;
            0.000000; 0.000000; 0.000000;;
-          TextureFilename {"GS-02-MA.JPG";}
+          TextureFilename {"GS-02-MA - Copy.JPG";}
         }
         Material glass {
            0.125490; 0.125490; 0.125490; 1.000000;;

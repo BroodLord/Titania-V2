@@ -67,7 +67,7 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 			}
 		}
 
-		if ((myEngine->KeyHit(Key_Space) || myEngine->KeyHit(Mouse_LButton)) && numBullets < maxBullets)
+		if ((myEngine->KeyHit(Key_Space)) && numBullets < maxBullets)
 		{
 
 			shootingSound.play();

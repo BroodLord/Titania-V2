@@ -8,16 +8,10 @@
 #include "Hud.h"
 #include "Shooting.h"
 #include <deque>
-
 #include "Spawn.h"
 #include "PowerUp.h"
-using namespace tle;
 
-struct particle
-{
-	IModel* flame;
-	float moveVector[3];
-};
+using namespace tle;
 
 sf::SoundBuffer shootingBuffer;
 sf::Sound shootingSound;
@@ -31,15 +25,23 @@ sf::SoundBuffer powerDownBuffer;
 sf::Sound powerDownMusic;
 
 enum PlayerShipState { Normal, RollingLeft, RollingRight };
+enum PlayerShipState2 { Normal2, RollingLeft2, RollingRight2 };
 
 enum GameState { MainMenu, Play };
 PlayerShipState currentPlayerShipState;
+PlayerShipState2 currentPlayerShipState2;
 
 EKeyCode camSwitch = Key_1;
 EKeyCode MoveUp = Key_W;
 EKeyCode MoveRight = Key_D;
 EKeyCode MoveDown = Key_S;
 EKeyCode MoveLeft = Key_A;
+EKeyCode player2MoveUp = Key_Up;
+EKeyCode player2MoveRight = Key_Right;
+EKeyCode player2MoveDown = Key_Down;
+EKeyCode player2MoveLeft = Key_Left;
+EKeyCode player2RollRightKey = Mouse_RButton;
+EKeyCode player2RollLeftKey = Mouse_LButton;
 EKeyCode Exit = Key_Escape;
 EKeyCode RollRightKey = Key_E;
 EKeyCode RollLeftKey = Key_Q;
@@ -52,6 +54,7 @@ const float kMouseWheelMove = 10.0f; // distance for wheel movement z axis
 const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the camera
 bool mouseCaptureActive = false; // state of mouse capture
 bool tripleBullet = false;
+bool coop = false;
 
 deque <CBulletData> bullets;
 deque <CBulletData> lightBullets;
@@ -93,6 +96,7 @@ void main()
 
 	//** Meshes ** 
 	IMesh* playerShipMesh;
+	IMesh* playerShip2Mesh;
 	IMesh* floorMesh;
 	IMesh* camBlockMesh;
 	IMesh* skyBoxMesh;
@@ -110,6 +114,7 @@ void main()
 
 	//** Models
 	IModel* playerShip;
+	IModel* playerShip2;
 	IModel* flame;
 	IModel* floor;
 	IModel* topDownCamBlock;
@@ -131,6 +136,7 @@ void main()
 
 	bool moveCamTop = false;
 	bool barrelRollColdDown = false;
+	bool barrelRollColdDown2 = false;
 	bool moveCamBehind = false;
 
 	float startingz = 802.0f;
@@ -138,7 +144,9 @@ void main()
 	float startingx = 400.0f;
 	float countDown = 1.8f;
 	float currentX = 0.0f;
+	float currentX2 = 0.0f;
 	float barrelRollCountDown = 2.0f;
+	float barrelRollCountDown2 = 2.0f;
 	//float shieldPowerUpTimer = 9.0f;
 	//float speedPowerUpTimer = 5.0f;
 	//float bulletPowerUpTimer = 5.0f;
@@ -146,6 +154,7 @@ void main()
 	float speedPowerUpTimer = 0.0f;
 	float bulletPowerUpTimer = 0.0f;
 	float rollingTimer = 0.4f;
+	float rollingTimer2 = 0.4f;
 
 
 	int speedDisplay = 0;
@@ -190,10 +199,10 @@ void main()
 	IFont* Lives = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
 
 	ISprite* backGround = myEngine->CreateSprite("background.jpg", 0.0f, 0.0f); //Simple box used as UI to make text stand out
-
+	ISprite* endGame = myEngine->CreateSprite("gameover.png", 1000.f, 10000.f);
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
-	IFont* deathFont = myEngine->LoadFont("Arial", 70); //Loading in a font to use in text strings
+	IFont* deathFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	IFont* preGameFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 
 
@@ -267,6 +276,8 @@ void main()
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
 	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
+	playerShip2Mesh = myEngine->LoadMesh("gunShip01.x");
+	playerShip2 = playerShip2Mesh->CreateModel(-10000.0f, -10030.0f, -100785.0f);
 
 	sphereMesh = myEngine->LoadMesh("Sphere.x");
 	shield = sphereMesh->CreateModel(0.0f, 500.0f, 0.0f);
@@ -357,6 +368,7 @@ void main()
 	{
 		myEngine->DrawScene();
 		currentX = playerShip->GetLocalX();
+		currentX2 = playerShip2->GetLocalX();
 		float frameTime = myEngine->Timer();
 		// Draw the scene
 		SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, bulletMesh, myEngine);
@@ -376,11 +388,13 @@ void main()
 		stringstream preGameText;
 
 		string kPlayText = "Press Enter to Start";
+		string kCoopText = "Press Space for Coop";
 		string kQuitText = "Press Esc to Quit";
 
 
 		if (currentGameState == MainMenu)
 		{
+			endGame->SetPosition(10000, 10000);
 			battleMusic.stop();
 			if (menuMusic.getStatus() == menuMusic.Stopped)
 			{
@@ -389,9 +403,15 @@ void main()
 			menuMusic.setLoop(true);
 			backGround->SetPosition(0, 0);
 			playerCamera->LookAt(topDownCamBlock);
-			preGameText << kPlayText << "   " << kQuitText;
+			preGameText << kPlayText << "\n" << kCoopText << "\n" << kQuitText;
 			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f, kWhite); //Game state text is set to go
 			preGameText.str(""); // Clear myStream
+
+			if (myEngine->KeyHit(Key_Space))
+			{
+				coop = true;
+				playerShip2->SetLocalPosition(0.0f, -30.0f, 785.0f);
+			}
 
 			if (myEngine->KeyHit(kStartKey))
 			{
@@ -707,22 +727,76 @@ void main()
 							//player invunerable
 						}
 					}
-
-					if (currentPlayerShipState == RollingLeft)
+				}
+				if (coop == true)
+				{
+					if (barrelRollColdDown2 == false)
 					{
-						rollingTimer -= frameTime;
-						if (rollingTimer > 0)
+						if (currentPlayerShipState == RollingLeft)
 						{
-							playerShip->RotateZ(-900.0f * frameTime);
-							playerShip->MoveX(50.0f * frameTime);
+							rollingTimer -= frameTime;
+							if (rollingTimer > 0)
+							{
+								playerShip->RotateZ(-900.0f * frameTime);
+								playerShip->MoveX(50.0f * frameTime);
+							}
+							if (rollingTimer <= 0)
+							{
+								rollingTimer = 0.4f;
+								currentPlayerShipState = Normal;
+								barrelRollColdDown = true;
+								playerShip->ResetOrientation();
+								//player invunerable
+							}
 						}
-						if (rollingTimer <= 0)
+
+						if (currentPlayerShipState2 == Normal)
 						{
-							rollingTimer = 0.4f;
-							currentPlayerShipState = Normal;
-							barrelRollColdDown = true;
-							playerShip->ResetOrientation();
-							//player invunerable
+							if (myEngine->KeyHit(player2RollRightKey))
+							{
+								currentPlayerShipState2 = RollingRight2;
+							}
+
+							if (myEngine->KeyHit(player2RollLeftKey))
+							{
+								currentPlayerShipState2 = RollingLeft2;
+							}
+						}
+
+						if (currentPlayerShipState2 == RollingRight2)
+						{
+							rollingTimer2 -= frameTime;
+							if (rollingTimer2 > 0)
+							{
+								playerShip2->RotateZ(900.0f * frameTime);
+								playerShip2->MoveX(-playerShipSpeed);
+							}
+							if (rollingTimer2 <= 0)
+							{
+								rollingTimer2 = 0.4f;
+								currentPlayerShipState2 = Normal2;
+								barrelRollColdDown2 = true;
+								playerShip2->ResetOrientation();
+								//player invunerable
+							}
+						}
+
+						if (currentPlayerShipState2 == RollingLeft2)
+						{
+							rollingTimer2 -= frameTime;
+							if (rollingTimer2 > 0)
+							{
+								playerShip2->RotateZ(-900.0f * frameTime);
+								playerShip2->MoveX(50.0f * frameTime);
+							}
+							if (rollingTimer2 <= 0)
+							{
+								rollingTimer2 = 0.4f;
+								currentPlayerShipState2 = Normal2;
+								barrelRollColdDown2 = true;
+								playerShip->ResetOrientation();
+								//player invunerable
+							}
 						}
 					}
 				}
@@ -742,6 +816,19 @@ void main()
 			{
 				playerShip->MoveX(-playerShipSpeed);
 				playerShip->SetX(27.0f);
+			}
+			if (coop == true)
+			{
+				if (currentX2 < -27.0f)
+				{
+					playerShip2->MoveX(playerShipSpeed);
+					playerShip2->SetX(-27.0f);
+				}
+				if (currentX2 > 27.0f)
+				{
+					playerShip2->MoveX(-playerShipSpeed);
+					playerShip2->SetX(27.0f);
+				}
 			}
 
 
@@ -773,6 +860,20 @@ void main()
 						if (myEngine->KeyHeld(MoveLeft))
 						{
 							playerShip->MoveX(playerShipSpeed);
+						}
+					}
+					if (coop == true)
+					{
+						if (currentPlayerShipState2 != RollingLeft2 && currentPlayerShipState != RollingRight2)
+						{
+							if (myEngine->KeyHeld(player2MoveRight))
+							{
+								playerShip2->MoveX(-playerShipSpeed);
+							}
+							if (myEngine->KeyHeld(player2MoveLeft))
+							{
+								playerShip2->MoveX(playerShipSpeed);
+							}
 						}
 					}
 					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
@@ -866,6 +967,20 @@ void main()
 							playerShip->MoveX(playerShipSpeed);
 						}
 					}
+					if (coop == true)
+					{
+						if (currentPlayerShipState2 != RollingLeft2 && currentPlayerShipState != RollingRight2)
+						{
+							if (myEngine->KeyHeld(player2MoveRight))
+							{
+								playerShip2->MoveX(-playerShipSpeed);
+							}
+							if (myEngine->KeyHeld(player2MoveLeft))
+							{
+								playerShip2->MoveX(playerShipSpeed);
+							}
+						}
+					}
 					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 					{
 						int oldMouseMoveX = myEngine->GetMouseMovementX();
@@ -936,10 +1051,19 @@ void main()
 					barrelRollCountDown = 2.0f;
 				}
 			}
+			if (barrelRollColdDown2 == true)
+			{
+				barrelRollCountDown2 -= frameTime;
+				if (barrelRollCountDown2 <= 0)
+				{
+					barrelRollColdDown2 = false;
+					barrelRollCountDown2 = 2.0f;
+				}
+			}
 		}
 		if (gameOver == true && Health == Dead)
 		{
-			deathFont->Draw("Game Over", 800.0f, 500.0f, kBlack);
+			endGame->SetPosition(0, 0);
 			if (myEngine->KeyHit(Key_Return))
 			{
 				//speedPowerUp->SetPosition(0.0f, -30.0f, 730.0f);
