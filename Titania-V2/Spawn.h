@@ -23,7 +23,7 @@ public:
 	float mBulletSize;
 	float mBulletHealth;
 	float mBulletSpeed;
-
+	virtual void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh) = 0;
 private:
 
 };
@@ -48,9 +48,11 @@ public:
 	mScore = 1;
 	mBulletRadius = 1.0f;
 	mBulletSize = mBulletRadius * 0.6;
-	mBulletHealth = 1.0f;
+	mBulletHealth = 3.0f;
 	mBulletSpeed = 1.0f;
+
 }
+	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CLightEnemyShip();
 
 private:
@@ -77,8 +79,8 @@ public:
 		mBulletSize = mBulletRadius * 0.6;
 		mBulletHealth = 1.0f;
 		mBulletSpeed = 2.0f;
-
 	}
+	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CMediumEnemyShip();
 
 private:
@@ -104,6 +106,7 @@ public:
 		mBulletHealth = 5.0f;
 		mBulletSpeed = 1.0f;
 	}
+	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CHeavyEnemyShip();
 
 private:
@@ -141,3 +144,4 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop
 void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IMesh*& bulletMesh);
 //bool FindActive(deque <unique_ptr<CShips>>& current, string& active);
 void Erase(deque <CBulletData>& bullets, IModel* newBullet);
+void RandomEnemies(int& i, int& j, int& k);

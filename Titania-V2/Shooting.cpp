@@ -12,6 +12,7 @@ extern deque <CBulletData> enemybullets;
 extern deque <CBulletData> bullets;
 extern int numBullets;
 bool switchDirections = false;
+extern float playerFireRate;
 
 void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IModel* playerShip, IMesh*& bulletMesh, float playerShipSpeed, sf::Sound& shootingSound)
 {
@@ -67,9 +68,9 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 			}
 		}
 
-		if ((myEngine->KeyHit(Key_Space) || myEngine->KeyHit(Mouse_LButton)) && numBullets < maxBullets)
+		if ((myEngine->KeyHeld(Key_Space) || myEngine->KeyHeld(Mouse_LButton)) && numBullets < maxBullets && playerFireRate < 0.0f)
 		{
-
+			playerFireRate = 0.15f;
 			shootingSound.play();
 			//*******************************
 			// Play shooting sound here
@@ -165,6 +166,7 @@ void EnemyShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngi
 		temp.model = bulletMesh->CreateModel(x, y - 1.0f, z);
 		temp.model->Scale(ship.front()->mBulletSize);
 		temp.model->SetSkin("ice.jpg");
+		temp.mOwner = "HeavyShot";
 		temp.mSpeed = ship.front()->mBulletSpeed;
 
 
@@ -438,7 +440,7 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 
 }
 
-void MoveBullet(float frameTime, IMesh*& bulletMesh)
+void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 {
 	//for(auto it = enemybullets.begin(); it != enemybullets.end(); it++)
 	//{
@@ -461,6 +463,19 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh)
 
 	for (int i = 0; i < enemyShots; i++)
 	{
+		/*if (enemybullets[i].mOwner != "LightRight" && enemybullets[i].mOwner != "LightLeft" && enemybullets[i].mOwner != "LightMiddle")
+		{
+			if (player->GetX() > enemybullets[i].model->GetX())
+			{
+				enemybullets[i].model->MoveX((10.0f * enemybullets[i].mSpeed) * frameTime);
+
+			}
+			if (player->GetX() < enemybullets[i].model->GetX())
+			{
+				enemybullets[i].model->MoveX((10.0f * -enemybullets[i].mSpeed) * frameTime);
+			}
+		}*/
+
 		if (enemybullets[i].mOwner == "Left")
 		{
 			enemybullets[i].xVel = enemybullets[i].xVel + 0.06f;
@@ -542,19 +557,30 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh)
 		}
 		else if (enemybullets[i].mOwner == "LightMiddle")
 		{
+
 			enemybullets[i].model->Move(-enemybullets[i].xVel * frameTime, -enemybullets[i].yVel * frameTime,
 				-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
 			enemybullets[i].model->RotateLocalY(200.0f * frameTime);
-			/*if (!switchDirections)
-			{
+			
+		}
+		else if (enemybullets[i].mOwner == "HeavyShot")
+		{
 
-				enemybullets[i].model->RotateLocalY(200.0f * frameTime);
+			if (player->GetX() > enemybullets[i].model->GetX())
+			{
+				enemybullets[i].model->MoveX((10.0f * enemybullets[i].mSpeed) * frameTime);
+				
 			}
-			else
+			if (player->GetX() < enemybullets[i].model->GetX())
 			{
-				enemybullets[i].model->RotateLocalY(-200.0f * frameTime);
+				enemybullets[i].model->MoveX((10.0f * -enemybullets[i].mSpeed) * frameTime);
+			}
+			enemybullets[i].model->RotateZ(500.0f * frameTime);
+			enemybullets[i].model->MoveZ(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
 
-			}*/
+			/*enemybullets[i].model->LookAt(player);
+			enemybullets[i].model->Scale(3);*/
+enemybullets[i].model->RotateZ(500.0f * frameTime);
 		}
 		else
 		{

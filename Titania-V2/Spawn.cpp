@@ -22,6 +22,11 @@ extern deque <unique_ptr <CShips>> MediumShipList;
 extern deque <unique_ptr <CShips>> LightShipList;
 extern deque <unique_ptr <CShips>> SpawnedShipList;
 
+extern deque <unique_ptr <CShips>> RightList;
+extern deque <unique_ptr <CShips>> MiddleList;
+extern deque <unique_ptr <CShips>> LeftList;
+extern deque <unique_ptr <CShips>> DeadList;
+
 int spawnArray[30] = { 1,3,2,1,2,3,3,1,2,1,3,2,2,1,3,2,1,1,3,2,3,2,1,2,3,1,2,3,2,1, };
 
 int spawnCounter = 0;
@@ -36,7 +41,7 @@ extern int gPlayerScore;
 void CreateEnemies(I3DEngine*& myEngine)
 {
 	currentEnemyShipState = Active;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 30; i++)
 	{
 		unique_ptr <CHeavyEnemyShip> heavyTemp(new CHeavyEnemyShip(myEngine));
 
@@ -49,12 +54,12 @@ void CreateEnemies(I3DEngine*& myEngine)
 	{
 		unique_ptr <CMediumEnemyShip> mediumTemp(new CMediumEnemyShip(myEngine));
 
-		mediumTemp->mShipModel = mediumTemp->mShipMesh->CreateModel(-120.0f, -30.0f, 700.0f);
+		mediumTemp->mShipModel = mediumTemp->mShipMesh->CreateModel(120.0f, -30.0f, 700.0f);
 		mediumTemp->mShipModel->Scale(1.5f);
 		mediumTemp->mShipModel->RotateY(180);
 		MediumShipList.push_back(move(mediumTemp));
 	}
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 30; i++)
 	{
 		unique_ptr <CLightEnemyShip> lightTemp(new CLightEnemyShip(myEngine));
 
@@ -63,12 +68,21 @@ void CreateEnemies(I3DEngine*& myEngine)
 		lightTemp->mShipModel->RotateY(180);
 		LightShipList.push_back(move(lightTemp));
 	}
+
+	int i = random(1, 4);
+	int j = random(1, 4);
+	int k = random(1, 4);
+
+	RandomEnemies(i, j, k);
+
 }
 
 void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop, bool moveCamBehind, float frameTime, IMesh*& bulletMesh, I3DEngine*& myEngine)
 {
 
-
+	int l = random(1, 4);
+	int m = random(1, 4);
+	int n = random(1, 4);
 
 	//for (auto it = LightShipList.begin(); it != LightShipList.end(); it++)
 	//{
@@ -91,143 +105,165 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop
 
 	/*if (currentEnemyShipState == Active)
 	{*/
-	for (auto it = LightShipList.begin(); it != LightShipList.end(); it++)
+	if (!LeftList.empty())
 	{
 		for (int j = 0; j < numBullets; j++)
 		{
 			float mama = bullets[j].model->GetLocalX();
 
-			if (sphere2sphere((*it)->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
+			if (sphere2sphere(LeftList.front()->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
 			{
 				bulletMesh->RemoveModel(bullets[j].model);
 				Erase(bullets, bullets[j].model);
-				(*it)->mHealth = (*it)->mHealth - 1;
-				if ((*it)->mHealth <= 0)
+				LeftList.front()->mHealth = LeftList.front()->mHealth - 1;
+				if (LeftList.front()->mHealth <= 0)
 				{
-					(*it)->mDead = Deactivated;
-					SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
+					LeftList.front()->mDead = Deactivated;
+					SpawnPowerUp(random(0, 6), LeftList.front()->mShipModel, myEngine);
 				}
 
-				if ((*it)->mDead == Deactivated)
+				if (LeftList.front()->mDead == Deactivated)
 				{
-					(*it)->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
-					(*it)->mDead = Active;
-					(*it)->mHealth = 2;
-					gPlayerScore = gPlayerScore + (*it)->mScore;
-
+					LeftList.front()->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
+					//(*it)->mDead = Active;
+					//(*it)->mHealth = 2;
+					gPlayerScore = gPlayerScore + LeftList.front()->mScore;
+					DeadList.push_back(move(LeftList.front()));
+					LeftList.pop_front();
+					RandomEnemies(l, m, n);
 				}
 				numBullets--;
 				break;
 			}
 		}
 	}
-	for (auto it = MediumShipList.begin(); it != MediumShipList.end(); it++)
+
+	if (!RightList.empty())
 	{
-		for (int j = 0; j < numBullets; j++)
-		{
-			if (sphere2sphere((*it)->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
+			for (int j = 0; j < numBullets; j++)
 			{
-				bulletMesh->RemoveModel(bullets[j].model);
-				Erase(bullets, bullets[j].model);
-				(*it)->mHealth = (*it)->mHealth - 1;
-				if ((*it)->mHealth <= 0)
+				if (sphere2sphere(RightList.front()->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
 				{
-					(*it)->mDead = Deactivated;
-					SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
+					bulletMesh->RemoveModel(bullets[j].model);
+					Erase(bullets, bullets[j].model);
+					RightList.front()->mHealth = RightList.front()->mHealth - 1;
+					if (RightList.front()->mHealth <= 0)
+					{
+						RightList.front()->mDead = Deactivated;
+						SpawnPowerUp(random(0, 6), RightList.front()->mShipModel, myEngine);
+					}
+					if (RightList.front()->mDead == Deactivated)
+					{
+						RightList.front()->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
+						//(*it)->mDead = Active;
+						//(*it)->mHealth = 6;
+						gPlayerScore = gPlayerScore + RightList.front()->mScore;
+						DeadList.push_back(move(RightList.front()));
+						RightList.pop_front();
+						RandomEnemies(l, m, n);
+					}
+					numBullets--;
+					break;
 				}
-				if ((*it)->mDead == Deactivated)
-				{
-					(*it)->mShipModel->SetPosition(-120.0f, -30.0f, 700.0f);
-					(*it)->mDead = Active;
-					(*it)->mHealth = 6;
-					gPlayerScore = gPlayerScore + (*it)->mScore;
-				}
-				numBullets--;
-				break;
 			}
 		}
-	}
-	for (auto it = HeavyShipList.begin(); it != HeavyShipList.end(); it++)
-	{
-		for (int j = 0; j < numBullets; j++)
-		{
-			if (sphere2sphere((*it)->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
-			{
-				bulletMesh->RemoveModel(bullets[j].model);
-				Erase(bullets, bullets[j].model);
-				(*it)->mHealth = (*it)->mHealth - 1;
-				if ((*it)->mHealth <= 0)
-				{
-					(*it)->mDead = Deactivated;
-					SpawnPowerUp(random(0, 6), (*it)->mShipModel, myEngine);
-				}
 
-				if ((*it)->mDead == Deactivated)
+	if (!MiddleList.empty())
+	{
+			for (int j = 0; j < numBullets; j++)
+			{
+				if (sphere2sphere(MiddleList.front()->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
 				{
-					(*it)->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
-					(*it)->mDead = Active;
-					(*it)->mHealth = 10;
-					gPlayerScore = gPlayerScore + (*it)->mScore;
+					bulletMesh->RemoveModel(bullets[j].model);
+					Erase(bullets, bullets[j].model);
+					MiddleList.front()->mHealth = MiddleList.front()->mHealth - 1;
+					if (MiddleList.front()->mHealth <= 0)
+					{
+						MiddleList.front()->mDead = Deactivated;
+						SpawnPowerUp(random(0, 6), MiddleList.front()->mShipModel, myEngine);
+					}
+
+					if (MiddleList.front()->mDead == Deactivated)
+					{
+						MiddleList.front()->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
+						//(*it)->mDead = Active;
+						//(*it)->mHealth = 10;
+						gPlayerScore = gPlayerScore + MiddleList.front()->mScore;
+						DeadList.push_back(move(MiddleList.front()));
+						MiddleList.pop_front();
+						RandomEnemies(l, m, n);
+					}
+					numBullets--;
+					break;
 				}
-				numBullets--;
-				break;
 			}
 		}
-	}
+	
 	//}
 
 }
 
 void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IMesh*& bulletMesh)
 {
-	if (moveCamTop != true && moveCamBehind != true)
+	if (!LeftList.empty())
 	{
-		if (LightShipList.front()->mShipModel->GetX() > 20.0f)
+		if (moveCamTop != true && moveCamBehind != true)
 		{
-			
-			LightShipList.front()->mShipModel->MoveX(-50.0f * frameTime);
-		}
-		else
-		{
-			if (lightFireRate < 0.0f)
+			if (LeftList.front()->mShipModel->GetX() > 20.0f)
 			{
-				LightShipList.front()->mShipModel->SetX(20.0f);
-				OrbitShot(moveCamTop, moveCamBehind, frameTime, myEngine, LightShipList, bulletMesh);
-				lightFireRate = LightShipList.front()->mFireRate;
-			}
-		}
 
-		if (HeavyShipList.front()->mShipModel->GetX() > 0.0f)
-		{
-			
-			HeavyShipList.front()->mShipModel->MoveX(-50.0f * frameTime);
-		}
-		else
-		{
-			if (heavyFireRate < 0.0f)
+				LeftList.front()->mShipModel->MoveX(-50.0f * frameTime);
+			}
+			else
 			{
-				EnemyShooting(moveCamTop, moveCamBehind, frameTime, myEngine, HeavyShipList, bulletMesh);
-				HeavyShipList.front()->mShipModel->SetX(0.0f);
-				heavyFireRate = HeavyShipList.front()->mFireRate;
+				if (lightFireRate < 0.0f)
+				{
+					LeftList.front()->mShipModel->SetX(20.0f);
+					LeftList.front()->ShipShooting(moveCamTop, moveCamBehind, frameTime, myEngine, LeftList, bulletMesh);
+					lightFireRate = LeftList.front()->mFireRate;
+				}
 			}
 		}
-
-		if (MediumShipList.front()->mShipModel->GetX() < -20.0f)
-		{			
-			MediumShipList.front()->mShipModel->MoveX(50.0f * frameTime);
-		}
-		else
-		{
-			if (mediumFireRate < 0.0f)
-			{
-				FiveShot(moveCamTop, moveCamBehind, frameTime, myEngine, MediumShipList, bulletMesh);
-				MediumShipList.front()->mShipModel->SetX(-20.0f);
-				mediumFireRate = MediumShipList.front()->mFireRate;
-			}
-			
-		}
-		MoveBullet(frameTime, bulletMesh);
 	}
+		if (!MiddleList.empty())
+		{
+			if (MiddleList.front()->mShipModel->GetX() > 0.0f)
+			{
+
+				MiddleList.front()->mShipModel->MoveX(-50.0f * frameTime);
+			}
+			else
+			{
+				if (heavyFireRate < 0.0f)
+				{
+					heavyFireRate = MiddleList.front()->mFireRate;
+					MiddleList.front()->mShipModel->SetX(0.0f);
+					MiddleList.front()->ShipShooting(moveCamTop, moveCamBehind, frameTime, myEngine, MiddleList, bulletMesh);
+					
+				}
+			}
+		}
+
+
+		if (!RightList.empty())
+		{
+			if (RightList.front()->mShipModel->GetX() > -20.0f)
+			{
+				RightList.front()->mShipModel->MoveX(-50.0f * frameTime);
+			}
+			else
+			{
+				if (mediumFireRate < 0.0f)
+				{
+					RightList.front()->mShipModel->SetX(-20.0f);
+					RightList.front()->ShipShooting(moveCamTop, moveCamBehind, frameTime, myEngine, RightList, bulletMesh);
+					mediumFireRate = RightList.front()->mFireRate;
+				}
+
+			}
+		}
+		
+	
 }
 
 //bool FindActive(deque <unique_ptr<CShips>>& current, EnemyShipState& ship)
@@ -257,4 +293,143 @@ void Erase(deque <CBulletData>& bullets, IModel* newBullet)
 		p++;
 
 	}
+}
+
+void RandomEnemies(int& i, int& j, int& k)
+{
+	while (RightList.empty() || LeftList.empty() || MiddleList.empty())
+	{
+		if (LightShipList.empty() && MediumShipList.empty() && HeavyShipList.empty())
+		{
+			break;
+		}
+		if (i == 1)
+		{
+			if (!LightShipList.empty() && RightList.empty())
+			{
+				RightList.push_back(move(LightShipList.front()));
+				LightShipList.pop_front();
+			}
+			else
+			{
+				i = random(1, 4);
+			}
+		}
+		else if (i == 2)
+		{
+			if (!MediumShipList.empty() && RightList.empty())
+			{
+				RightList.push_back(move(MediumShipList.front()));
+				MediumShipList.pop_front();
+			}
+			else
+			{
+				i = random(1, 4);
+			}
+		}
+		else if (i == 3)
+		{
+			if (!HeavyShipList.empty() && RightList.empty())
+			{
+				RightList.push_back(move(HeavyShipList.front()));
+				HeavyShipList.pop_front();
+			}
+			else
+			{
+				i = random(1, 4);
+			}
+		}
+
+		if (j == 1)
+		{
+			if (!LightShipList.empty() && MiddleList.empty())
+			{
+				MiddleList.push_back(move(LightShipList.front()));
+				LightShipList.pop_front();
+			}
+			else
+			{
+				j = random(1, 4);
+			}
+		}
+		else if (j == 2)
+		{
+			if (!MediumShipList.empty() && MiddleList.empty())
+			{
+				MiddleList.push_back(move(MediumShipList.front()));
+				MediumShipList.pop_front();
+			}
+			else
+			{
+				j = random(1, 4);
+			}
+		}
+		else if (j == 3)
+		{
+			if (!HeavyShipList.empty() && MiddleList.empty())
+			{
+				MiddleList.push_back(move(HeavyShipList.front()));
+				HeavyShipList.pop_front();
+			}
+			else
+			{
+				j = random(1, 4);
+			}
+		}
+
+
+		if (k == 1)
+		{
+			if (!LightShipList.empty() && LeftList.empty())
+			{
+				LeftList.push_back(move(LightShipList.front()));
+				LightShipList.pop_front();
+			}
+			else
+			{
+				k = random(1, 4);
+			}
+		}
+		else if (k == 2)
+		{
+			if (!MediumShipList.empty() && LeftList.empty())
+			{
+				LeftList.push_back(move(MediumShipList.front()));
+				MediumShipList.pop_front();
+			}
+			else
+			{
+				k = random(1, 4);
+			}
+		}
+		else if (k == 3)
+		{
+			if (!HeavyShipList.empty() && LeftList.empty())
+			{
+				LeftList.push_back(move(HeavyShipList.front()));
+				HeavyShipList.pop_front();
+			}
+			else
+			{
+				k = random(1, 4);
+			}
+		}
+
+	}
+}
+
+
+void CLightEnemyShip::ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)
+{
+	OrbitShot(moveCamTop, moveCamBehind, frameTime, myEngine, ship, bulletMesh);
+}
+
+void CMediumEnemyShip::ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)
+{
+	FiveShot(moveCamTop, moveCamBehind, frameTime, myEngine, ship, bulletMesh);
+}
+
+void CHeavyEnemyShip::ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)
+{
+	EnemyShooting(moveCamTop, moveCamBehind, frameTime, myEngine, ship, bulletMesh);
 }

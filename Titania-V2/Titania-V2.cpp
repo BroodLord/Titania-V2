@@ -53,6 +53,8 @@ const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the 
 bool mouseCaptureActive = false; // state of mouse capture
 bool tripleBullet = false;
 
+float playerFireRate = 0.0f;
+
 deque <CBulletData> bullets;
 deque <CBulletData> lightBullets;
 deque <CBulletData>  mediumBullets;
@@ -71,9 +73,14 @@ deque <unique_ptr <CShips>> MediumShipList;
 deque <unique_ptr <CShips>> LightShipList;
 deque <unique_ptr <CShips>> SpawnedShipList;
 
-float lightFireRate;
-float mediumFireRate;
-float heavyFireRate;
+deque <unique_ptr <CShips>> RightList;
+deque <unique_ptr <CShips>> MiddleList;
+deque <unique_ptr <CShips>> LeftList;
+deque <unique_ptr <CShips>> DeadList;
+
+float lightFireRate = 0;
+float mediumFireRate = 0;
+float heavyFireRate = 0;
 
 int enemyShots = 0;
 int numBullets = 0;
@@ -239,9 +246,11 @@ void main()
 		TripleList.push_back(move(tripleTemp));
 	}
 
-	lightFireRate = LightShipList.front()->mFireRate;
-	mediumFireRate = MediumShipList.front()->mFireRate;
-	heavyFireRate = HeavyShipList.front()->mFireRate;
+	
+		lightFireRate = LightShipList.front()->mFireRate;
+		mediumFireRate = MediumShipList.front()->mFireRate;
+		heavyFireRate = HeavyShipList.front()->mFireRate;
+	
 
 	for (int i = 0; i < 20; i++)
 	{
@@ -252,6 +261,7 @@ void main()
 		startingz -= 100.0f;
 		Road[i]->AttachToParent(floor);
 	}
+
 	topDownCamBlock->Scale(0.01f);
 
 
@@ -410,8 +420,11 @@ void main()
 			{
 				Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound);
 				ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
+				MoveBullet(frameTime, bulletMesh, playerShip);
+
 			}
 
+			playerFireRate -= frameTime;
 
 			auto bt = enemybullets.begin(); // set p to the beginning of the loop
 			while (bt != enemybullets.end()) // while not at the end of the loop
@@ -436,7 +449,7 @@ void main()
 							enemyShots--;
 
 							bulletHit = true;
-							
+
 						}
 						break;
 					}
@@ -558,6 +571,11 @@ void main()
 					if (speedPowerUpTimer > 0.0f)
 					{
 						playerShipSpeed = 75.0f * frameTime;
+						for (auto bulletIT = bullets.begin(); bulletIT != bullets.end(); bulletIT++)
+						{
+							bulletIT->zVel = bulletIT->zVel + 75.0f * frameTime;
+						}
+
 						speedPowerUpTimer -= frameTime;
 						if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
 						{
