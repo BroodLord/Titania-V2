@@ -22,6 +22,7 @@ public:
 	float mBulletRadius;
 	float mBulletSize;
 	float mBulletHealth;
+	float mBulletSpeed;
 
 private:
 
@@ -48,6 +49,7 @@ public:
 	mBulletRadius = 1.0f;
 	mBulletSize = mBulletRadius * 0.6;
 	mBulletHealth = 1.0f;
+	mBulletSpeed = 1.0f;
 }
 	//~CLightEnemyShip();
 
@@ -69,11 +71,13 @@ public:
 		mName = "MediumShip";
 		mShipMesh = myEngine->LoadMesh("enemyShip1.x");
 		mHealth = 6;
-		mFireRate = 0.5f;
+		mFireRate = 2.0f;
 		mScore = 2;
 		mBulletRadius = 1.0f;
 		mBulletSize = mBulletRadius * 0.6;
 		mBulletHealth = 1.0f;
+		mBulletSpeed = 2.0f;
+
 	}
 	//~CMediumEnemyShip();
 
@@ -98,6 +102,7 @@ public:
 		mBulletRadius = 5;
 		mBulletSize = mBulletRadius * 0.6;
 		mBulletHealth = 5.0f;
+		mBulletSpeed = 1.0f;
 	}
 	//~CHeavyEnemyShip();
 

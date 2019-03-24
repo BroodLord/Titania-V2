@@ -192,7 +192,7 @@ void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEn
 			if (lightFireRate < 0.0f)
 			{
 				LightShipList.front()->mShipModel->SetX(20.0f);
-				EnemyShooting(moveCamTop, moveCamBehind, frameTime, myEngine, LightShipList, bulletMesh);
+				OrbitShot(moveCamTop, moveCamBehind, frameTime, myEngine, LightShipList, bulletMesh);
 				lightFireRate = LightShipList.front()->mFireRate;
 			}
 		}

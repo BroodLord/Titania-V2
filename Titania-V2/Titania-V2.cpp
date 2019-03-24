@@ -768,11 +768,11 @@ void main()
 					{
 						if (myEngine->KeyHeld(MoveRight))
 						{
-							playerShip->MoveX(playerShipSpeed);
+							playerShip->MoveX(-playerShipSpeed);
 						}
 						if (myEngine->KeyHeld(MoveLeft))
 						{
-							playerShip->MoveX(-playerShipSpeed);
+							playerShip->MoveX(playerShipSpeed);
 						}
 					}
 					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)

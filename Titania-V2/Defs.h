@@ -29,6 +29,7 @@ public:
 	float mRadius;
 	float mHealth;
 	string mOwner;
+	float mSpeed;
 };
 
 //class CTripleBullet : public CBulletData
