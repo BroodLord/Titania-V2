@@ -12,6 +12,10 @@ static int HeavyCounter = 0;
 
 EnemyShipState currentEnemyShipState;
 
+extern deque <CBulletData> bullets;
+extern deque <CBulletData> lightBullets;
+extern deque <CBulletData>  mediumBullets;
+extern deque <CBulletData> heavyBullets;
 
 extern deque <unique_ptr <CShips>> HeavyShipList;
 extern deque <unique_ptr <CShips>> MediumShipList;
@@ -23,6 +27,9 @@ int spawnArray[30] = { 1,3,2,1,2,3,3,1,2,1,3,2,2,1,3,2,1,1,3,2,3,2,1,2,3,1,2,3,2
 int spawnCounter = 0;
 
 float closeCounter = 2, farCounter = 2.8, MidCounter = 2.4;
+extern float lightFireRate;
+extern float mediumFireRate;
+extern float heavyFireRate;
 
 extern int gPlayerScore;
 
@@ -90,7 +97,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop
 		{
 			float mama = bullets[j].model->GetLocalX();
 
-			if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
+			if (sphere2sphere((*it)->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
 			{
 				bulletMesh->RemoveModel(bullets[j].model);
 				Erase(bullets, bullets[j].model);
@@ -118,7 +125,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop
 	{
 		for (int j = 0; j < numBullets; j++)
 		{
-			if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
+			if (sphere2sphere((*it)->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
 			{
 				bulletMesh->RemoveModel(bullets[j].model);
 				Erase(bullets, bullets[j].model);
@@ -132,7 +139,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop
 				{
 					(*it)->mShipModel->SetPosition(-120.0f, -30.0f, 700.0f);
 					(*it)->mDead = Active;
-					(*it)->mHealth = 4;
+					(*it)->mHealth = 6;
 					gPlayerScore = gPlayerScore + (*it)->mScore;
 				}
 				numBullets--;
@@ -144,7 +151,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop
 	{
 		for (int j = 0; j < numBullets; j++)
 		{
-			if (sphere2sphere((*it)->mShipModel, bullets[j].model, PLAYERSHIPRADIUS, BULLETRADIUS))
+			if (sphere2sphere((*it)->mShipModel, bullets[j].model, ENEMYSHIPRADIUS, BULLETRADIUS))
 			{
 				bulletMesh->RemoveModel(bullets[j].model);
 				Erase(bullets, bullets[j].model);
@@ -159,7 +166,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop
 				{
 					(*it)->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
 					(*it)->mDead = Active;
-					(*it)->mHealth = 4;
+					(*it)->mHealth = 10;
 					gPlayerScore = gPlayerScore + (*it)->mScore;
 				}
 				numBullets--;
@@ -182,9 +189,12 @@ void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEn
 		}
 		else
 		{
-			LightShipList.front()->mShipModel->SetX(20.0f);
-			//EnemyShooting(moveCamTop, moveCamBehind, frameTime, myEngine, LightShipList.front()->mShipModel, bulletMesh);
-
+			if (lightFireRate < 0.0f)
+			{
+				LightShipList.front()->mShipModel->SetX(20.0f);
+				EnemyShooting(moveCamTop, moveCamBehind, frameTime, myEngine, LightShipList, bulletMesh);
+				lightFireRate = LightShipList.front()->mFireRate;
+			}
 		}
 
 		if (HeavyShipList.front()->mShipModel->GetX() > 0.0f)
@@ -194,18 +204,29 @@ void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEn
 		}
 		else
 		{
-			HeavyShipList.front()->mShipModel->SetX(0.0f);
+			if (heavyFireRate < 0.0f)
+			{
+				EnemyShooting(moveCamTop, moveCamBehind, frameTime, myEngine, HeavyShipList, bulletMesh);
+				HeavyShipList.front()->mShipModel->SetX(0.0f);
+				heavyFireRate = HeavyShipList.front()->mFireRate;
+			}
 		}
 
 		if (MediumShipList.front()->mShipModel->GetX() < -20.0f)
-		{
-			
+		{			
 			MediumShipList.front()->mShipModel->MoveX(50.0f * frameTime);
 		}
 		else
 		{
-			MediumShipList.front()->mShipModel->SetX(-20.0f);
+			if (mediumFireRate < 0.0f)
+			{
+				FiveShot(moveCamTop, moveCamBehind, frameTime, myEngine, MediumShipList, bulletMesh);
+				MediumShipList.front()->mShipModel->SetX(-20.0f);
+				mediumFireRate = MediumShipList.front()->mFireRate;
+			}
+			
 		}
+		MoveBullet(frameTime, bulletMesh);
 	}
 }
 

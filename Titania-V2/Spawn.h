@@ -19,6 +19,9 @@ public:
 	float mFireRate;
 	EnemyShipState mDead = Active;
 	int mScore;
+	float mBulletRadius;
+	float mBulletSize;
+	float mBulletHealth;
 
 private:
 
@@ -39,9 +42,12 @@ public:
 {
 		mName = "LightShip";
 	mShipMesh = myEngine->LoadMesh("enemyShip.x");
-	mHealth = 2;
-	mFireRate = 5.0f;
+	mHealth = 4;
+	mFireRate = 2.0f;
 	mScore = 1;
+	mBulletRadius = 1.0f;
+	mBulletSize = mBulletRadius * 0.6;
+	mBulletHealth = 1.0f;
 }
 	//~CLightEnemyShip();
 
@@ -62,9 +68,12 @@ public:
 	{
 		mName = "MediumShip";
 		mShipMesh = myEngine->LoadMesh("enemyShip1.x");
-		mHealth = 4;
-		mFireRate = 3.0f;
+		mHealth = 6;
+		mFireRate = 0.5f;
 		mScore = 2;
+		mBulletRadius = 1.0f;
+		mBulletSize = mBulletRadius * 0.6;
+		mBulletHealth = 1.0f;
 	}
 	//~CMediumEnemyShip();
 
@@ -83,9 +92,12 @@ public:
 	{
 		mName = "HeavyShip";
 		mShipMesh = myEngine->LoadMesh("enemyShip2.x");
-		mHealth = 4;
-		mFireRate = 3.0f;
+		mHealth = 10;
+		mFireRate = 4.5f;
 		mScore = 4;
+		mBulletRadius = 5;
+		mBulletSize = mBulletRadius * 0.6;
+		mBulletHealth = 5.0f;
 	}
 	//~CHeavyEnemyShip();
 

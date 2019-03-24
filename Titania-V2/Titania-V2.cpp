@@ -8,6 +8,7 @@
 #include "Hud.h"
 #include "Shooting.h"
 #include <deque>
+
 #include "Spawn.h"
 #include "PowerUp.h"
 using namespace tle;
@@ -57,6 +58,8 @@ deque <CBulletData> lightBullets;
 deque <CBulletData>  mediumBullets;
 deque <CBulletData> heavyBullets;
 
+deque <CBulletData> enemybullets;
+
 int gPlayerScore = 0;
 deque <unique_ptr <CPowerUp>> SpeedList;
 deque <unique_ptr <CPowerUp>> ShieldList;
@@ -67,6 +70,13 @@ deque <unique_ptr <CShips>> HeavyShipList;
 deque <unique_ptr <CShips>> MediumShipList;
 deque <unique_ptr <CShips>> LightShipList;
 deque <unique_ptr <CShips>> SpawnedShipList;
+
+float lightFireRate;
+float mediumFireRate;
+float heavyFireRate;
+
+int enemyShots = 0;
+int numBullets = 0;
 
 void main()
 {
@@ -112,8 +122,7 @@ void main()
 	//IModel* bulletPowerUp;
 	IModel* shield;
 
-	int numBullets = 0;
-	int enemyBullets = 0;
+
 	//BulletData bullets[maxBullets];
 
 	//BulletData bullets2[maxBullets];
@@ -206,8 +215,8 @@ void main()
 
 	for (int i = 0; i < 5; i++)
 	{
-		
-			unique_ptr <CSpeed> speedTemp (new CSpeed(myEngine));
+
+		unique_ptr <CSpeed> speedTemp(new CSpeed(myEngine));
 
 		speedTemp->mModel = speedTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
 		speedTemp->mModel->ScaleZ(0.01f);
@@ -215,20 +224,24 @@ void main()
 		speedTemp->mModel->RotateLocalX(90.0f);
 		SpeedList.push_back(move(speedTemp));
 
-		unique_ptr <CShield> shieldTemp (new CShield(myEngine));
+		unique_ptr <CShield> shieldTemp(new CShield(myEngine));
 		shieldTemp->mModel = shieldTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
 		shieldTemp->mModel->ScaleZ(0.01f);
 		shieldTemp->mModel->Scale(0.5f);
 		shieldTemp->mModel->RotateLocalX(-90.0f);
 		ShieldList.push_back(move(shieldTemp));
 
-		unique_ptr <CTriple> tripleTemp (new CTriple(myEngine));
+		unique_ptr <CTriple> tripleTemp(new CTriple(myEngine));
 		tripleTemp->mModel = tripleTemp->mMesh->CreateModel(0.0f, 500.0f, 785.0f);
 		tripleTemp->mModel->ScaleZ(0.01f);
 		tripleTemp->mModel->Scale(0.5f);
 		tripleTemp->mModel->RotateLocalX(90.0f);
 		TripleList.push_back(move(tripleTemp));
 	}
+
+	lightFireRate = LightShipList.front()->mFireRate;
+	mediumFireRate = MediumShipList.front()->mFireRate;
+	heavyFireRate = HeavyShipList.front()->mFireRate;
 
 	for (int i = 0; i < 20; i++)
 	{
@@ -395,16 +408,75 @@ void main()
 
 			if (Health != Dead)
 			{
-				Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, numBullets, bulletMesh, playerShipSpeed, shootingSound, bullets);
+				Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound);
 				ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
 			}
 
 
+			auto bt = enemybullets.begin(); // set p to the beginning of the loop
+			while (bt != enemybullets.end()) // while not at the end of the loop
+			{
+				bool bulletHit = false;
+
+				auto jt = bullets.begin(); // set p to the beginning of the loop
+				while (jt != bullets.end()) // while not at the end of the loop
+				{
+					if (sphere2sphere(bt->model, jt->model, bt->mRadius, BULLETRADIUS))
+					{
+						bulletMesh->RemoveModel(jt->model);
+						Erase(bullets, jt->model);
+						numBullets--;
+						bt->mHealth--;
+						if (bt->mHealth <= 0)
+						{
+
+							bulletMesh->RemoveModel(bt->model);
+							Erase(enemybullets, bt->model);
+
+							enemyShots--;
+
+							bulletHit = true;
+							
+						}
+						break;
+					}
+					jt++;
+				}
+				if (bulletHit)
+				{
+					bulletHit = false;
+					break;
+				}
+				bt++;
+			}
+
+			auto kt = enemybullets.begin();
+			while (kt != enemybullets.end())
+			{
+				if (sphere2sphere(playerShip, kt->model, PLAYERSHIPRADIUS, kt->mRadius))
+				{
+					bulletMesh->RemoveModel(kt->model);
+					Erase(enemybullets, kt->model);
+					enemyShots--;
+					loseHealth = RemoveHeart;
+
+					if (loseHealth == RemoveHeart)
+					{
+						removeHeart(myEngine, Health);
+						loseHealth = Pause;
+					}
+					break;
+				}
+				kt++;
+			}
+
 			menuMusic.stop();
 
-		
-			
+			lightFireRate -= frameTime;
+			mediumFireRate -= frameTime;
+			heavyFireRate -= frameTime;
 
+			myEngine->StartMouseCapture();
 
 
 			if (battleMusic.getStatus() == battleMusic.Stopped)
@@ -507,7 +579,16 @@ void main()
 
 					shield->SetY(-30.0f);
 					shield->RotateLocalY(250.0f * frameTime);
-
+					for (auto i = enemybullets.begin(); i != enemybullets.end(); i++)
+					{
+						if (sphere2sphere(playerShip, (*i).model, 8.0f, i->mRadius))
+						{
+							bulletMesh->RemoveModel((*i).model);
+							Erase(enemybullets, (*i).model);
+							enemyShots--;
+							break;
+						}
+					}
 					if (shieldPowerUpTimer > 0.0f)
 					{
 						shieldPowerUpTimer -= frameTime;
@@ -648,26 +729,19 @@ void main()
 
 				//**** Health ****
 
-				if (myEngine->KeyHit(Key_L))
-				{
-					loseHealth = RemoveHeart;
-				}
 
-				if (loseHealth == RemoveHeart)
-				{
-					removeHeart(myEngine, Health);
-					loseHealth = Pause;
-				}
 
 			}
 
-			if (currentX <= -27.0f)
+			if (currentX < -27.0f)
 			{
 				playerShip->MoveX(playerShipSpeed);
+				playerShip->SetX(-27.0f);
 			}
-			if (currentX >= 27.0f)
+			if (currentX > 27.0f)
 			{
 				playerShip->MoveX(-playerShipSpeed);
+				playerShip->SetX(27.0f);
 			}
 
 
@@ -694,13 +768,28 @@ void main()
 					{
 						if (myEngine->KeyHeld(MoveRight))
 						{
-							playerShip->MoveX(-playerShipSpeed);
+							playerShip->MoveX(playerShipSpeed);
 						}
 						if (myEngine->KeyHeld(MoveLeft))
 						{
-							playerShip->MoveX(playerShipSpeed);
+							playerShip->MoveX(-playerShipSpeed);
 						}
 					}
+					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
+					{
+						int oldMouseMoveX = myEngine->GetMouseMovementX();
+						int mouseMoveX = myEngine->GetMouseMovementX();
+						if (oldMouseMoveX < mouseMoveX)
+						{
+							playerShip->MoveX(playerShipSpeed * 6);
+						}
+						if (oldMouseMoveX > mouseMoveX)
+						{
+							playerShip->MoveX(-playerShipSpeed * 6);
+						}
+
+					}
+
 				}
 				if (moveCamBehind != true)
 				{
@@ -777,6 +866,21 @@ void main()
 							playerShip->MoveX(playerShipSpeed);
 						}
 					}
+					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
+					{
+						int oldMouseMoveX = myEngine->GetMouseMovementX();
+						int mouseMoveX = myEngine->GetMouseMovementX();
+						if (oldMouseMoveX < mouseMoveX)
+						{
+							playerShip->MoveX(playerShipSpeed * 6);
+						}
+						if (oldMouseMoveX > mouseMoveX)
+						{
+							playerShip->MoveX(-playerShipSpeed * 6);
+						}
+
+					}
+
 				}
 
 				if (moveCamTop != true)
@@ -787,6 +891,7 @@ void main()
 						playerCamera->ResetOrientation();
 					}
 				}
+
 				if (moveCamTop == true)
 				{
 					countDown -= frameTime;

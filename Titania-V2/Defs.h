@@ -2,6 +2,7 @@
 #include <TL-Engine.h>	// TL-Engine include file and namespace
 #include <SFML/Audio.hpp>
 #include <deque>
+#include  <memory>
 using namespace tle;
 
 
@@ -14,8 +15,8 @@ float random(int rangeMin, int rangeMax);
 
 const float PLAYERSHIPRADIUS = 3.0f;
 const float PLACEMENTPOWERUPRADIUS = 2.0f;
-const float ENEMYSHIPRADIUS = 8.0f;
-const float BULLETRADIUS = 8.0f;
+const float ENEMYSHIPRADIUS = 6.0f;
+const float BULLETRADIUS = 1.0f;
 
 class CBulletData
 {
@@ -25,6 +26,9 @@ public:
 	IModel* model;
 	float xVel, yVel, zVel;
 	float life = 3.0;
+	float mRadius;
+	float mHealth;
+	string mOwner;
 };
 
 //class CTripleBullet : public CBulletData
