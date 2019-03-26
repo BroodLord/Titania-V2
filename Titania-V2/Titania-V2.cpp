@@ -381,7 +381,8 @@ void main()
 		currentX2 = playerShip2->GetLocalX();
 		float frameTime = myEngine->Timer();
 		// Draw the scene
-		SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, bulletMesh, myEngine);
+
+			SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, bulletMesh, myEngine);
 		stringstream powerUpStateText; //Text altered to present gamestate
 		stringstream speedText; //Text altered to present gamestate
 		stringstream shieldText; //Text altered to present gamestate
