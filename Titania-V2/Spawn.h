@@ -113,6 +113,29 @@ private:
 
 };
 
+class CBossEnemyShip : public CShips
+{
+public:
+	CBossEnemyShip(I3DEngine*& myEngine)
+	{
+		mName = "BossShip";
+		mShipMesh = myEngine->LoadMesh("Boss.x");
+		mHealth = 200;
+		mFireRate = 0.5f;
+		mScore = 100;
+		mBulletRadius = 1.0f;
+		mBulletSize = mBulletRadius * 1.0;
+		mBulletHealth = 3.0f;
+		mBulletSpeed = 2.0f;
+
+	}
+	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
+	//~CLightEnemyShip();
+
+private:
+
+};
+
 
 
 

@@ -16,7 +16,9 @@ extern deque <CBulletData> bullets;
 extern deque <CBulletData> lightBullets;
 extern deque <CBulletData>  mediumBullets;
 extern deque <CBulletData> heavyBullets;
+extern deque <CBulletData> BossBullets;
 
+extern deque <unique_ptr <CShips>> BossShipList;
 extern deque <unique_ptr <CShips>> HeavyShipList;
 extern deque <unique_ptr <CShips>> MediumShipList;
 extern deque <unique_ptr <CShips>> LightShipList;
@@ -35,6 +37,7 @@ float closeCounter = 2, farCounter = 2.8, MidCounter = 2.4;
 extern float lightFireRate;
 extern float mediumFireRate;
 extern float heavyFireRate;
+extern float bossFireRate;
 
 extern int gPlayerScore;
 
@@ -68,6 +71,13 @@ void CreateEnemies(I3DEngine*& myEngine)
 		lightTemp->mShipModel->RotateY(180);
 		LightShipList.push_back(move(lightTemp));
 	}
+	
+		unique_ptr <CBossEnemyShip> bossTemp(new CBossEnemyShip(myEngine));
+		bossTemp->mShipModel = bossTemp->mShipMesh->CreateModel(0.0f, 30.0f, 690);
+		bossTemp->mShipModel->Scale(5.0f);
+		bossTemp->mShipModel->RotateY(180.0f);
+		BossShipList.push_back(move(bossTemp));
+
 
 	int i = random(1, 4);
 	int j = random(1, 4);
@@ -262,6 +272,19 @@ void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEn
 
 			}
 		}
+		if (RightList.empty() == true && MiddleList.empty() == true && LeftList.empty() == true)
+		{
+			if (BossShipList.front()->mShipModel->GetY() > -30.0f)
+			{
+				BossShipList.front()->mShipModel->MoveLocalY(-50.0f * frameTime);
+			}
+			if (bossFireRate < 0.0f)
+			{
+				BossShipList.front()->mShipModel->SetY(-30.0f);
+				BossShipList.front()->ShipShooting(moveCamTop, moveCamBehind, frameTime, myEngine, BossShipList, bulletMesh);
+				bossFireRate = BossShipList.front()->mFireRate;
+			}
+		}
 		
 	
 }
@@ -432,4 +455,8 @@ void CMediumEnemyShip::ShipShooting(bool moveCamTop, bool moveCamBehind, float f
 void CHeavyEnemyShip::ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)
 {
 	EnemyShooting(moveCamTop, moveCamBehind, frameTime, myEngine, ship, bulletMesh);
+}
+void CBossEnemyShip::ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)
+{
+	BeamShot(moveCamTop, moveCamBehind, frameTime, myEngine, ship, bulletMesh);
 }

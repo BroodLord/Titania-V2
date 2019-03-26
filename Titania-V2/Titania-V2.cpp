@@ -62,6 +62,7 @@ deque <CBulletData> bullets;
 deque <CBulletData> lightBullets;
 deque <CBulletData>  mediumBullets;
 deque <CBulletData> heavyBullets;
+deque <CBulletData> bossBullets;
 
 deque <CBulletData> enemybullets;
 
@@ -71,6 +72,7 @@ deque <unique_ptr <CPowerUp>> ShieldList;
 deque <unique_ptr <CPowerUp>> TripleList;
 deque <unique_ptr <CPowerUp>> CurrentlySpawned;
 
+deque <unique_ptr <CShips>> BossShipList;
 deque <unique_ptr <CShips>> HeavyShipList;
 deque <unique_ptr <CShips>> MediumShipList;
 deque <unique_ptr <CShips>> LightShipList;
@@ -84,6 +86,7 @@ deque <unique_ptr <CShips>> DeadList;
 float lightFireRate = 0;
 float mediumFireRate = 0;
 float heavyFireRate = 0;
+float bossFireRate = 0;
 
 int enemyShots = 0;
 int numBullets = 0;
@@ -259,6 +262,7 @@ void main()
 		lightFireRate = LightShipList.front()->mFireRate;
 		mediumFireRate = MediumShipList.front()->mFireRate;
 		heavyFireRate = HeavyShipList.front()->mFireRate;
+		bossFireRate = BossShipList.front()->mFireRate;
 	
 
 	for (int i = 0; i < 20; i++)
@@ -282,7 +286,6 @@ void main()
 	/*powerupthing = myEngine->LoadMesh("cube.x");
 	cubetest = powerupthing->CreateModel(0.0f, 0.0f, 0.0f);
 	cubetest->ScaleX(0.1f);*/
-
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
 	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
@@ -439,9 +442,12 @@ void main()
 
 			if (Health != Dead)
 			{
-				Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound);
-				ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
-				MoveBullet(frameTime, bulletMesh, playerShip);
+				if (moveCamBehind == false && moveCamTop == false)
+				{
+					Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound);
+					ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
+					MoveBullet(frameTime, bulletMesh, playerShip);
+				}
 
 			}
 
@@ -509,8 +515,16 @@ void main()
 			lightFireRate -= frameTime;
 			mediumFireRate -= frameTime;
 			heavyFireRate -= frameTime;
+			bossFireRate -= frameTime;
 
 			myEngine->StartMouseCapture();
+
+			if (myEngine->KeyHit(Key_L))
+			{
+				RightList.clear();
+				MiddleList.clear();
+				LeftList.clear();
+			}
 
 
 			if (battleMusic.getStatus() == battleMusic.Stopped)
@@ -746,9 +760,6 @@ void main()
 							//player invunerable
 						}
 					}
-				}
-				if (coop == true)
-				{
 					if (barrelRollColdDown2 == false)
 					{
 						if (currentPlayerShipState == RollingLeft)
@@ -768,6 +779,9 @@ void main()
 								//player invunerable
 							}
 						}
+				}
+				if (coop == true)
+				{
 
 						if (currentPlayerShipState2 == Normal)
 						{

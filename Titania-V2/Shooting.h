@@ -14,3 +14,4 @@ void EnemyShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngi
 void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player);
 void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
+void BeamShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);

@@ -197,6 +197,180 @@ void EnemyShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngi
 
 }
 
+void BeamShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)
+{
+	float x = ship.front()->mShipModel->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
+	float y = ship.front()->mShipModel->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
+	float z = ship.front()->mShipModel->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
+
+
+	float bulletSpeedX = 0;
+	float bulletSpeedZ = bulletSpeed;
+
+	float xSpeed = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
+	float ySpeed = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
+	float zSpeed = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
+
+	if (moveCamTop != true && moveCamBehind != true)
+	{
+		CBulletData BossShipShots;
+
+		//*******************************
+		// Play shooting sound here
+		//*******************************
+		shootingSound.play();
+		// Create bullet 1
+		BossShipShots.mHealth = ship.front()->mBulletHealth;
+		BossShipShots.mRadius = ship.front()->mBulletRadius;
+		BossShipShots.model = bulletMesh->CreateModel(x - 13.0, y - 1.0f, z + 13);
+		BossShipShots.model->Scale(ship.front()->mBulletSize);
+		BossShipShots.model->SetSkin("ice.jpg");
+		BossShipShots.mOwner = "Middle";
+		BossShipShots.mSpeed = ship.front()->mBulletSpeed;
+
+
+		// Get ship direction from matrix (x and z axes)
+
+
+		BossShipShots.xVel = -xSpeed;
+		BossShipShots.yVel = -ySpeed;
+		BossShipShots.zVel = -zSpeed;
+
+		// Length of bullet's life measured in seconds
+		enemyShots++;
+		enemybullets.push_back(BossShipShots);
+
+		// Create bullets in pairs - enough space for one more bullet?
+
+		// Create bullet 2
+		BossShipShots.mHealth = ship.front()->mBulletHealth;
+		BossShipShots.mRadius = ship.front()->mBulletRadius;
+		BossShipShots.model = bulletMesh->CreateModel(x + 13.0f, y - 1.0f, z + 13);
+		BossShipShots.model->Scale(ship.front()->mBulletSize);
+		BossShipShots.model->SetSkin("ice.jpg");
+		BossShipShots.mOwner = "Owner";
+		BossShipShots.mSpeed = ship.front()->mBulletSpeed;
+
+		// Get ship direction from matrix (x and z axes)
+
+		BossShipShots.xVel = -xSpeed;
+		BossShipShots.yVel = -ySpeed;
+		BossShipShots.zVel = -zSpeed;
+
+		// Length of bullet's life measured in seconds
+		enemyShots++;
+		enemybullets.push_back(BossShipShots);
+
+		BossShipShots.mHealth = ship.front()->mBulletHealth;
+		BossShipShots.mRadius = ship.front()->mBulletRadius;
+		BossShipShots.model = bulletMesh->CreateModel(x + 13.0f, y - 1.0f, z + 15);
+		BossShipShots.model->Scale(ship.front()->mBulletSize);
+		BossShipShots.model->SetSkin("ice.jpg");
+		BossShipShots.mOwner = "Owner";
+		BossShipShots.mSpeed = ship.front()->mBulletSpeed;
+
+		// Get ship direction from matrix (x and z axes)
+
+		BossShipShots.xVel = -xSpeed;
+		BossShipShots.yVel = -ySpeed;
+		BossShipShots.zVel = -zSpeed;
+
+		// Length of bullet's life measured in seconds
+		enemyShots++;
+		enemybullets.push_back(BossShipShots);
+
+		BossShipShots.mHealth = ship.front()->mBulletHealth;
+		BossShipShots.mRadius = ship.front()->mBulletRadius;
+		BossShipShots.model = bulletMesh->CreateModel(x - 13.0f, y - 1.0f, z + 15);
+		BossShipShots.model->Scale(ship.front()->mBulletSize);
+		BossShipShots.model->SetSkin("ice.jpg");
+		BossShipShots.mOwner = "Owner";
+		BossShipShots.mSpeed = ship.front()->mBulletSpeed;
+
+		// Get ship direction from matrix (x and z axes)
+
+		BossShipShots.xVel = -xSpeed;
+		BossShipShots.yVel = -ySpeed;
+		BossShipShots.zVel = -zSpeed;
+
+		// Length of bullet's life measured in seconds
+		enemyShots++;
+		enemybullets.push_back(BossShipShots);
+
+		BossShipShots.mHealth = ship.front()->mBulletHealth;
+		BossShipShots.mRadius = ship.front()->mBulletRadius;
+		BossShipShots.model = bulletMesh->CreateModel(x + 13.0f, y - 1.0f, z + 17);
+		BossShipShots.model->Scale(ship.front()->mBulletSize);
+		BossShipShots.model->SetSkin("ice.jpg");
+		BossShipShots.mOwner = "Owner";
+		BossShipShots.mSpeed = ship.front()->mBulletSpeed;
+
+		// Get ship direction from matrix (x and z axes)
+
+		BossShipShots.xVel = -xSpeed;
+		BossShipShots.yVel = -ySpeed;
+		BossShipShots.zVel = -zSpeed;
+
+		// Length of bullet's life measured in seconds
+		enemyShots++;
+		enemybullets.push_back(BossShipShots);
+
+		BossShipShots.mHealth = ship.front()->mBulletHealth;
+		BossShipShots.mRadius = ship.front()->mBulletRadius;
+		BossShipShots.model = bulletMesh->CreateModel(x - 13.0f, y - 1.0f, z + 17);
+		BossShipShots.model->Scale(ship.front()->mBulletSize);
+		BossShipShots.model->SetSkin("ice.jpg");
+		BossShipShots.mOwner = "Owner";
+		BossShipShots.mSpeed = ship.front()->mBulletSpeed;
+
+		// Get ship direction from matrix (x and z axes)
+
+		BossShipShots.xVel = -xSpeed;
+		BossShipShots.yVel = -ySpeed;
+		BossShipShots.zVel = -zSpeed;
+
+		// Length of bullet's life measured in seconds
+		enemyShots++;
+		enemybullets.push_back(BossShipShots);
+
+		BossShipShots.mHealth = ship.front()->mBulletHealth;
+		BossShipShots.mRadius = ship.front()->mBulletRadius;
+		BossShipShots.model = bulletMesh->CreateModel(x + 13.0f, y - 1.0f, z + 19);
+		BossShipShots.model->Scale(ship.front()->mBulletSize);
+		BossShipShots.model->SetSkin("ice.jpg");
+		BossShipShots.mOwner = "Owner";
+		BossShipShots.mSpeed = ship.front()->mBulletSpeed;
+
+		// Get ship direction from matrix (x and z axes)
+
+		BossShipShots.xVel = -xSpeed;
+		BossShipShots.yVel = -ySpeed;
+		BossShipShots.zVel = -zSpeed;
+
+		// Length of bullet's life measured in seconds
+		enemyShots++;
+		enemybullets.push_back(BossShipShots);
+
+		BossShipShots.mHealth = ship.front()->mBulletHealth;
+		BossShipShots.mRadius = ship.front()->mBulletRadius;
+		BossShipShots.model = bulletMesh->CreateModel(x - 13.0f, y - 1.0f, z + 19);
+		BossShipShots.model->Scale(ship.front()->mBulletSize);
+		BossShipShots.model->SetSkin("ice.jpg");
+		BossShipShots.mOwner = "Owner";
+		BossShipShots.mSpeed = ship.front()->mBulletSpeed;
+
+		// Get ship direction from matrix (x and z axes)
+
+		BossShipShots.xVel = -xSpeed;
+		BossShipShots.yVel = -ySpeed;
+		BossShipShots.zVel = -zSpeed;
+
+		// Length of bullet's life measured in seconds
+		enemyShots++;
+		enemybullets.push_back(BossShipShots);
+	}
+}
+
 
 void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)
 {
@@ -475,6 +649,16 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 				enemybullets[i].model->MoveX((10.0f * -enemybullets[i].mSpeed) * frameTime);
 			}
 		}*/
+
+		//if (enemybullets[i].mOwner == "Owner")
+		//{
+		//	enemybullets[i].xVel = enemybullets[i].xVel + 0.06f;
+		//	enemybullets[i].model->MoveX(-enemybullets[i].xVel * frameTime * 0.1f);
+		//}
+		if (enemybullets[i].mOwner == "Owner")
+		{
+
+		}
 
 		if (enemybullets[i].mOwner == "Left")
 		{
