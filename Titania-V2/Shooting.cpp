@@ -71,7 +71,7 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 			}
 		}
 
-		if ((myEngine->KeyHeld(Key_Space) || myEngine->KeyHeld(Mouse_LButton)) && numBullets + 2 < maxBullets && playerFireRate < 0.0f)
+		if ((myEngine->KeyHeld(Key_Space)) && numBullets + 2 < maxBullets && playerFireRate < 0.0f)
 		{
 			playerFireRate = 0.15f;
 			shootingSound.play();
@@ -98,22 +98,22 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 
 			// Create bullets in pairs - enough space for one more bullet?
-			
+
 				// Create bullet 2
-				temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
-				temp2.model->Scale(bulletSize * 75.0f);
+			temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
+			temp2.model->Scale(bulletSize * 75.0f);
 
 
-				// Get ship direction from matrix (x and z axes)
+			// Get ship direction from matrix (x and z axes)
 
-				temp2.xVel = xSpeed;
-				temp2.yVel = ySpeed;
-				temp2.zVel = zSpeed;
+			temp2.xVel = xSpeed;
+			temp2.yVel = ySpeed;
+			temp2.zVel = zSpeed;
 
-				// Length of bullet's life measured in seconds
-				numBullets++;
-				bullets.push_back(temp2);
-			
+			// Length of bullet's life measured in seconds
+			numBullets++;
+			bullets.push_back(temp2);
+
 
 			if (tripleBullet == true && numBullets < maxBullets)
 			{
@@ -194,20 +194,18 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 			}
 		}
 
-		if ((myEngine->KeyHeld(Key_I)) && numBullets2 < maxBullets2 && player2FireRate < 0.0f)
+		if ((myEngine->KeyHeld(Mouse_MButton)) && numBullets2 < maxBullets2 && player2FireRate < 0.0f)
 		{
 			player2FireRate = 0.15f;
-
-
 				shootingSound.play();
-				//*******************************
-				// Play shooting sound here
-				//*******************************
+			//*******************************
+			// Play shooting sound here
+			//*******************************
 
-				// Create bullet 1
+			// Create bullet 1
 
-				temp.model = bulletMesh->CreateModel(x - 1.5f, y - 1.0f, z - 4.5f);
-				temp.model->Scale(bulletSize * 75.0f);
+			temp.model = bulletMesh->CreateModel(x - 1.5f, y - 1.0f, z - 4.5f);
+			temp.model->Scale(bulletSize * 75.0f);
 
 
 			// Get ship direction from matrix (x and z axes)
@@ -579,7 +577,7 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		// Length of bullet's life measured in seconds
 		enemyShots++;
 		enemybullets.push_back(MiddleShipShots);
-		
+
 
 		// bullet 3
 		MiddleShipShots.mHealth = ship.front()->mBulletHealth;
@@ -938,7 +936,7 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 			enemybullets[i].model->Move(-enemybullets[i].xVel * frameTime, -enemybullets[i].yVel * frameTime,
 				-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
 			enemybullets[i].model->RotateLocalY(200.0f * frameTime);
-			
+
 		}
 		else if (enemybullets[i].mOwner == "HeavyShot")
 		{
@@ -946,7 +944,7 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 			if (player->GetX() > enemybullets[i].model->GetX())
 			{
 				enemybullets[i].model->MoveX((10.0f * enemybullets[i].mSpeed) * frameTime);
-				
+
 			}
 			if (player->GetX() < enemybullets[i].model->GetX())
 			{
@@ -957,7 +955,7 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 
 			/*enemybullets[i].model->LookAt(player);
 			enemybullets[i].model->Scale(3);*/
-enemybullets[i].model->RotateZ(500.0f * frameTime);
+			enemybullets[i].model->RotateZ(500.0f * frameTime);
 		}
 		else
 		{
