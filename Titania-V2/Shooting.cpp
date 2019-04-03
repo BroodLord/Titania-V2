@@ -10,9 +10,12 @@ extern sf::SoundBuffer shootingBuffer;
 extern sf::Sound shootingSound;
 extern deque <CBulletData> enemybullets;
 extern deque <CBulletData> bullets;
+extern deque <CBulletData> bullets2;
 extern int numBullets;
+extern int numBullets2;
 bool switchDirections = false;
 extern float playerFireRate;
+extern float player2FireRate;
 
 void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IModel* playerShip, IMesh*& bulletMesh, float playerShipSpeed, sf::Sound& shootingSound)
 {
@@ -135,6 +138,130 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		}
 	}
 
+}
+
+void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IModel* playerShip2, IMesh*& bulletMesh, float playerShipSpeed, sf::Sound& shootingSound)
+{
+	float x = playerShip2->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
+	float y = playerShip2->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
+	float z = playerShip2->GetZ() - 0.015f * matrix[2] + 0.01f * matrix[10];
+
+
+	float bulletSpeedX = playerShipSpeed;
+	float bulletSpeedZ = playerShipSpeed + bulletSpeed;
+
+	playerShip2->GetMatrix(matrix);
+	float xSpeed = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
+	float ySpeed = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
+	float zSpeed = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
+
+
+	if (moveCamTop != true && moveCamBehind != true)
+	{
+
+
+		CBulletData temp;
+		CBulletData temp2;
+		CBulletData temp3;
+
+		for (int i = 0; i < numBullets2; i++)
+		{
+			// Move bullet
+			bullets2[i].model->Move(-bullets2[i].xVel * frameTime, -bullets2[i].yVel * frameTime,
+				-bullets2[i].zVel * frameTime * 5.0f);
+			bullets2[i].model->RotateZ(500.0f * frameTime);
+		}
+
+		for (int i = 0; i < numBullets2; i++)
+		{
+			// Decrease life and see if bullet is dead
+			bullets2[i].life -= frameTime;
+			if (bullets2[i].life <= 0)
+			{
+				// Destroy bullet
+				bulletMesh->RemoveModel(bullets2.front().model);
+
+				// Copy last bullet into this dead slot to keep all live bullets in one block
+				/*bullets[i].model = bullets[numBullets - 1].model;
+				bullets[i].xVel = bullets[numBullets - 1].xVel;
+				bullets[i].yVel = bullets[numBullets - 1].yVel;
+				bullets[i].zVel = bullets[numBullets - 1].zVel;
+				bullets[i].life = bullets[numBullets - 1].life;*/
+
+				// Decrease number of bullets
+				bullets2.pop_front();
+				numBullets2--;
+			}
+		}
+
+		if ((myEngine->KeyHeld(Key_I)) && numBullets2 < maxBullets2 && player2FireRate < 0.0f)
+		{
+			player2FireRate = 0.15f;
+
+
+				shootingSound.play();
+				//*******************************
+				// Play shooting sound here
+				//*******************************
+
+				// Create bullet 1
+
+				temp.model = bulletMesh->CreateModel(x - 1.5f, y - 1.0f, z - 4.5f);
+				temp.model->Scale(bulletSize * 75.0f);
+
+
+			// Get ship direction from matrix (x and z axes)
+
+
+			temp.xVel = xSpeed;
+			temp.yVel = ySpeed;
+			temp.zVel = zSpeed;
+
+			// Length of bullet's life measured in seconds
+			numBullets2++;
+			bullets2.push_back(temp);
+
+
+			// Create bullets in pairs - enough space for one more bullet?
+			if (numBullets2 < maxBullets2)
+			{
+				// Create bullet 2
+				temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
+				temp2.model->Scale(bulletSize * 75.0f);
+
+
+				// Get ship direction from matrix (x and z axes)
+
+				temp2.xVel = xSpeed;
+				temp2.yVel = ySpeed;
+				temp2.zVel = zSpeed;
+
+				// Length of bullet's life measured in seconds
+				numBullets2++;
+				bullets2.push_back(temp2);
+			}
+
+			if (tripleBullet == true && numBullets2 < maxBullets2)
+			{
+				// bullet 3
+				temp3.model = bulletMesh->CreateModel(x, y - 1.0f, z - 4.5f);
+				temp3.model->Scale(bulletSize * 75.0f);
+
+
+				// Get ship direction from matrix (x and z axes)
+
+
+				temp3.xVel = xSpeed;
+				temp3.yVel = ySpeed;
+				temp3.zVel = zSpeed;
+
+				// Length of bullet's life measured in seconds
+				numBullets2++;
+				bullets2.push_back(temp3);
+
+			}
+		}
+	}
 }
 
 void EnemyShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)

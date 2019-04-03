@@ -40,8 +40,8 @@ EKeyCode player2MoveUp = Key_Up;
 EKeyCode player2MoveRight = Key_Right;
 EKeyCode player2MoveDown = Key_Down;
 EKeyCode player2MoveLeft = Key_Left;
-EKeyCode player2RollRightKey = Mouse_RButton;
-EKeyCode player2RollLeftKey = Mouse_LButton;
+EKeyCode player2RollRightKey = Key_P;
+EKeyCode player2RollLeftKey = Key_O;
 EKeyCode Exit = Key_Escape;
 EKeyCode RollRightKey = Key_E;
 EKeyCode RollLeftKey = Key_Q;
@@ -57,8 +57,10 @@ bool tripleBullet = false;
 bool coop = false;
 
 float playerFireRate = 0.0f;
+float player2FireRate = 0.0f;
 
 deque <CBulletData> bullets;
+deque <CBulletData> bullets2;
 deque <CBulletData> lightBullets;
 deque <CBulletData>  mediumBullets;
 deque <CBulletData> heavyBullets;
@@ -90,6 +92,7 @@ float bossFireRate = 0;
 
 int enemyShots = 0;
 int numBullets = 0;
+int numBullets2 = 0;
 
 void main()
 {
@@ -417,14 +420,23 @@ void main()
 			menuMusic.setLoop(true);
 			backGround->SetPosition(0, 0);
 			playerCamera->LookAt(topDownCamBlock);
-			preGameText << kPlayText << "\n" << kCoopText << "\n" << kQuitText;
+			preGameText << kPlayText << "\n" << kCoopText << " " << coop << "\n" << kQuitText;
 			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f, kWhite); //Game state text is set to go
 			preGameText.str(""); // Clear myStream
 
 			if (myEngine->KeyHit(Key_Space))
 			{
-				coop = true;
-				playerShip2->SetLocalPosition(0.0f, -30.0f, 785.0f);
+				if (coop == false)
+				{
+					coop = true;
+					playerShip2->SetPosition(0.0f, -30.0f, 785.0f);
+				}
+				else
+				{
+					coop = false;
+					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
+				}
+
 			}
 
 			if (myEngine->KeyHit(kStartKey))
@@ -445,6 +457,7 @@ void main()
 				if (moveCamBehind == false && moveCamTop == false)
 				{
 					Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound);
+					Shooting2(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip2, bulletMesh, playerShipSpeed, shootingSound);
 					ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
 					MoveBullet(frameTime, bulletMesh, playerShip);
 				}
@@ -452,6 +465,7 @@ void main()
 			}
 
 			playerFireRate -= frameTime;
+			player2FireRate -= frameTime;
 
 			auto bt = enemybullets.begin(); // set p to the beginning of the loop
 			while (bt != enemybullets.end()) // while not at the end of the loop
