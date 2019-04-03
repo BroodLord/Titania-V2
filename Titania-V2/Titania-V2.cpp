@@ -97,7 +97,7 @@ int numBullets = 0;
 int numBullets2 = 0;
 bool gCoop = false;
 
-string gCoopText = "(false)";
+string gCoopText = "(Disabled)";
 
 void main()
 {
@@ -410,7 +410,7 @@ void main()
 		stringstream preGameText;
 
 		string kPlayText = "Press Enter to Start";
-		string kCoopText = "Press Space for Coop";
+		string kCoopText = "Press Space to Toggle Coop:";
 		string kQuitText = "Press Esc to Quit";
 
 		if (currentGameState == MainMenu)
@@ -433,13 +433,13 @@ void main()
 				if (gCoop == false)
 				{
 					gCoop = true;
-					gCoopText = "(true)";
+					gCoopText = "(Enabled)";
 					playerShip2->SetPosition(0.0f, -30.0f, 785.0f);
 				}
 				else
 				{
 					gCoop = false;
-					gCoopText = "(false)";
+					gCoopText = "(Disabled)";
 					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
 				}
 

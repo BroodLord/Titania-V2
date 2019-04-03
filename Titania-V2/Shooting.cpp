@@ -13,7 +13,6 @@ extern deque <CBulletData> bullets;
 extern deque <CBulletData> bullets2;
 extern int numBullets;
 extern int numBullets2;
-bool switchDirections = false;
 extern float playerFireRate;
 extern float player2FireRate;
 
@@ -41,33 +40,35 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		CBulletData temp2;
 		CBulletData temp3;
 
-		for (int i = 0; i < numBullets; i++)
+		for (auto PlayerShots = bullets.begin(); PlayerShots != bullets.end(); PlayerShots++)
 		{
 			// Move bullet
-			bullets[i].model->Move(-bullets[i].xVel * frameTime, -bullets[i].yVel * frameTime,
-				-bullets[i].zVel * frameTime * 5.0f);
-			bullets[i].model->RotateZ(500.0f * frameTime);
-		}
+			PlayerShots->model->Move(-PlayerShots->xVel * frameTime, -PlayerShots->yVel * frameTime,
+				-PlayerShots->zVel * frameTime * 5.0f);
+			PlayerShots->model->RotateZ(500.0f * frameTime);
 
-		for (int i = 0; i < numBullets; i++)
+		}
+		for (auto PlayerShots = bullets.begin(); PlayerShots != bullets.end(); PlayerShots++)
 		{
+
 			// Decrease life and see if bullet is dead
-			bullets[i].life -= frameTime;
-			if (bullets[i].life <= 0)
+			PlayerShots->life -= frameTime;
+			if (PlayerShots->life <= 0)
 			{
 				// Destroy bullet
 				bulletMesh->RemoveModel(bullets.front().model);
 
 				// Copy last bullet into this dead slot to keep all live bullets in one block
-				/*bullets[i].model = bullets[numBullets - 1].model;
-				bullets[i].xVel = bullets[numBullets - 1].xVel;
-				bullets[i].yVel = bullets[numBullets - 1].yVel;
-				bullets[i].zVel = bullets[numBullets - 1].zVel;
-				bullets[i].life = bullets[numBullets - 1].life;*/
+				/*PlayerShots->model = bullets[numBullets - 1].model;
+				PlayerShots->xVel = bullets[numBullets - 1].xVel;
+				PlayerShots->yVel = bullets[numBullets - 1].yVel;
+				PlayerShots->zVel = bullets[numBullets - 1].zVel;
+				PlayerShots->life = bullets[numBullets - 1].life;*/
 
 				// Decrease number of bullets
 				bullets.pop_front();
 				numBullets--;
+				break;
 			}
 		}
 
@@ -120,7 +121,7 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 				// bullet 3
 				temp3.model = bulletMesh->CreateModel(x, y - 1.0f, z - 4.5f);
 				temp3.model->Scale(bulletSize * 75.0f);
-
+				temp3.model->SetSkin("GreenFire.jpg");
 
 				// Get ship direction from matrix (x and z axes)
 
@@ -164,40 +165,40 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		CBulletData temp2;
 		CBulletData temp3;
 
-		for (int i = 0; i < numBullets2; i++)
-		{
-			// Move bullet
-			bullets2[i].model->Move(-bullets2[i].xVel * frameTime, -bullets2[i].yVel * frameTime,
-				-bullets2[i].zVel * frameTime * 5.0f);
-			bullets2[i].model->RotateZ(500.0f * frameTime);
-		}
+		//for (int i = 0; i < numBullets2; i++)
+		//{
+		//	// Move bullet
+		//	bullets2[i].model->Move(-bullets2[i].xVel * frameTime, -bullets2[i].yVel * frameTime,
+		//		-bullets2[i].zVel * frameTime * 5.0f);
+		//	bullets2[i].model->RotateZ(500.0f * frameTime);
+		//}
 
-		for (int i = 0; i < numBullets2; i++)
-		{
-			// Decrease life and see if bullet is dead
-			bullets2[i].life -= frameTime;
-			if (bullets2[i].life <= 0)
-			{
-				// Destroy bullet
-				bulletMesh->RemoveModel(bullets2.front().model);
+		//for (int i = 0; i < numBullets2; i++)
+		//{
+		//	// Decrease life and see if bullet is dead
+		//	bullets2[i].life -= frameTime;
+		//	if (bullets2[i].life <= 0)
+		//	{
+		//		// Destroy bullet
+		//		bulletMesh->RemoveModel(bullets2.front().model);
 
-				// Copy last bullet into this dead slot to keep all live bullets in one block
-				/*bullets[i].model = bullets[numBullets - 1].model;
-				bullets[i].xVel = bullets[numBullets - 1].xVel;
-				bullets[i].yVel = bullets[numBullets - 1].yVel;
-				bullets[i].zVel = bullets[numBullets - 1].zVel;
-				bullets[i].life = bullets[numBullets - 1].life;*/
+		//		// Copy last bullet into this dead slot to keep all live bullets in one block
+		//		/*bullets[i].model = bullets[numBullets - 1].model;
+		//		bullets[i].xVel = bullets[numBullets - 1].xVel;
+		//		bullets[i].yVel = bullets[numBullets - 1].yVel;
+		//		bullets[i].zVel = bullets[numBullets - 1].zVel;
+		//		bullets[i].life = bullets[numBullets - 1].life;*/
 
-				// Decrease number of bullets
-				bullets2.pop_front();
-				numBullets2--;
-			}
-		}
+		//		// Decrease number of bullets
+		//		bullets.pop_front();
+		//		numBullets2--;
+		//	}
+		//}
 
-		if ((myEngine->KeyHeld(Mouse_MButton)) && numBullets2 < maxBullets2 && player2FireRate < 0.0f)
+		if ((myEngine->KeyHeld(Mouse_MButton)) && numBullets + 2 < maxBullets && player2FireRate < 0.0f)
 		{
 			player2FireRate = 0.15f;
-				shootingSound.play();
+			shootingSound.play();
 			//*******************************
 			// Play shooting sound here
 			//*******************************
@@ -216,12 +217,12 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 			temp.zVel = zSpeed;
 
 			// Length of bullet's life measured in seconds
-			numBullets2++;
-			bullets2.push_back(temp);
+			numBullets++;
+			bullets.push_back(temp);
 
 
 			// Create bullets in pairs - enough space for one more bullet?
-			if (numBullets2 < maxBullets2)
+			if (numBullets < maxBullets)
 			{
 				// Create bullet 2
 				temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
@@ -235,17 +236,17 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 				temp2.zVel = zSpeed;
 
 				// Length of bullet's life measured in seconds
-				numBullets2++;
-				bullets2.push_back(temp2);
+				numBullets++;
+				bullets.push_back(temp2);
 			}
 
-			if (tripleBullet == true && numBullets2 < maxBullets2)
+			if (tripleBullet == true && numBullets < maxBullets)
 			{
 				// bullet 3
 				temp3.model = bulletMesh->CreateModel(x, y - 1.0f, z - 4.5f);
 				temp3.model->Scale(bulletSize * 75.0f);
-
-
+				temp3.model->SetSkin("GreenFire.jpg")
+					;
 				// Get ship direction from matrix (x and z axes)
 
 
@@ -254,8 +255,8 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 				temp3.zVel = zSpeed;
 
 				// Length of bullet's life measured in seconds
-				numBullets2++;
-				bullets2.push_back(temp3);
+				numBullets++;
+				bullets.push_back(temp3);
 
 			}
 		}
@@ -297,7 +298,7 @@ void EnemyShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngi
 
 		if (i == 2)
 		{
-			temp.model->SetSkin("fire.jpg");
+			temp.model->SetSkin("Pinkfire.jpg");
 			temp.mImmune = true;
 		}
 		// Get ship direction from matrix (x and z axes)
@@ -535,7 +536,7 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 		if (i == 2)
 		{
-			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.model->SetSkin("Pinkfire.jpg");
 			MiddleShipShots.mImmune = true;
 		}
 
@@ -564,7 +565,7 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 		if (i == 2)
 		{
-			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.model->SetSkin("Pinkfire.jpg");
 			MiddleShipShots.mImmune = true;
 		}
 
@@ -591,7 +592,7 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 		if (i == 2)
 		{
-			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.model->SetSkin("Pinkfire.jpg");
 			MiddleShipShots.mImmune = true;
 		}
 
@@ -618,7 +619,7 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 		if (i == 2)
 		{
-			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.model->SetSkin("Pinkfire.jpg");
 			MiddleShipShots.mImmune = true;
 		}
 
@@ -645,7 +646,7 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 		if (i == 2)
 		{
-			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.model->SetSkin("Pinkfire.jpg");
 			MiddleShipShots.mImmune = true;
 		}
 
@@ -708,7 +709,7 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 
 		if (i == 2)
 		{
-			LightShipShots.model->SetSkin("fire.jpg");
+			LightShipShots.model->SetSkin("Pinkfire.jpg");
 			LightShipShots.mImmune = true;
 		}
 
@@ -727,53 +728,52 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		// Create bullet 2
 		LightShipShots2.mHealth = ship.front()->mBulletHealth;
 		LightShipShots2.mRadius = ship.front()->mBulletRadius;
-		LightShipShots2.model = bulletMesh->CreateModel(1.5f, 0.0f, 0.0f);
-		LightShipShots2.model->SetSkin("ice.jpg");
+		LightShipShots2.model = bulletMesh->CreateModel(-1.5f, y - 1.0f, 0);
+		LightShipShots2.model->Scale(ship.front()->mBulletSize);
+		LightShipShots2.model->SetSkin("fire.jpg");
 		LightShipShots2.mOwner = "LightRight";
 		LightShipShots2.mSpeed = ship.front()->mBulletSpeed;
 		i = random(0, 4);
 
 		if (i == 2)
 		{
-			LightShipShots2.model->SetSkin("fire.jpg");
+			LightShipShots2.model->SetSkin("Pinkfire.jpg");
 			LightShipShots2.mImmune = true;
 		}
 
 		// Get ship direction from matrix (x and z axes)
 
-		LightShipShots2.xVel = -xSpeed;
+		LightShipShots2.xVel = -zSpeed;
 		LightShipShots2.yVel = -ySpeed;
 		LightShipShots2.zVel = -zSpeed;
 
 		// Length of bullet's life measured in seconds
 
-
-
-
 		// bullet 3
 		LightShipShots3.mHealth = ship.front()->mBulletHealth;
 		LightShipShots3.mRadius = ship.front()->mBulletRadius;
-		LightShipShots3.model = bulletMesh->CreateModel(-1.5f, 0.0f, 0.0f);
+		LightShipShots3.model = bulletMesh->CreateModel(1.5f, y -1.0f, z);
 		LightShipShots3.model->SetSkin("ice.jpg");
+		LightShipShots3.model->Scale(ship.front()->mBulletSize);
 		LightShipShots3.mOwner = "LightLeft";
 		LightShipShots3.mSpeed = ship.front()->mBulletSpeed;
 		i = random(0, 4);
 
 		if (i == 2)
 		{
-			LightShipShots3.model->SetSkin("fire.jpg");
+			LightShipShots3.model->SetSkin("Pinkfire.jpg");
 			LightShipShots3.mImmune = true;
 		}
 
 		// Get ship direction from matrix (x and z axes)
 
 
-		LightShipShots3.xVel = -xSpeed;
+		LightShipShots3.xVel = -zSpeed;
 		LightShipShots3.yVel = -ySpeed;
 		LightShipShots3.zVel = -zSpeed;
 
-		LightShipShots2.model->AttachToParent(LightShipShots.model);
-		LightShipShots3.model->AttachToParent(LightShipShots.model);
+		//LightShipShots2.model->AttachToParent(LightShipShots.model);
+		//LightShipShots3.model->AttachToParent(LightShipShots.model);
 
 		// Length of bullet's life measured in seconds
 		enemyShots++;
@@ -852,13 +852,6 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 			enemybullets[i].model->Move(-enemybullets[i].xVel * frameTime, -enemybullets[i].yVel * frameTime,
 				-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
 			enemybullets[i].model->RotateZ(500.0f * frameTime);
-
-			if (i == 2)
-			{
-				enemybullets[i].model->SetSkin("fire.jpg");
-				enemybullets[i].mImmune = true;
-			}
-
 		}
 		else if (enemybullets[i].mOwner == "Right")
 		{
@@ -889,45 +882,78 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 		}
 		else if (enemybullets[i].mOwner == "LightRight")
 		{
-			if (enemybullets[i].model->GetLocalX() < -20.0f)
-			{
-				switchDirections = true;
-			}
 
-			else if (enemybullets[i].model->GetLocalX() > 20.0f)
-			{
-				switchDirections = false;
-			}
+			//float bulletSpeedZ = bulletSpeed;
+			//float zSpeed = bulletSpeedZ;
 
-			if (!switchDirections)
-			{
+			//	if (enemybullets.size() > i + 1 && enemybullets[i + 1].mOwner == "LightMiddle")
+			//	{
+			//		//enemybullets[i].zVel = enemybullets[i].zVel + 0.1f;
+			//	/*	enemybullets[i].oldX = enemybullets[i + 1].model->GetX();
+			//		enemybullets[i].oldY = enemybullets[i + 1].model->GetY();
+			//		enemybullets[i].oldZ = enemybullets[i + 1].model->GetZ();
+			//		enemybullets[i].model->AttachToParent(enemybullets[i + 1].model);*/
+			//		enemybullets[i].model->MoveX(enemybullets[i].xVel * frameTime * (5.0f * enemybullets[i].mSpeed));
+			//	}			
+			//else
+			//{
+			//		/*enemybullets[i].model->SetZ(enemybullets[i].oldZ);
+			//		enemybullets[i].model->SetY(enemybullets[i].oldY);*/
+			//		enemybullets[i].model->MoveZ(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
+			//	enemybullets[i].zVel = zSpeed;
+			//}
 
+			//if (enemybullets.size() > i + 1 && enemybullets[i].model->GetLocalX() < enemybullets[i + 1].model->GetLocalX() - 20.0f)
+			//{
+			//	enemybullets[i].xVel = -enemybullets[i].xVel;		
+			//}
+			//else if (enemybullets.size() > i + 1 && enemybullets[i].model->GetLocalX() > enemybullets[i + 1].model->GetLocalX() + 20.0f)
+			//{
+			//	enemybullets[i].xVel = -enemybullets[i].xVel;
+			//}
 
-				enemybullets[i].model->MoveX(enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
-			}
-			else
-			{
+			
 
-				enemybullets[i].model->MoveX(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
+			
 
-			}
-
-			//enemybullets[i].model->RotateZ(500.0f * frameTime);
 		}
 		else if (enemybullets[i].mOwner == "LightLeft")
 		{
-			if (!switchDirections)
+
+			
+			float bulletSpeedZ = bulletSpeed;
+
+			float zSpeed = bulletSpeedZ;
+			
+
+				if (enemybullets.size() > i + 2 && enemybullets[i + 2].mOwner == "LightMiddle")
+				{
+					enemybullets[i].model->MoveZ(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
+					enemybullets[i].model->MoveLocalZ(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed) * 2);
+					enemybullets[i].model->SetX(enemybullets[i + 2].model->GetX() + 5);
+					enemybullets[i].model->RotateLocalY(500.f * frameTime);
+				}
+			
+				else
+				{
+					enemybullets[i].zVel = -zSpeed;
+				}
+			
+
+			if (enemybullets.size() > i + 2 && enemybullets[i].model->GetLocalX() < enemybullets[i + 2].model->GetX() - 20.0f)
 			{
-
-
-				enemybullets[i].model->MoveX(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
+				enemybullets[i].xVel = -enemybullets[i].xVel;
 			}
-			else
+			else if (enemybullets.size() > i + 2 && enemybullets[i].model->GetLocalX() > enemybullets[i + 2].model->GetX() + 20.0f)
 			{
-
-				enemybullets[i].model->MoveX(enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
-
+				enemybullets[i].xVel = -enemybullets[i].xVel;
 			}
+				
+
+			//enemybullets[i].model->Move(-enemybullets[i].yVel * frameTime, -enemybullets[i].yVel * frameTime,
+			//	-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
+			////enemybullets[i].model->RotateLocalY(200.0f * frameTime);
+	
 
 		}
 		else if (enemybullets[i].mOwner == "LightMiddle")

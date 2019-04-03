@@ -31,6 +31,7 @@ public:
 	string mOwner;
 	float mSpeed;
 	bool mImmune = false;
+	float oldX, oldY, oldZ;
 };
 
 //class CTripleBullet : public CBulletData

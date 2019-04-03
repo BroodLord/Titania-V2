@@ -6,7 +6,6 @@
 #include "Spawn.h"
 using namespace tle;
 
-
 const int maxBullets = 20;
 const int maxBullets2 = 20;
 
