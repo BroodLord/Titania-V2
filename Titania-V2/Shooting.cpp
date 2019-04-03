@@ -68,7 +68,7 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 			}
 		}
 
-		if ((myEngine->KeyHeld(Key_Space) || myEngine->KeyHeld(Mouse_LButton)) && numBullets < maxBullets && playerFireRate < 0.0f)
+		if ((myEngine->KeyHeld(Key_Space) || myEngine->KeyHeld(Mouse_LButton)) && numBullets + 2 < maxBullets && playerFireRate < 0.0f)
 		{
 			playerFireRate = 0.15f;
 			shootingSound.play();
@@ -95,8 +95,7 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 
 
 			// Create bullets in pairs - enough space for one more bullet?
-			if (numBullets < maxBullets)
-			{
+			
 				// Create bullet 2
 				temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
 				temp2.model->Scale(bulletSize * 75.0f);
@@ -111,7 +110,7 @@ void Shooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 				// Length of bullet's life measured in seconds
 				numBullets++;
 				bullets.push_back(temp2);
-			}
+			
 
 			if (tripleBullet == true && numBullets < maxBullets)
 			{
@@ -151,6 +150,7 @@ void EnemyShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngi
 	float xSpeed = bulletSpeedX * matrix[0] + bulletSpeedZ * matrix[8];
 	float ySpeed = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
 	float zSpeed = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
+	int i;
 
 	if (moveCamTop != true && moveCamBehind != true)
 	{
@@ -168,8 +168,13 @@ void EnemyShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngi
 		temp.model->SetSkin("ice.jpg");
 		temp.mOwner = "HeavyShot";
 		temp.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
 
-
+		if (i == 2)
+		{
+			temp.model->SetSkin("fire.jpg");
+			temp.mImmune = true;
+		}
 		// Get ship direction from matrix (x and z axes)
 
 
@@ -181,9 +186,6 @@ void EnemyShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngi
 		enemyShots++;
 		enemybullets.push_back(temp);
 	}
-
-
-
 
 	/*for (auto it = enemybullets.begin(); it != enemybullets.end(); it++)
 	{
@@ -386,6 +388,8 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 	float ySpeed = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
 	float zSpeed = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
 
+	int i;
+
 	if (moveCamTop != true && moveCamBehind != true)
 	{
 		CBulletData MiddleShipShots;
@@ -402,7 +406,13 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		MiddleShipShots.model->SetSkin("ice.jpg");
 		MiddleShipShots.mOwner = "Middle";
 		MiddleShipShots.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
 
+		if (i == 2)
+		{
+			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.mImmune = true;
+		}
 
 		// Get ship direction from matrix (x and z axes)
 
@@ -425,6 +435,13 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		MiddleShipShots.model->SetSkin("ice.jpg");
 		MiddleShipShots.mOwner = "MiddleRight";
 		MiddleShipShots.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
+
+		if (i == 2)
+		{
+			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.mImmune = true;
+		}
 
 		// Get ship direction from matrix (x and z axes)
 
@@ -435,8 +452,7 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		// Length of bullet's life measured in seconds
 		enemyShots++;
 		enemybullets.push_back(MiddleShipShots);
-
-
+		
 
 		// bullet 3
 		MiddleShipShots.mHealth = ship.front()->mBulletHealth;
@@ -446,6 +462,13 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		MiddleShipShots.model->SetSkin("ice.jpg");
 		MiddleShipShots.mOwner = "MiddleLeft";
 		MiddleShipShots.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
+
+		if (i == 2)
+		{
+			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.mImmune = true;
+		}
 
 		// Get ship direction from matrix (x and z axes)
 
@@ -466,6 +489,13 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		MiddleShipShots.model->SetSkin("ice.jpg");
 		MiddleShipShots.mOwner = "Left";
 		MiddleShipShots.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
+
+		if (i == 2)
+		{
+			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.mImmune = true;
+		}
 
 		// Get ship direction from matrix (x and z axes)
 
@@ -486,6 +516,13 @@ void FiveShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& 
 		MiddleShipShots.model->SetSkin("ice.jpg");
 		MiddleShipShots.mOwner = "Right";
 		MiddleShipShots.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
+
+		if (i == 2)
+		{
+			MiddleShipShots.model->SetSkin("fire.jpg");
+			MiddleShipShots.mImmune = true;
+		}
 
 		// Get ship direction from matrix (x and z axes)
 
@@ -522,6 +559,8 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 	float ySpeed = bulletSpeedX * matrix[1] + bulletSpeedZ * matrix[9];
 	float zSpeed = bulletSpeedX * matrix[2] + bulletSpeedZ * matrix[10];
 
+	int i;
+
 	if (moveCamTop != true && moveCamBehind != true)
 	{
 		CBulletData LightShipShots;
@@ -540,7 +579,13 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		LightShipShots.model->SetSkin("ice.jpg");
 		LightShipShots.mOwner = "LightMiddle";
 		LightShipShots.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
 
+		if (i == 2)
+		{
+			LightShipShots.model->SetSkin("fire.jpg");
+			LightShipShots.mImmune = true;
+		}
 
 		// Get ship direction from matrix (x and z axes)
 
@@ -561,6 +606,13 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		LightShipShots2.model->SetSkin("ice.jpg");
 		LightShipShots2.mOwner = "LightRight";
 		LightShipShots2.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
+
+		if (i == 2)
+		{
+			LightShipShots2.model->SetSkin("fire.jpg");
+			LightShipShots2.mImmune = true;
+		}
 
 		// Get ship direction from matrix (x and z axes)
 
@@ -580,6 +632,13 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		LightShipShots3.model->SetSkin("ice.jpg");
 		LightShipShots3.mOwner = "LightLeft";
 		LightShipShots3.mSpeed = ship.front()->mBulletSpeed;
+		i = random(0, 4);
+
+		if (i == 2)
+		{
+			LightShipShots3.model->SetSkin("fire.jpg");
+			LightShipShots3.mImmune = true;
+		}
 
 		// Get ship direction from matrix (x and z axes)
 
@@ -668,6 +727,13 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 			enemybullets[i].model->Move(-enemybullets[i].xVel * frameTime, -enemybullets[i].yVel * frameTime,
 				-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
 			enemybullets[i].model->RotateZ(500.0f * frameTime);
+
+			if (i == 2)
+			{
+				enemybullets[i].model->SetSkin("fire.jpg");
+				enemybullets[i].mImmune = true;
+			}
+
 		}
 		else if (enemybullets[i].mOwner == "Right")
 		{

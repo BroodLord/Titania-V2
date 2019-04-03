@@ -6,6 +6,10 @@ static int lightCounter = 0;
 static int MedCounter = 0;
 static int HeavyCounter = 0;
 
+const float ENEMY_X = 120.0f;
+const float ENEMY_Y = -30.0f;
+const float ENEMY_Z = 710.0f;
+
 //HeavyEnemyShip heavyShip;
 //MediumEnemyShip mediumShip;
 //LightEnemyShip lightShip;
@@ -48,7 +52,7 @@ void CreateEnemies(I3DEngine*& myEngine)
 	{
 		unique_ptr <CHeavyEnemyShip> heavyTemp(new CHeavyEnemyShip(myEngine));
 
-		heavyTemp->mShipModel = heavyTemp->mShipMesh->CreateModel(120.0f, -30.0f, 700.0f);
+		heavyTemp->mShipModel = heavyTemp->mShipMesh->CreateModel(ENEMY_X, ENEMY_Y, ENEMY_Z);
 		heavyTemp->mShipModel->Scale(2);
 		heavyTemp->mShipModel->RotateY(180);
 		HeavyShipList.push_back(move(heavyTemp));
@@ -57,7 +61,7 @@ void CreateEnemies(I3DEngine*& myEngine)
 	{
 		unique_ptr <CMediumEnemyShip> mediumTemp(new CMediumEnemyShip(myEngine));
 
-		mediumTemp->mShipModel = mediumTemp->mShipMesh->CreateModel(120.0f, -30.0f, 700.0f);
+		mediumTemp->mShipModel = mediumTemp->mShipMesh->CreateModel(ENEMY_X, ENEMY_Y, ENEMY_Z);
 		mediumTemp->mShipModel->Scale(1.5f);
 		mediumTemp->mShipModel->RotateY(180);
 		MediumShipList.push_back(move(mediumTemp));
@@ -66,7 +70,7 @@ void CreateEnemies(I3DEngine*& myEngine)
 	{
 		unique_ptr <CLightEnemyShip> lightTemp(new CLightEnemyShip(myEngine));
 
-		lightTemp->mShipModel = lightTemp->mShipMesh->CreateModel(120.0f, -30.0f, 700.0f);
+		lightTemp->mShipModel = lightTemp->mShipMesh->CreateModel(ENEMY_X, ENEMY_Y, ENEMY_Z);
 		lightTemp->mShipModel->Scale(1.5f);
 		lightTemp->mShipModel->RotateY(180);
 		LightShipList.push_back(move(lightTemp));
@@ -84,7 +88,6 @@ void CreateEnemies(I3DEngine*& myEngine)
 	int k = random(1, 4);
 
 	RandomEnemies(i, j, k);
-
 }
 
 void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop, bool moveCamBehind, float frameTime, IMesh*& bulletMesh, I3DEngine*& myEngine)
@@ -399,8 +402,7 @@ void RandomEnemies(int& i, int& j, int& k)
 				j = random(1, 4);
 			}
 		}
-
-
+		
 		if (k == 1)
 		{
 			if (!LightShipList.empty() && LeftList.empty())
@@ -440,7 +442,6 @@ void RandomEnemies(int& i, int& j, int& k)
 
 	}
 }
-
 
 void CLightEnemyShip::ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh)
 {

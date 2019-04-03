@@ -461,7 +461,7 @@ void main()
 				auto jt = bullets.begin(); // set p to the beginning of the loop
 				while (jt != bullets.end()) // while not at the end of the loop
 				{
-					if (sphere2sphere(bt->model, jt->model, bt->mRadius, BULLETRADIUS))
+					if (sphere2sphere(bt->model, jt->model, bt->mRadius, BULLETRADIUS) && !bt->mImmune)
 					{
 						bulletMesh->RemoveModel(jt->model);
 						Erase(bullets, jt->model);
