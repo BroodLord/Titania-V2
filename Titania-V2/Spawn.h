@@ -49,7 +49,7 @@ public:
 	mBulletRadius = 1.0f;
 	mBulletSize = mBulletRadius * 0.6;
 	mBulletHealth = 3.0f;
-	mBulletSpeed = 0.7f;
+	mBulletSpeed = 1.0f;
 
 }
 	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);

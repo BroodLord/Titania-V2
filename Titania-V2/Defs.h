@@ -3,6 +3,7 @@
 #include <SFML/Audio.hpp>
 #include <deque>
 #include  <memory>
+
 using namespace tle;
 
 
@@ -31,7 +32,8 @@ public:
 	string mOwner;
 	float mSpeed;
 	bool mImmune = false;
-	float oldX, oldY, oldZ;
+	float mDistance = 10.0f;
+	float angle = 0.0f;
 };
 
 //class CTripleBullet : public CBulletData

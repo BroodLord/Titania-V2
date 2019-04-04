@@ -1,5 +1,6 @@
 #include "Shooting.h"
 #include "Spawn.h"
+#include <cmath>
 
 float matrix[16];
 const float bulletSize = 0.008f;
@@ -701,7 +702,7 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		LightShipShots.mHealth = ship.front()->mBulletHealth;
 		LightShipShots.mRadius = ship.front()->mBulletRadius;
 		LightShipShots.model = bulletMesh->CreateModel(x, y - 1.0f, z);
-		LightShipShots.model->Scale(ship.front()->mBulletSize);
+		LightShipShots.model->Scale(ship.front()->mBulletSize * 2);
 		LightShipShots.model->SetSkin("ice.jpg");
 		LightShipShots.mOwner = "LightMiddle";
 		LightShipShots.mSpeed = ship.front()->mBulletSpeed;
@@ -728,9 +729,9 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		// Create bullet 2
 		LightShipShots2.mHealth = ship.front()->mBulletHealth;
 		LightShipShots2.mRadius = ship.front()->mBulletRadius;
-		LightShipShots2.model = bulletMesh->CreateModel(-1.5f, y - 1.0f, 0);
+		LightShipShots2.model = bulletMesh->CreateModel(x, y - 1.0f, z);
 		LightShipShots2.model->Scale(ship.front()->mBulletSize);
-		LightShipShots2.model->SetSkin("fire.jpg");
+		LightShipShots2.model->SetSkin("ice.jpg");
 		LightShipShots2.mOwner = "LightRight";
 		LightShipShots2.mSpeed = ship.front()->mBulletSpeed;
 		i = random(0, 4);
@@ -743,7 +744,7 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 
 		// Get ship direction from matrix (x and z axes)
 
-		LightShipShots2.xVel = -zSpeed;
+		LightShipShots2.xVel = -xSpeed;
 		LightShipShots2.yVel = -ySpeed;
 		LightShipShots2.zVel = -zSpeed;
 
@@ -752,7 +753,7 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		// bullet 3
 		LightShipShots3.mHealth = ship.front()->mBulletHealth;
 		LightShipShots3.mRadius = ship.front()->mBulletRadius;
-		LightShipShots3.model = bulletMesh->CreateModel(1.5f, y -1.0f, z);
+		LightShipShots3.model = bulletMesh->CreateModel(x, y - 1.0f, z);
 		LightShipShots3.model->SetSkin("ice.jpg");
 		LightShipShots3.model->Scale(ship.front()->mBulletSize);
 		LightShipShots3.mOwner = "LightLeft";
@@ -768,7 +769,7 @@ void OrbitShot(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		// Get ship direction from matrix (x and z axes)
 
 
-		LightShipShots3.xVel = -zSpeed;
+		LightShipShots3.xVel = -xSpeed;
 		LightShipShots3.yVel = -ySpeed;
 		LightShipShots3.zVel = -zSpeed;
 
@@ -882,78 +883,48 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 		}
 		else if (enemybullets[i].mOwner == "LightRight")
 		{
+			if (enemybullets.size() > i + 1 && enemybullets[i + 1].mOwner == "LightMiddle")
+			{
+				float bulletXpos = enemybullets[i + 1].model->GetX() - cos(enemybullets[i].angle) * -enemybullets[i].mDistance;
+				float bulletZpos = enemybullets[i + 1].model->GetZ() + sin(enemybullets[i].angle) * -enemybullets[i].mDistance;
+				//rotate -= 0.7f * frameTime;
+				enemybullets[i].angle += 1.5f * frameTime;
+				enemybullets[i].model->SetX(bulletXpos);
+				enemybullets[i].model->SetZ(bulletZpos);
+				enemybullets[i].mDistance -= 10.0f * frameTime;
+			}
 
-			//float bulletSpeedZ = bulletSpeed;
-			//float zSpeed = bulletSpeedZ;
-
-			//	if (enemybullets.size() > i + 1 && enemybullets[i + 1].mOwner == "LightMiddle")
-			//	{
-			//		//enemybullets[i].zVel = enemybullets[i].zVel + 0.1f;
-			//	/*	enemybullets[i].oldX = enemybullets[i + 1].model->GetX();
-			//		enemybullets[i].oldY = enemybullets[i + 1].model->GetY();
-			//		enemybullets[i].oldZ = enemybullets[i + 1].model->GetZ();
-			//		enemybullets[i].model->AttachToParent(enemybullets[i + 1].model);*/
-			//		enemybullets[i].model->MoveX(enemybullets[i].xVel * frameTime * (5.0f * enemybullets[i].mSpeed));
-			//	}			
-			//else
-			//{
-			//		/*enemybullets[i].model->SetZ(enemybullets[i].oldZ);
-			//		enemybullets[i].model->SetY(enemybullets[i].oldY);*/
-			//		enemybullets[i].model->MoveZ(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
-			//	enemybullets[i].zVel = zSpeed;
-			//}
-
-			//if (enemybullets.size() > i + 1 && enemybullets[i].model->GetLocalX() < enemybullets[i + 1].model->GetLocalX() - 20.0f)
-			//{
-			//	enemybullets[i].xVel = -enemybullets[i].xVel;		
-			//}
-			//else if (enemybullets.size() > i + 1 && enemybullets[i].model->GetLocalX() > enemybullets[i + 1].model->GetLocalX() + 20.0f)
-			//{
-			//	enemybullets[i].xVel = -enemybullets[i].xVel;
-			//}
-
-			
-
-			
+			enemybullets[i].model->Move(-enemybullets[i].xVel * frameTime, -enemybullets[i].yVel * frameTime,
+				-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
 
 		}
 		else if (enemybullets[i].mOwner == "LightLeft")
 		{
-
-			
-			float bulletSpeedZ = bulletSpeed;
-
-			float zSpeed = bulletSpeedZ;
-			
-
-				if (enemybullets.size() > i + 2 && enemybullets[i + 2].mOwner == "LightMiddle")
-				{
-					enemybullets[i].model->MoveZ(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
-					enemybullets[i].model->MoveLocalZ(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed) * 2);
-					enemybullets[i].model->SetX(enemybullets[i + 2].model->GetX() + 5);
-					enemybullets[i].model->RotateLocalY(500.f * frameTime);
-				}
-			
-				else
-				{
-					enemybullets[i].zVel = -zSpeed;
-				}
-			
-
-			if (enemybullets.size() > i + 2 && enemybullets[i].model->GetLocalX() < enemybullets[i + 2].model->GetX() - 20.0f)
+			if (enemybullets.size() > i + 2 && enemybullets[i + 2].mOwner == "LightMiddle")
 			{
-				enemybullets[i].xVel = -enemybullets[i].xVel;
+				float bulletXpos = enemybullets[i + 2].model->GetX() - cos(enemybullets[i].angle) * enemybullets[i].mDistance;
+				float bulletZpos = enemybullets[i + 2].model->GetZ() + sin(enemybullets[i].angle) * enemybullets[i].mDistance;
+				enemybullets[i].angle += 1.5f * frameTime;
+				enemybullets[i].model->SetX(bulletXpos);
+				enemybullets[i].model->SetZ(bulletZpos);
+				enemybullets[i].mDistance -= 10.0f * frameTime;
 			}
-			else if (enemybullets.size() > i + 2 && enemybullets[i].model->GetLocalX() > enemybullets[i + 2].model->GetX() + 20.0f)
+			else if (enemybullets.size() > i + 1 && enemybullets[i + 1].mOwner == "LightMiddle")
 			{
-				enemybullets[i].xVel = -enemybullets[i].xVel;
+				float bulletXpos = enemybullets[i + 1].model->GetX() - cos(enemybullets[i].angle) * enemybullets[i].mDistance;
+				float bulletZpos = enemybullets[i + 1].model->GetZ() + sin(enemybullets[i].angle) * enemybullets[i].mDistance;
+				//rotate -= 0.7f * frameTime;
+				enemybullets[i].angle += 1.5f * frameTime;
+				enemybullets[i].model->SetX(bulletXpos);
+				enemybullets[i].model->SetZ(bulletZpos);
+				enemybullets[i].mDistance -= 10.0f * frameTime;
 			}
-				
 
-			//enemybullets[i].model->Move(-enemybullets[i].yVel * frameTime, -enemybullets[i].yVel * frameTime,
-			//	-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
-			////enemybullets[i].model->RotateLocalY(200.0f * frameTime);
-	
+
+			enemybullets[i].model->Move(-enemybullets[i].xVel * frameTime, -enemybullets[i].yVel * frameTime,
+				-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
+
+
 
 		}
 		else if (enemybullets[i].mOwner == "LightMiddle")
@@ -978,9 +949,6 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 			}
 			enemybullets[i].model->RotateZ(500.0f * frameTime);
 			enemybullets[i].model->MoveZ(-enemybullets[i].zVel * frameTime * (5.0f * enemybullets[i].mSpeed));
-
-			/*enemybullets[i].model->LookAt(player);
-			enemybullets[i].model->Scale(3);*/
 			enemybullets[i].model->RotateZ(500.0f * frameTime);
 		}
 		else
@@ -1002,11 +970,7 @@ void MoveBullet(float frameTime, IMesh*& bulletMesh, IModel* player)
 			bulletMesh->RemoveModel(enemybullets.front().model);
 
 			// Copy last bullet into this dead slot to keep all live bullets in one block
-			/*bullets[i].model = bullets[numBullets - 1].model;
-			bullets[i].xVel = bullets[numBullets - 1].xVel;
-			bullets[i].yVel = bullets[numBullets - 1].yVel;
-			bullets[i].zVel = bullets[numBullets - 1].zVel;
-			bullets[i].life = bullets[numBullets - 1].life;*/
+			
 
 			// Decrease number of bullets
 			enemybullets.pop_front();

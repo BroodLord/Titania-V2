@@ -4,6 +4,10 @@ using namespace tle;
 ISprite* firstHeart;
 ISprite* secondHeart;
 ISprite* thirdHeart;
+ISprite* ScreenCrack1;
+ISprite* ScreenCrack2;
+ISprite* ScreenCrack3;
+ISprite* ScreenCrack4;
 ISprite* speedPup;
 ISprite* shieldPup;
 ISprite* bulletPup;
@@ -20,7 +24,7 @@ void fullHealth(I3DEngine*& myEngine, AmountLives Health)
 	{
 		firstHeart = myEngine->CreateSprite("Heart2.png", 140.0f, 25.0f);
 		secondHeart = myEngine->CreateSprite("Heart2.png", 170.0f, 25.0f);
-		thirdHeart = myEngine->CreateSprite("Heart2.png", 200.0f, 25.0f);
+		thirdHeart = myEngine->CreateSprite("Heart2.png", 200.0f, 25.0f);		
 	}
 }
 
@@ -30,11 +34,17 @@ void removeHeart(I3DEngine*& myEngine, AmountLives& Health)
 	{
 		myEngine->RemoveSprite(thirdHeart);
 		Health = TwoLives;
+		ScreenCrack1 = myEngine->CreateSprite("smallGlass.png", -100.0f, -100.0f);
+		ScreenCrack3 = myEngine->CreateSprite("smallGlass2.png", 1700.0f, 0.0f);
 	}
 	else if (Health == TwoLives)
 	{
 		myEngine->RemoveSprite(secondHeart);
 		Health = OneLife;
+		
+		ScreenCrack2 = myEngine->CreateSprite("Crack3.png", -300.0f, 700.0f);
+		ScreenCrack4 = myEngine->CreateSprite("Crack3.png", 500.0f, -900.0f);
+		ScreenCrack4 = myEngine->CreateSprite("Crack5.png", 1000.0f, 700.0f);
 	}
 	else if (Health == OneLife)
 	{

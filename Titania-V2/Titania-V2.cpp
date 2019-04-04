@@ -451,12 +451,33 @@ void main()
 				currentGameState = Play;
 				fullHealth(myEngine, Health);
 				ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -30.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out
+				
+
+					playerCamera->LookAt(topDownCamBlock);
+
+					if (moveCamTop != true)
+					{
+						
+							moveCamTop = true;
+							playerCamera->ResetOrientation();
+						
+					}
+
+					if (countDown <= 0)
+					{
+						moveCamTop = false;
+						countDown = 1.8;
+						cameraPos = behind;
+					}
 			}
 		}
 
 
 		if (currentGameState == Play && gameOver == false)
 		{
+
+
+
 
 			if (Health != Dead)
 			{
@@ -560,6 +581,9 @@ void main()
 
 			if (Health == Dead)
 			{
+				
+
+				
 				gameOver = true;
 			}
 
@@ -989,8 +1013,6 @@ void main()
 						countDown = 1.8;
 						playerCamera->DetachFromParent();
 						cameraPos = topDown;
-
-
 					}
 				}
 				break;
