@@ -1,27 +1,28 @@
-﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  Titania-V2.cpp
+﻿  Titania-V2.cpp
 d:\kclifford1\documents\github\titania-v2\titania-v2\hud.h(7): warning C4091: 'extern ': ignored on left of 'AmountLives' when no variable is declared
 d:\kclifford1\documents\github\titania-v2\titania-v2\hud.h(8): warning C4091: 'extern ': ignored on left of 'RemoveLives' when no variable is declared
 d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(50): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(79): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(105): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(127): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(428): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(580): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(592): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(596): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(601): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(605): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(609): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(652): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(678): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(713): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(987): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(988): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(1091): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(1092): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(430): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(471): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(472): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(648): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(660): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(664): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(669): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(673): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(677): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(720): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(746): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(781): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(1057): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(1058): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(1161): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(1162): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
 d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(123): warning C4101: 'flameMesh': unreferenced local variable
 d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(153): warning C4101: 'matrix': unreferenced local variable
 d:\kclifford1\documents\github\titania-v2\titania-v2\titania-v2.cpp(136): warning C4101: 'flame': unreferenced local variable
   Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
-  Copying DLLs & shaders...
+  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)

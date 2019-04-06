@@ -180,6 +180,8 @@ void main()
 	int bulletDisplay = 0;
 
 	bool gameOver = false;
+	bool reset = false;
+	bool test = false;
 
 	PowerUpState currentSpeedPowerUpState = None;
 	PowerUpState currentShieldPowerUpState = None;
@@ -266,12 +268,12 @@ void main()
 		TripleList.push_back(move(tripleTemp));
 	}
 
-	
-		lightFireRate = LightShipList.front()->mFireRate;
-		mediumFireRate = MediumShipList.front()->mFireRate;
-		heavyFireRate = HeavyShipList.front()->mFireRate;
-		bossFireRate = BossShipList.front()->mFireRate;
-	
+
+	lightFireRate = LightShipList.front()->mFireRate;
+	mediumFireRate = MediumShipList.front()->mFireRate;
+	heavyFireRate = HeavyShipList.front()->mFireRate;
+	bossFireRate = BossShipList.front()->mFireRate;
+
 
 	for (int i = 0; i < 20; i++)
 	{
@@ -376,7 +378,7 @@ void main()
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
 	GameState currentGameState = MainMenu;
-	cameraPos = topDown;
+	cameraPos = behind;
 
 
 
@@ -393,7 +395,7 @@ void main()
 		float frameTime = myEngine->Timer();
 		// Draw the scene
 
-			SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, bulletMesh, myEngine);
+		SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, bulletMesh, myEngine);
 		stringstream powerUpStateText; //Text altered to present gamestate
 		stringstream speedText; //Text altered to present gamestate
 		stringstream shieldText; //Text altered to present gamestate
@@ -451,371 +453,418 @@ void main()
 				currentGameState = Play;
 				fullHealth(myEngine, Health);
 				ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -30.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out
-				
 
-					playerCamera->LookAt(topDownCamBlock);
 
-					if (moveCamTop != true)
-					{
-						
-							moveCamTop = true;
-							playerCamera->ResetOrientation();
-						
-					}
-
-					if (countDown <= 0)
-					{
-						moveCamTop = false;
-						countDown = 1.8;
-						cameraPos = behind;
-					}
 			}
 		}
 
 
+
 		if (currentGameState == Play && gameOver == false)
 		{
-
-
-
-
-			if (Health != Dead)
+			if (test == false)
 			{
-				if (moveCamBehind == false && moveCamTop == false)
+				if (test == false)
 				{
-					Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound);
-					if (gCoop == true)
+					countDown -= frameTime;
+					playerCamera->LookAt(topDownCamBlock);
+					playerCamera->MoveLocalY(-50.0 * frameTime);
+					playerCamera->MoveLocalZ(5.0 * frameTime);
+					if (reset != true)
 					{
-						Shooting2(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip2, bulletMesh, playerShipSpeed, shootingSound);
-					}
-					ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
-					MoveBullet(frameTime, bulletMesh, playerShip);
-				}
+						if (cameraPos == behind)
+						{
+							for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+							{
+								(*it)->mModel->ResetOrientation();
+								//(*it)->mModel->RotateLocalX(50.0f * frameTime);
+							}
 
+							for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+							{
+								(*it)->mModel->ResetOrientation();
+								//(*it)->mModel->RotateLocalX(50.0f * frameTime);
+							}
+
+							for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+							{
+								(*it)->mModel->ResetOrientation();
+								//(*it)->mModel->RotateLocalX(50.0f * frameTime);
+							}
+
+							for (auto it = TripleList.begin(); it != TripleList.end(); it++)
+							{
+								(*it)->mModel->ResetOrientation();
+								//(*it)->mModel->RotateLocalY(50.0f * frameTime);
+							}
+						}
+						if (cameraPos == topDown)
+						{
+							//for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+							//{
+							//	//(*it)->mModel->ResetOrientation();
+							//	(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+							//}
+							//
+							//for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+							//{
+							//	//(*it)->mModel->ResetOrientation();
+							//	(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+							//}
+							//
+							//for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+							//{
+							//	//(*it)->mModel->ResetOrientation();
+							//	(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+							//}
+							//
+							//for (auto it = TripleList.begin(); it != TripleList.end(); it++)
+							//{
+							//	//(*it)->mModel->ResetOrientation();
+							//	(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+							//}
+						}
+
+					}
+					else
+					{
+						cout << " ";
+					}
+					if (countDown <= 0)
+					{
+						//playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
+						test = true;
+						countDown = 1.8;
+						cameraPos = behind;
+					}
+				}
 			}
 
-			playerFireRate -= frameTime;
-			player2FireRate -= frameTime;
-
-			auto bt = enemybullets.begin(); // set p to the beginning of the loop
-			while (bt != enemybullets.end()) // while not at the end of the loop
+			if (test == true)
 			{
-				bool bulletHit = false;
 
-				auto jt = bullets.begin(); // set p to the beginning of the loop
-				while (jt != bullets.end()) // while not at the end of the loop
+				if (Health != Dead)
 				{
-					if (sphere2sphere(bt->model, jt->model, bt->mRadius, BULLETRADIUS) && !bt->mImmune)
+					if (moveCamBehind == false && moveCamTop == false)
 					{
-						bulletMesh->RemoveModel(jt->model);
-						Erase(bullets, jt->model);
-						numBullets--;
-						bt->mHealth--;
-						if (bt->mHealth <= 0)
+						Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound);
+						if (gCoop == true)
 						{
+							Shooting2(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip2, bulletMesh, playerShipSpeed, shootingSound);
+						}
+						ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
+						MoveBullet(frameTime, bulletMesh, playerShip);
+						playerFireRate -= frameTime;
+						player2FireRate -= frameTime;
+					}
 
-							bulletMesh->RemoveModel(bt->model);
-							Erase(enemybullets, bt->model);
+				}
 
-							enemyShots--;
 
-							bulletHit = true;
 
+				auto bt = enemybullets.begin(); // set p to the beginning of the loop
+				while (bt != enemybullets.end()) // while not at the end of the loop
+				{
+					bool bulletHit = false;
+
+					auto jt = bullets.begin(); // set p to the beginning of the loop
+					while (jt != bullets.end()) // while not at the end of the loop
+					{
+						if (sphere2sphere(bt->model, jt->model, bt->mRadius, BULLETRADIUS) && !bt->mImmune)
+						{
+							bulletMesh->RemoveModel(jt->model);
+							Erase(bullets, jt->model);
+							numBullets--;
+							bt->mHealth--;
+							if (bt->mHealth <= 0)
+							{
+
+								bulletMesh->RemoveModel(bt->model);
+								Erase(enemybullets, bt->model);
+
+								enemyShots--;
+
+								bulletHit = true;
+
+							}
+							break;
+						}
+						jt++;
+					}
+					if (bulletHit)
+					{
+						bulletHit = false;
+						break;
+					}
+					bt++;
+				}
+
+				auto kt = enemybullets.begin();
+				while (kt != enemybullets.end())
+				{
+					if (sphere2sphere(playerShip, kt->model, PLAYERSHIPRADIUS, kt->mRadius))
+					{
+						bulletMesh->RemoveModel(kt->model);
+						Erase(enemybullets, kt->model);
+						enemyShots--;
+						loseHealth = RemoveHeart;
+
+						if (loseHealth == RemoveHeart)
+						{
+							removeHeart(myEngine, Health);
+							loseHealth = Pause;
 						}
 						break;
 					}
-					jt++;
+					kt++;
 				}
-				if (bulletHit)
+
+				menuMusic.stop();
+
+				if (moveCamBehind == false && moveCamTop == false)
 				{
-					bulletHit = false;
-					break;
+					lightFireRate -= frameTime;
+					mediumFireRate -= frameTime;
+					heavyFireRate -= frameTime;
+					bossFireRate -= frameTime;
 				}
-				bt++;
-			}
 
-			auto kt = enemybullets.begin();
-			while (kt != enemybullets.end())
-			{
-				if (sphere2sphere(playerShip, kt->model, PLAYERSHIPRADIUS, kt->mRadius))
+				myEngine->StartMouseCapture();
+
+				if (myEngine->KeyHit(Key_L))
 				{
-					bulletMesh->RemoveModel(kt->model);
-					Erase(enemybullets, kt->model);
-					enemyShots--;
-					loseHealth = RemoveHeart;
-
-					if (loseHealth == RemoveHeart)
-					{
-						removeHeart(myEngine, Health);
-						loseHealth = Pause;
-					}
-					break;
-				}
-				kt++;
-			}
-
-			menuMusic.stop();
-
-			lightFireRate -= frameTime;
-			mediumFireRate -= frameTime;
-			heavyFireRate -= frameTime;
-			bossFireRate -= frameTime;
-
-			myEngine->StartMouseCapture();
-
-			if (myEngine->KeyHit(Key_L))
-			{
-				RightList.clear();
-				MiddleList.clear();
-				LeftList.clear();
-			}
-
-
-			if (battleMusic.getStatus() == battleMusic.Stopped)
-			{
-				battleMusic.play();
-
-			}
-
-			Lives->Draw("Lives:", 70.0f, 23.0f, kCyan);
-
-			if (Health == Dead)
-			{
-				
-
-				
-				gameOver = true;
-			}
-
-			//**** Hud Stuff ****
-			powerUpStateText << "    Bullets: " << numBullets;
-			myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f, kWhite); //Game state text is set to go
-			powerUpStateText.str(""); // Clear myStream
-
-			powerUpStateText << "    Score: " << gPlayerScore;
-			myFont->Draw(powerUpStateText.str(), 15.0f, 100.0f, kWhite); //Game state text is set to go
-			powerUpStateText.str(""); // Clear myStream
-
-
-			tripleText << bulletDisplay;
-			myFont->Draw(tripleText.str(), 168.95f, 155.0f, kWhite); //Game state text is set to go
-			tripleText.str(""); // Clear myStream
-
-			shieldText << shieldDisplay;
-			myFont->Draw(shieldText.str(), 103.0f, 155.0f, kWhite); //Game state text is set to go
-			shieldText.str(""); // Clear myStream
-
-			speedText << speedDisplay;
-			myFont->Draw(speedText.str(), 37.5f, 155.0f, kWhite); //Game state text is set to go
-			speedText.str(""); // Clear myStream
-
-			if (moveCamTop != true && moveCamBehind != true)
-			{
-				int i = 0;
-				for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
-				{
-
-					//** Power Up Collision **
-					if (sphere2sphere(playerShip, (*it)->mModel, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
-					{
-						(*it)->mModel->SetY(500.0f);
-						currentPowerUpState = (*it)->mPowerType;
-						powerUpMusic.play();
-						(*it)->Power(myEngine, i);
-						//Erase(CurrentlySpawned, (*it)->mPowerType);
-						//CurrentlySpawned.pop_front();
-					}
-
-					i++;
-					if (currentPowerUpState == Speed)
-					{
-						currentSpeedPowerUpState = Speed;
-						speedPowerUpTimer = 5.0f;
-					}
-					else if (currentPowerUpState == Shield)
-					{
-						currentShieldPowerUpState = Shield;
-						shieldPowerUpTimer = 9.0f;
-					}
-					else if (currentPowerUpState == Bullet)
-					{
-						currentBulletPowerUpState = Bullet;
-						bulletPowerUpTimer = 5.0f;
-					}
+					RightList.clear();
+					MiddleList.clear();
+					LeftList.clear();
 				}
 
 
-				currentPowerUpState = None;
-
-				if (currentSpeedPowerUpState == Speed)
+				if (battleMusic.getStatus() == battleMusic.Stopped)
 				{
-					speedDisplay = speedPowerUpTimer + 1;
-					if (speedPowerUpTimer > 0.0f)
-					{
-						playerShipSpeed = 75.0f * frameTime;
-						for (auto bulletIT = bullets.begin(); bulletIT != bullets.end(); bulletIT++)
-						{
-							bulletIT->zVel = bulletIT->zVel + 75.0f * frameTime;
-						}
+					battleMusic.play();
 
-						speedPowerUpTimer -= frameTime;
-						if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
-						{
-							powerDownMusic.play();
-						}
-					}
-					else if (speedPowerUpTimer < 0.0f)
-					{
-						RemoveSpeedPowerUP(myEngine);
-						//speedPowerUpTimer = 5.0f;
-						speedDisplay = 0;
-						currentSpeedPowerUpState = None;
-					}
 				}
 
-				if (currentShieldPowerUpState == Shield)
-				{
-					shieldDisplay = shieldPowerUpTimer + 1;
+				Lives->Draw("Lives:", 70.0f, 23.0f, kCyan);
 
-					shield->SetY(-30.0f);
-					shield->RotateLocalY(250.0f * frameTime);
-					for (auto i = enemybullets.begin(); i != enemybullets.end(); i++)
-					{
-						if (sphere2sphere(playerShip, (*i).model, 8.0f, i->mRadius))
-						{
-							bulletMesh->RemoveModel((*i).model);
-							Erase(enemybullets, (*i).model);
-							enemyShots--;
-							break;
-						}
-					}
-					if (shieldPowerUpTimer > 0.0f)
-					{
-						shieldPowerUpTimer -= frameTime;
-						if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
-						{
-							powerDownMusic.play();
-						}
-					}
-					else if (shieldPowerUpTimer < 0.0f)
-					{
-						RemoveShieldPowerUP(myEngine);
-						//shieldPowerUpTimer = 9.0f;
-						shieldDisplay = 0;
-						shield->SetY(500.0f);
-						currentShieldPowerUpState = None;
-					}
+				if (Health == Dead)
+				{
+
+
+
+					gameOver = true;
 				}
 
-				if (currentBulletPowerUpState == Bullet)
+				//**** Hud Stuff ****
+				powerUpStateText << "    Bullets: " << numBullets;
+				myFont->Draw(powerUpStateText.str(), 15.0f, 70.0f, kWhite); //Game state text is set to go
+				powerUpStateText.str(""); // Clear myStream
+
+				powerUpStateText << "    Score: " << gPlayerScore;
+				myFont->Draw(powerUpStateText.str(), 15.0f, 100.0f, kWhite); //Game state text is set to go
+				powerUpStateText.str(""); // Clear myStream
+
+
+				tripleText << bulletDisplay;
+				myFont->Draw(tripleText.str(), 168.95f, 155.0f, kWhite); //Game state text is set to go
+				tripleText.str(""); // Clear myStream
+
+				shieldText << shieldDisplay;
+				myFont->Draw(shieldText.str(), 103.0f, 155.0f, kWhite); //Game state text is set to go
+				shieldText.str(""); // Clear myStream
+
+				speedText << speedDisplay;
+				myFont->Draw(speedText.str(), 37.5f, 155.0f, kWhite); //Game state text is set to go
+				speedText.str(""); // Clear myStream
+
+				if (moveCamTop != true && moveCamBehind != true)
 				{
-					tripleBullet = true;
-					bulletDisplay = bulletPowerUpTimer + 1;
-					if (bulletPowerUpTimer > 0.0f)
+					int i = 0;
+					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 					{
-						bulletPowerUpTimer -= frameTime;
-						if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+
+						//** Power Up Collision **
+						if (sphere2sphere(playerShip, (*it)->mModel, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
 						{
-							powerDownMusic.play();
+							(*it)->mModel->SetY(500.0f);
+							currentPowerUpState = (*it)->mPowerType;
+							powerUpMusic.play();
+							(*it)->Power(myEngine, i);
+							//Erase(CurrentlySpawned, (*it)->mPowerType);
+							//CurrentlySpawned.pop_front();
+						}
+
+						i++;
+						if (currentPowerUpState == Speed)
+						{
+							currentSpeedPowerUpState = Speed;
+							speedPowerUpTimer = 5.0f;
+						}
+						else if (currentPowerUpState == Shield)
+						{
+							currentShieldPowerUpState = Shield;
+							shieldPowerUpTimer = 9.0f;
+						}
+						else if (currentPowerUpState == Bullet)
+						{
+							currentBulletPowerUpState = Bullet;
+							bulletPowerUpTimer = 5.0f;
 						}
 					}
-					else if (bulletPowerUpTimer < 0.0f)
+
+
+					currentPowerUpState = None;
+
+					if (currentSpeedPowerUpState == Speed)
 					{
-						RemoveBulletPowerUP(myEngine);
-						//bulletPowerUpTimer = 5.0f;
-						bulletDisplay = 0;
-						currentBulletPowerUpState = None;
-						tripleBullet = false;
+						speedDisplay = speedPowerUpTimer + 1;
+						if (speedPowerUpTimer > 0.0f)
+						{
+							playerShipSpeed = 75.0f * frameTime;
+							for (auto bulletIT = bullets.begin(); bulletIT != bullets.end(); bulletIT++)
+							{
+								bulletIT->zVel = bulletIT->zVel + 75.0f * frameTime;
+							}
+
+							speedPowerUpTimer -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (speedPowerUpTimer < 0.0f)
+						{
+							RemoveSpeedPowerUP(myEngine);
+							//speedPowerUpTimer = 5.0f;
+							speedDisplay = 0;
+							currentSpeedPowerUpState = None;
+						}
 					}
+
+					if (currentShieldPowerUpState == Shield)
+					{
+						shieldDisplay = shieldPowerUpTimer + 1;
+
+						shield->SetY(-30.0f);
+						shield->RotateLocalY(250.0f * frameTime);
+						for (auto i = enemybullets.begin(); i != enemybullets.end(); i++)
+						{
+							if (sphere2sphere(playerShip, (*i).model, 8.0f, i->mRadius))
+							{
+								bulletMesh->RemoveModel((*i).model);
+								Erase(enemybullets, (*i).model);
+								enemyShots--;
+								break;
+							}
+						}
+						if (shieldPowerUpTimer > 0.0f)
+						{
+							shieldPowerUpTimer -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (shieldPowerUpTimer < 0.0f)
+						{
+							RemoveShieldPowerUP(myEngine);
+							//shieldPowerUpTimer = 9.0f;
+							shieldDisplay = 0;
+							shield->SetY(500.0f);
+							currentShieldPowerUpState = None;
+						}
+					}
+
+					if (currentBulletPowerUpState == Bullet)
+					{
+						tripleBullet = true;
+						bulletDisplay = bulletPowerUpTimer + 1;
+						if (bulletPowerUpTimer > 0.0f)
+						{
+							bulletPowerUpTimer -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (bulletPowerUpTimer < 0.0f)
+						{
+							RemoveBulletPowerUP(myEngine);
+							//bulletPowerUpTimer = 5.0f;
+							bulletDisplay = 0;
+							currentBulletPowerUpState = None;
+							tripleBullet = false;
+						}
+					}
+
+					//if (behind)
+					//{
+					//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					//	{						
+					//		//(*it)->mModel->RotateLocalX(50.0f * frameTime);
+					//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+					//	}
+					//}
+					//else if (topDown)
+					//{
+					//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					//	{
+					//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
+					//	}
+					//}
+
+
+					if (!CurrentlySpawned.empty())
+					{
+						if (CurrentlySpawned.front()->mModel->GetZ() > 800.0f)
+						{
+							if (CurrentlySpawned.front()->mPowerType == Speed)
+							{
+								CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
+								SpeedList.push_back(move(CurrentlySpawned.front()));
+							}
+							else if (CurrentlySpawned.front()->mPowerType == Shield)
+							{
+								CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
+								ShieldList.push_back(move(CurrentlySpawned.front()));
+							}
+							else if (CurrentlySpawned.front()->mPowerType == Bullet)
+							{
+								CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
+								TripleList.push_back(move(CurrentlySpawned.front()));
+							}
+
+							CurrentlySpawned.pop_front();
+						}
+					}
+
 				}
 
-				//if (behind)
-				//{
-				//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
-				//	{						
-				//		//(*it)->mModel->RotateLocalX(50.0f * frameTime);
-				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
-				//	}
-				//}
-				//else if (topDown)
-				//{
-				//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
-				//	}
-				//}
 
-
-				if (!CurrentlySpawned.empty())
+				if (moveCamTop != true && moveCamBehind != true)
 				{
-					if (CurrentlySpawned.front()->mModel->GetZ() > 800.0f)
+					if (barrelRollColdDown == false)
 					{
-						if (CurrentlySpawned.front()->mPowerType == Speed)
+						if (currentPlayerShipState == Normal)
 						{
-							CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
-							SpeedList.push_back(move(CurrentlySpawned.front()));
-						}
-						else if (CurrentlySpawned.front()->mPowerType == Shield)
-						{
-							CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
-							ShieldList.push_back(move(CurrentlySpawned.front()));
-						}
-						else if (CurrentlySpawned.front()->mPowerType == Bullet)
-						{
-							CurrentlySpawned.front()->mModel->SetPosition(0.0f, 500.0f, 785.0f);
-							TripleList.push_back(move(CurrentlySpawned.front()));
+							if (myEngine->KeyHit(RollRightKey))
+							{
+								currentPlayerShipState = RollingRight;
+							}
+
+							if (myEngine->KeyHit(RollLeftKey))
+							{
+								currentPlayerShipState = RollingLeft;
+							}
 						}
 
-						CurrentlySpawned.pop_front();
-					}
-				}
-
-			}
-
-
-			if (moveCamTop != true && moveCamBehind != true)
-			{
-				if (barrelRollColdDown == false)
-				{
-					if (currentPlayerShipState == Normal)
-					{
-						if (myEngine->KeyHit(RollRightKey))
-						{
-							currentPlayerShipState = RollingRight;
-						}
-
-						if (myEngine->KeyHit(RollLeftKey))
-						{
-							currentPlayerShipState = RollingLeft;
-						}
-					}
-
-					if (currentPlayerShipState == RollingRight)
-					{
-						rollingTimer -= frameTime;
-						if (rollingTimer > 0)
-						{
-							playerShip->RotateZ(900.0f * frameTime);
-							playerShip->MoveX(-playerShipSpeed);
-						}
-						if (rollingTimer <= 0)
-						{
-							rollingTimer = 0.4f;
-							currentPlayerShipState = Normal;
-							barrelRollColdDown = true;
-							playerShip->ResetOrientation();
-							//player invunerable
-						}
-					}
-					if (barrelRollColdDown2 == false)
-					{
-						if (currentPlayerShipState == RollingLeft)
+						if (currentPlayerShipState == RollingRight)
 						{
 							rollingTimer -= frameTime;
 							if (rollingTimer > 0)
 							{
-								playerShip->RotateZ(-900.0f * frameTime);
-								playerShip->MoveX(50.0f * frameTime);
+								playerShip->RotateZ(900.0f * frameTime);
+								playerShip->MoveX(-playerShipSpeed);
 							}
 							if (rollingTimer <= 0)
 							{
@@ -826,328 +875,402 @@ void main()
 								//player invunerable
 							}
 						}
+						if (barrelRollColdDown2 == false)
+						{
+							if (currentPlayerShipState == RollingLeft)
+							{
+								rollingTimer -= frameTime;
+								if (rollingTimer > 0)
+								{
+									playerShip->RotateZ(-900.0f * frameTime);
+									playerShip->MoveX(50.0f * frameTime);
+								}
+								if (rollingTimer <= 0)
+								{
+									rollingTimer = 0.4f;
+									currentPlayerShipState = Normal;
+									barrelRollColdDown = true;
+									playerShip->ResetOrientation();
+									//player invunerable
+								}
+							}
+						}
+						if (gCoop == true)
+						{
+
+							if (currentPlayerShipState2 == Normal)
+							{
+								if (myEngine->KeyHit(player2RollRightKey))
+								{
+									currentPlayerShipState2 = RollingRight2;
+								}
+
+								if (myEngine->KeyHit(player2RollLeftKey))
+								{
+									currentPlayerShipState2 = RollingLeft2;
+								}
+							}
+
+							if (currentPlayerShipState2 == RollingRight2)
+							{
+								rollingTimer2 -= frameTime;
+								if (rollingTimer2 > 0)
+								{
+									playerShip2->RotateZ(900.0f * frameTime);
+									playerShip2->MoveX(-playerShipSpeed);
+								}
+								if (rollingTimer2 <= 0)
+								{
+									rollingTimer2 = 0.4f;
+									currentPlayerShipState2 = Normal2;
+									barrelRollColdDown2 = true;
+									playerShip2->ResetOrientation();
+									//player invunerable
+								}
+							}
+
+							if (currentPlayerShipState2 == RollingLeft2)
+							{
+								rollingTimer2 -= frameTime;
+								if (rollingTimer2 > 0)
+								{
+									playerShip2->RotateZ(-900.0f * frameTime);
+									playerShip2->MoveX(50.0f * frameTime);
+								}
+								if (rollingTimer2 <= 0)
+								{
+									rollingTimer2 = 0.4f;
+									currentPlayerShipState2 = Normal2;
+									barrelRollColdDown2 = true;
+									playerShip->ResetOrientation();
+									//player invunerable
+								}
+							}
+						}
+					}
+
+					//**** Health ****
+
+
+
+				}
+
+				if (currentX < -27.0f)
+				{
+					playerShip->MoveX(playerShipSpeed);
+					playerShip->SetX(-27.0f);
+				}
+				if (currentX > 27.0f)
+				{
+					playerShip->MoveX(-playerShipSpeed);
+					playerShip->SetX(27.0f);
 				}
 				if (gCoop == true)
 				{
-
-						if (currentPlayerShipState2 == Normal)
-						{
-							if (myEngine->KeyHit(player2RollRightKey))
-							{
-								currentPlayerShipState2 = RollingRight2;
-							}
-
-							if (myEngine->KeyHit(player2RollLeftKey))
-							{
-								currentPlayerShipState2 = RollingLeft2;
-							}
-						}
-
-						if (currentPlayerShipState2 == RollingRight2)
-						{
-							rollingTimer2 -= frameTime;
-							if (rollingTimer2 > 0)
-							{
-								playerShip2->RotateZ(900.0f * frameTime);
-								playerShip2->MoveX(-playerShipSpeed);
-							}
-							if (rollingTimer2 <= 0)
-							{
-								rollingTimer2 = 0.4f;
-								currentPlayerShipState2 = Normal2;
-								barrelRollColdDown2 = true;
-								playerShip2->ResetOrientation();
-								//player invunerable
-							}
-						}
-
-						if (currentPlayerShipState2 == RollingLeft2)
-						{
-							rollingTimer2 -= frameTime;
-							if (rollingTimer2 > 0)
-							{
-								playerShip2->RotateZ(-900.0f * frameTime);
-								playerShip2->MoveX(50.0f * frameTime);
-							}
-							if (rollingTimer2 <= 0)
-							{
-								rollingTimer2 = 0.4f;
-								currentPlayerShipState2 = Normal2;
-								barrelRollColdDown2 = true;
-								playerShip->ResetOrientation();
-								//player invunerable
-							}
-						}
+					if (currentX2 < -27.0f)
+					{
+						playerShip2->MoveX(playerShipSpeed);
+						playerShip2->SetX(-27.0f);
+					}
+					if (currentX2 > 27.0f)
+					{
+						playerShip2->MoveX(-playerShipSpeed);
+						playerShip2->SetX(27.0f);
 					}
 				}
 
-				//**** Health ****
-
-
-
-			}
-
-			if (currentX < -27.0f)
-			{
-				playerShip->MoveX(playerShipSpeed);
-				playerShip->SetX(-27.0f);
-			}
-			if (currentX > 27.0f)
-			{
-				playerShip->MoveX(-playerShipSpeed);
-				playerShip->SetX(27.0f);
-			}
-			if (gCoop == true)
-			{
-				if (currentX2 < -27.0f)
+				/* Camera Switching */
+				switch (cameraPos)
 				{
-					playerShip2->MoveX(playerShipSpeed);
-					playerShip2->SetX(-27.0f);
-				}
-				if (currentX2 > 27.0f)
+				case topDown:
 				{
-					playerShip2->MoveX(-playerShipSpeed);
-					playerShip2->SetX(27.0f);
-				}
-			}
 
-
-			/* Camera Switching */
-			switch (cameraPos)
-			{
-			case behind:
-			{
-				if (moveCamBehind != true)
-				{
-					floor->MoveLocalZ(80.0f * frameTime);
-
-					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
-					{
-						(*it)->mModel->RotateLocalY(50.0f * frameTime);
-						(*it)->mModel->MoveZ(playerShipSpeed);
-					}
-
-					if (floorResert >= 200)
-					{
-						floor->SetLocalZ(0.0f);
-					}
-					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
-					{
-						if (myEngine->KeyHeld(MoveRight))
-						{
-							playerShip->MoveX(-playerShipSpeed);
-						}
-						if (myEngine->KeyHeld(MoveLeft))
-						{
-							playerShip->MoveX(playerShipSpeed);
-						}
-					}
-					if (gCoop == true)
-					{
-						if (currentPlayerShipState2 != RollingLeft2 && currentPlayerShipState != RollingRight2)
-						{
-							if (myEngine->KeyHeld(player2MoveRight))
-							{
-								playerShip2->MoveX(-playerShipSpeed);
-							}
-							if (myEngine->KeyHeld(player2MoveLeft))
-							{
-								playerShip2->MoveX(playerShipSpeed);
-							}
-						}
-					}
-					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
-					{
-						int oldMouseMoveX = myEngine->GetMouseMovementX();
-						int mouseMoveX = myEngine->GetMouseMovementX();
-						if (oldMouseMoveX < mouseMoveX)
-						{
-							playerShip->MoveX(playerShipSpeed * 6);
-						}
-						if (oldMouseMoveX > mouseMoveX)
-						{
-							playerShip->MoveX(-playerShipSpeed * 6);
-						}
-
-					}
-
-				}
-				if (moveCamBehind != true)
-				{
-					if (myEngine->KeyHit(camSwitch))
-					{
-						moveCamBehind = true;
-						playerCamera->SetPosition(0.0f, -20.0f, 825.0f);
-					}
-				}
-				if (moveCamBehind == true)
-				{
 					playerCamera->LookAt(topDownCamBlock);
-					countDown -= frameTime;
-					playerCamera->MoveLocalY(50.0 * frameTime);
-					playerCamera->MoveLocalZ(-5.0 * frameTime);
-
-					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					if (moveCamTop != true)
 					{
-						(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+						floor->MoveLocalZ(80.0f * frameTime);
+						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+						{
+							(*it)->mModel->RotateY(50.0f * frameTime);
+							(*it)->mModel->MoveZ(playerShipSpeed);
+						}
+
+						if (floorResert >= 200)
+						{
+							floor->SetLocalZ(0.0f);
+						}
+						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
+						{
+							if (myEngine->KeyHeld(MoveRight))
+							{
+								playerShip->MoveX(-playerShipSpeed);
+							}
+							if (myEngine->KeyHeld(MoveLeft))
+							{
+								playerShip->MoveX(playerShipSpeed);
+							}
+						}
+						if (gCoop == true)
+						{
+							if (currentPlayerShipState2 != RollingLeft2 && currentPlayerShipState != RollingRight2)
+							{
+								if (myEngine->KeyHeld(player2MoveRight))
+								{
+									playerShip2->MoveX(-playerShipSpeed);
+								}
+								if (myEngine->KeyHeld(player2MoveLeft))
+								{
+									playerShip2->MoveX(playerShipSpeed);
+								}
+							}
+						}
+						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
+						{
+							int oldMouseMoveX = myEngine->GetMouseMovementX();
+							int mouseMoveX = myEngine->GetMouseMovementX();
+							/*if (oldMouseMoveX < mouseMoveX)
+							{
+								playerShip->MoveX(playerShipSpeed * 6);
+							}
+							if (oldMouseMoveX > mouseMoveX)
+							{
+								playerShip->MoveX(-playerShipSpeed * 6);
+							}*/
+
+						}
+
 					}
 
-					for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+					if (moveCamTop != true)
 					{
-						(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+						if (myEngine->KeyHit(camSwitch))
+						{
+							moveCamTop = true;
+							playerCamera->ResetOrientation();
+						}
 					}
 
-					for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+					if (moveCamTop == true)
 					{
-						(*it)->mModel->RotateLocalX(-50.0f * frameTime);
-					}
+						countDown -= frameTime;
 
-					for (auto it = TripleList.begin(); it != TripleList.end(); it++)
-					{
-						(*it)->mModel->RotateLocalX(-50.0f * frameTime);
-					}
+						playerCamera->MoveLocalY(-50.0 * frameTime);
+						playerCamera->MoveLocalZ(5.0 * frameTime);
 
-					if (countDown <= 0)
-					{
-						moveCamBehind = false;
-						countDown = 1.8;
-						playerCamera->DetachFromParent();
-						cameraPos = topDown;
-					}
-				}
-				break;
-			}
-			case topDown:
-			{
 
-				playerCamera->LookAt(topDownCamBlock);
-				if (moveCamTop != true)
+						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+						{
+							(*it)->mModel->RotateLocalX(50.0f * frameTime);
+						}
+
+						for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+						{
+							(*it)->mModel->RotateLocalX(50.0f * frameTime);
+						}
+
+						for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+						{
+							(*it)->mModel->RotateLocalX(50.0f * frameTime);
+						}
+
+						for (auto it = TripleList.begin(); it != TripleList.end(); it++)
+						{
+							(*it)->mModel->RotateLocalX(50.0f * frameTime);
+						}
+
+
+
+
+						if (countDown <= 0)
+						{
+							moveCamTop = false;
+							countDown = 1.8;
+							cameraPos = behind;
+						}
+					}
+					break;
+				case behind:
 				{
-					floor->MoveLocalZ(80.0f * frameTime);
-					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					if (moveCamBehind != true)
 					{
-						(*it)->mModel->RotateY(50.0f * frameTime);
-						(*it)->mModel->MoveZ(playerShipSpeed);
-					}
+						floor->MoveLocalZ(80.0f * frameTime);
 
-					if (floorResert >= 200)
-					{
-						floor->SetLocalZ(0.0f);
-					}
-					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
-					{
-						if (myEngine->KeyHeld(MoveRight))
+						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 						{
-							playerShip->MoveX(-playerShipSpeed);
+							(*it)->mModel->RotateLocalY(50.0f * frameTime);
+							(*it)->mModel->MoveZ(playerShipSpeed);
 						}
-						if (myEngine->KeyHeld(MoveLeft))
+
+						if (floorResert >= 200)
 						{
-							playerShip->MoveX(playerShipSpeed);
+							floor->SetLocalZ(0.0f);
 						}
-					}
-					if (gCoop == true)
-					{
-						if (currentPlayerShipState2 != RollingLeft2 && currentPlayerShipState != RollingRight2)
+						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
-							if (myEngine->KeyHeld(player2MoveRight))
+							if (myEngine->KeyHeld(MoveRight))
 							{
-								playerShip2->MoveX(-playerShipSpeed);
+								playerShip->MoveX(-playerShipSpeed);
 							}
-							if (myEngine->KeyHeld(player2MoveLeft))
+							if (myEngine->KeyHeld(MoveLeft))
 							{
-								playerShip2->MoveX(playerShipSpeed);
+								playerShip->MoveX(playerShipSpeed);
 							}
 						}
-					}
-					if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
-					{
-						int oldMouseMoveX = myEngine->GetMouseMovementX();
-						int mouseMoveX = myEngine->GetMouseMovementX();
-						if (oldMouseMoveX < mouseMoveX)
+						if (gCoop == true)
 						{
+							if (currentPlayerShipState2 != RollingLeft2 && currentPlayerShipState != RollingRight2)
+							{
+								if (myEngine->KeyHeld(player2MoveRight))
+								{
+									playerShip2->MoveX(-playerShipSpeed);
+								}
+								if (myEngine->KeyHeld(player2MoveLeft))
+								{
+									playerShip2->MoveX(playerShipSpeed);
+								}
+							}
+						}
+						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
+						{
+							int oldMouseMoveX = myEngine->GetMouseMovementX();
+							int mouseMoveX = myEngine->GetMouseMovementX();
+							/*	if (oldMouseMoveX < mouseMoveX)
+							{
 							playerShip->MoveX(playerShipSpeed * 6);
-						}
-						if (oldMouseMoveX > mouseMoveX)
-						{
+							}
+							if (oldMouseMoveX > mouseMoveX)
+							{
 							playerShip->MoveX(-playerShipSpeed * 6);
+							}*/
+
 						}
 
 					}
+					if (moveCamBehind != true)
+					{
+						if (myEngine->KeyHit(camSwitch))
+						{
+							moveCamBehind = true;
+							playerCamera->SetPosition(0.0f, -20.0f, 825.0f);
+						}
+					}
+					if (moveCamBehind == true)
+					{
+						playerCamera->LookAt(topDownCamBlock);
+						countDown -= frameTime;
+						playerCamera->MoveLocalY(50.0 * frameTime);
+						playerCamera->MoveLocalZ(-5.0 * frameTime);
+						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+						{
+							(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+						}
 
+						for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+						{
+							(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+						}
+
+						for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+						{
+							(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+						}
+
+						for (auto it = TripleList.begin(); it != TripleList.end(); it++)
+						{
+							(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+						}
+						if (countDown <= 0)
+						{
+							moveCamBehind = false;
+							countDown = 1.8;
+							playerCamera->DetachFromParent();
+							cameraPos = topDown;
+						}
+					}
+					break;
 				}
-
-				if (moveCamTop != true)
+				}
+				}
+				if (barrelRollColdDown == true)
 				{
-					if (myEngine->KeyHit(camSwitch))
+					barrelRollCountDown -= frameTime;
+					if (barrelRollCountDown <= 0)
 					{
-						moveCamTop = true;
-						playerCamera->ResetOrientation();
+						barrelRollColdDown = false;
+						barrelRollCountDown = 2.0f;
 					}
 				}
-
-				if (moveCamTop == true)
+				if (barrelRollColdDown2 == true)
 				{
-					countDown -= frameTime;
-					playerCamera->MoveLocalY(-50.0 * frameTime);
-					playerCamera->MoveLocalZ(5.0 * frameTime);
-
-					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+					barrelRollCountDown2 -= frameTime;
+					if (barrelRollCountDown2 <= 0)
 					{
-						(*it)->mModel->RotateLocalX(50.0f * frameTime);
+						barrelRollColdDown2 = false;
+						barrelRollCountDown2 = 2.0f;
 					}
-
-					for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
-					{
-						(*it)->mModel->RotateLocalX(50.0f * frameTime);
-					}
-
-					for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
-					{
-						(*it)->mModel->RotateLocalX(50.0f * frameTime);
-					}
-
-					for (auto it = TripleList.begin(); it != TripleList.end(); it++)
-					{
-						(*it)->mModel->RotateLocalX(50.0f * frameTime);
-					}
-					if (countDown <= 0)
-					{
-						moveCamTop = false;
-						countDown = 1.8;
-						cameraPos = behind;
-					}
-				}
-				break;
-			}
-			}
-			if (barrelRollColdDown == true)
-			{
-				barrelRollCountDown -= frameTime;
-				if (barrelRollCountDown <= 0)
-				{
-					barrelRollColdDown = false;
-					barrelRollCountDown = 2.0f;
-				}
-			}
-			if (barrelRollColdDown2 == true)
-			{
-				barrelRollCountDown2 -= frameTime;
-				if (barrelRollCountDown2 <= 0)
-				{
-					barrelRollColdDown2 = false;
-					barrelRollCountDown2 = 2.0f;
 				}
 			}
 		}
+
+
 		if (gameOver == true && Health == Dead)
 		{
 			endGame->SetPosition(0, 0);
 			if (myEngine->KeyHit(Key_Return))
 			{
+				//if (cameraPos == topDown)
+				//{
+				//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
+				//	}
+				//
+				//	for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
+				//	}
+				//
+				//	for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
+				//	}
+				//
+				//	for (auto it = TripleList.begin(); it != TripleList.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
+				//	}
+				//}
+				//if (cameraPos == behind)
+				//{
+				//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+				//	}
+				//
+				//	for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+				//	}
+				//
+				//	for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+				//	}
+				//
+				//	for (auto it = TripleList.begin(); it != TripleList.end(); it++)
+				//	{
+				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
+				//	}
+				//}
 				//speedPowerUp->SetPosition(0.0f, -30.0f, 730.0f);
 				currentGameState = MainMenu;
+
+				playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
+				//cameraPos = behind;
 				Health = ThreeLives;
 				gameOver = false;
+				test = false;
+				reset = true;
 
 			}
 		}
