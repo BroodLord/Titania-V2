@@ -4,11 +4,14 @@
 using namespace tle;
 
 
-extern enum AmountLives { ThreeLives, TwoLives, OneLife, Dead };
-extern enum RemoveLives { RemoveHeart, Pause };
+extern enum AmountLives { ThreeLives, TwoLives, OneLife, Dead, ThreeLivesP2, TwoLivesP2, OneLifeP2, DeadP2};
+extern enum RemoveLives { RemoveHeart, Pause, RemoveHeartP2, PauseP2};
 
 void fullHealth(I3DEngine*& myEngine, AmountLives Health);
 void removeHeart(I3DEngine*& myEngine, AmountLives& Health);
+
+void fullHealthP2(I3DEngine*& myEngine, AmountLives HealthP2);
+void removeHeartP2(I3DEngine*& myEngine, AmountLives& HealthP2);
 
 void SpeedPowerUP(I3DEngine*& myEngine);
 void NoPowerUP(I3DEngine*& myEngine);

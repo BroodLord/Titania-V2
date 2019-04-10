@@ -13,7 +13,7 @@ extern deque <CBulletData> enemybullets;
 extern deque <CBulletData> bullets;
 extern deque <CBulletData> bullets2;
 extern int numBullets;
-extern int numBullets2;
+extern int numBulletsP2;
 extern float playerFireRate;
 extern float player2FireRate;
 
@@ -166,7 +166,7 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		CBulletData temp2;
 		CBulletData temp3;
 
-		//for (int i = 0; i < numBullets2; i++)
+		//for (int i = 0; i < numBulletsP2; i++)
 		//{
 		//	// Move bullet
 		//	bullets2[i].model->Move(-bullets2[i].xVel * frameTime, -bullets2[i].yVel * frameTime,
@@ -174,7 +174,7 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 		//	bullets2[i].model->RotateZ(500.0f * frameTime);
 		//}
 
-		//for (int i = 0; i < numBullets2; i++)
+		//for (int i = 0; i < numBulletsP2; i++)
 		//{
 		//	// Decrease life and see if bullet is dead
 		//	bullets2[i].life -= frameTime;
@@ -192,11 +192,11 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 
 		//		// Decrease number of bullets
 		//		bullets.pop_front();
-		//		numBullets2--;
+		//		numBulletsP2--;
 		//	}
 		//}
 
-		if ((myEngine->KeyHeld(Mouse_MButton)) && numBullets + 2 < maxBullets && player2FireRate < 0.0f)
+		if ((myEngine->KeyHeld(Mouse_MButton)) && numBulletsP2 + 2 < maxBulletsP2 && player2FireRate < 0.0f)
 		{
 			player2FireRate = 0.15f;
 			shootingSound.play();
@@ -218,12 +218,12 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 			temp.zVel = zSpeed;
 
 			// Length of bullet's life measured in seconds
-			numBullets++;
+			numBulletsP2++;
 			bullets.push_back(temp);
 
 
 			// Create bullets in pairs - enough space for one more bullet?
-			if (numBullets < maxBullets)
+			if (numBulletsP2 < maxBulletsP2)
 			{
 				// Create bullet 2
 				temp2.model = bulletMesh->CreateModel(x + 1.5f, y - 1.0f, z - 4.5f);
@@ -237,11 +237,11 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 				temp2.zVel = zSpeed;
 
 				// Length of bullet's life measured in seconds
-				numBullets++;
+				numBulletsP2++;
 				bullets.push_back(temp2);
 			}
 
-			if (tripleBullet == true && numBullets < maxBullets)
+			if (tripleBullet == true && numBulletsP2 < maxBulletsP2)
 			{
 				// bullet 3
 				temp3.model = bulletMesh->CreateModel(x, y - 1.0f, z - 4.5f);
@@ -256,7 +256,7 @@ void Shooting2(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*&
 				temp3.zVel = zSpeed;
 
 				// Length of bullet's life measured in seconds
-				numBullets++;
+				numBulletsP2++;
 				bullets.push_back(temp3);
 
 			}

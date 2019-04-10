@@ -71,6 +71,7 @@ deque <CBulletData> bossBullets;
 deque <CBulletData> enemybullets;
 
 int gPlayerScore = 0;
+int gPlayer2Score = 0;
 deque <unique_ptr <CPowerUp>> SpeedList;
 deque <unique_ptr <CPowerUp>> ShieldList;
 deque <unique_ptr <CPowerUp>> TripleList;
@@ -94,7 +95,7 @@ float bossFireRate = 0;
 
 int enemyShots = 0;
 int numBullets = 0;
-int numBullets2 = 0;
+int numBulletsP2 = 0;
 bool gCoop = false;
 
 string gCoopText = "(Disabled)";
@@ -191,6 +192,9 @@ void main()
 	//**** Hud Things ****
 	AmountLives Health = ThreeLives;
 	RemoveLives loseHealth = Pause;
+
+	AmountLives HealthP2 = ThreeLivesP2;
+	RemoveLives loseHealthP2 = PauseP2;
 
 	mainMenuBuffer.loadFromFile("Sound Affects\\mainMusic.wav");
 	menuMusic.setBuffer(mainMenuBuffer);
@@ -401,6 +405,11 @@ void main()
 		stringstream shieldText; //Text altered to present gamestate
 		stringstream tripleText; //Text altered to present gamestate
 
+		stringstream powerUpStateTextP2; //Text altered to present gamestate
+		stringstream speedTextP2; //Text altered to present gamestate
+		stringstream shieldTextP2; //Text altered to present gamestate
+		stringstream tripleTextP2; //Text altered to present gamestate
+
 		string kPowerUpStateText = "PowerUp: ";
 		string kNoneText = "None";
 		string kSpeedText = "Speed";
@@ -452,9 +461,9 @@ void main()
 				backGround->SetPosition(100000, 100000);
 				currentGameState = Play;
 				fullHealth(myEngine, Health);
+				fullHealthP2(myEngine, HealthP2);
 				ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -30.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out
-
-
+				ISprite* myUI2 = myEngine->CreateSprite("backdrop2.png", 1380.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out for P2
 			}
 		}
 
@@ -646,6 +655,7 @@ void main()
 				}
 
 				Lives->Draw("Lives:", 70.0f, 23.0f, kCyan);
+				Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kGreen);
 
 				if (Health == Dead)
 				{
@@ -675,6 +685,29 @@ void main()
 
 				speedText << speedDisplay;
 				myFont->Draw(speedText.str(), 37.5f, 155.0f, kWhite); //Game state text is set to go
+				speedText.str(""); // Clear myStream
+
+				//**** P2 Hud Stuff ****
+
+				powerUpStateTextP2 << "    P2 Bullets: " << numBulletsP2;
+				myFont->Draw(powerUpStateTextP2.str(), 3015.0f, 70.0f, kWhite); //Game state text is set to go
+				powerUpStateTextP2.str(""); // Clear myStream
+
+				powerUpStateTextP2 << "    P2 Score: " << gPlayer2Score;
+				myFont->Draw(powerUpStateTextP2.str(), 3015.0f, 100.0f, kWhite); //Game state text is set to go
+				powerUpStateTextP2.str(""); // Clear myStream
+
+
+				tripleText << bulletDisplay;
+				myFont->Draw(tripleText.str(), 3168.95f, 155.0f, kWhite); //Game state text is set to go
+				tripleText.str(""); // Clear myStream
+
+				shieldText << shieldDisplay;
+				myFont->Draw(shieldText.str(), 3103.0f, 155.0f, kWhite); //Game state text is set to go
+				shieldText.str(""); // Clear myStream
+
+				speedText << speedDisplay;
+				myFont->Draw(speedText.str(), 3337.5f, 155.0f, kWhite); //Game state text is set to go
 				speedText.str(""); // Clear myStream
 
 				if (moveCamTop != true && moveCamBehind != true)
@@ -1268,6 +1301,7 @@ void main()
 				playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 				//cameraPos = behind;
 				Health = ThreeLives;
+				HealthP2 = ThreeLivesP2;
 				gameOver = false;
 				test = false;
 				reset = true;
@@ -1308,12 +1342,18 @@ void main()
 
 #endif // DEBUG
 
-		// Exit the game when running
+		// Pause, then exit
 		if (myEngine->KeyHit(Exit))
 		{
-			myEngine->Stop();
+			if (currentGameState == MainMenu)
+			{
+				myEngine->Stop();
+			}
+			else
+			{
+				currentGameState = MainMenu;
+			}
 		}
-
 	}
 
 	// Delete the 3D engine now we are finished with it
