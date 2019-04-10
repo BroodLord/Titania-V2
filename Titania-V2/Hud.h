@@ -21,3 +21,12 @@ void ShieldPowerUP(I3DEngine*& myEngine);
 void RemoveShieldPowerUP(I3DEngine*& myEngine);
 void RemoveBulletPowerUP(I3DEngine*& myEngine);
 void BulletPowerUP(I3DEngine*& myEngine);
+
+void SpeedPowerUPP2(I3DEngine*& myEngine);
+void NoPowerUPP2(I3DEngine*& myEngine);
+void RemoveSpeedPowerUPP2(I3DEngine*& myEngine);
+void ShieldPowerUPP2(I3DEngine*& myEngine);
+void RemoveShieldPowerUPP2(I3DEngine*& myEngine);
+void RemoveBulletPowerUPP2(I3DEngine*& myEngine);
+void BulletPowerUPP2(I3DEngine*& myEngine);
+void SpawnSpritesP2(I3DEngine*& myEngine);

@@ -384,7 +384,7 @@ void main()
 	GameState currentGameState = MainMenu;
 	cameraPos = behind;
 
-
+	
 
 	//NoPowerUP(myEngine);
 	SpawnSprites(myEngine);
@@ -424,6 +424,7 @@ void main()
 		string kCoopText = "Press Space to Toggle Coop:";
 		string kQuitText = "Press Esc to Quit";
 
+
 		if (currentGameState == MainMenu)
 		{
 			endGame->SetPosition(10000, 10000);
@@ -439,6 +440,9 @@ void main()
 			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f, kWhite); //Game state text is set to go
 			preGameText.str(""); // Clear myStream
 
+			
+
+
 			if (myEngine->KeyHit(Key_Space))
 			{
 				if (gCoop == false)
@@ -446,6 +450,9 @@ void main()
 					gCoop = true;
 					gCoopText = "(Enabled)";
 					playerShip2->SetPosition(0.0f, -30.0f, 785.0f);
+					ISprite* myUI2 = myEngine->CreateSprite("Player2Backdrop.png", 1405.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out for P2
+					SpawnSpritesP2(myEngine);
+					Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kCyan);
 				}
 				else
 				{
@@ -454,6 +461,8 @@ void main()
 					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
 				}
 
+				
+
 			}
 
 			if (myEngine->KeyHit(kStartKey))
@@ -461,9 +470,12 @@ void main()
 				backGround->SetPosition(100000, 100000);
 				currentGameState = Play;
 				fullHealth(myEngine, Health);
-				fullHealthP2(myEngine, HealthP2);
 				ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -30.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out
-				ISprite* myUI2 = myEngine->CreateSprite("backdrop2.png", 1380.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out for P2
+				if (gCoop == true)
+				{
+					fullHealthP2(myEngine, HealthP2);
+				}
+
 			}
 		}
 
@@ -471,6 +483,26 @@ void main()
 
 		if (currentGameState == Play && gameOver == false)
 		{
+			if (numBullets <= 0)
+			{
+				numBullets = 0;
+			}
+			if (numBulletsP2 <= 0)
+			{
+				numBulletsP2 = 0;
+			}
+
+			if (gCoop)
+			{
+				Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kGreen);
+				if (HealthP2 == DeadP2)
+				{
+					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
+					//HealthP2 = ThreeLivesP2;
+				}
+			}
+
+
 			if (test == false)
 			{
 				if (test == false)
@@ -625,6 +657,22 @@ void main()
 						}
 						break;
 					}
+
+					if (sphere2sphere(playerShip2, kt->model, PLAYERSHIPRADIUS, kt->mRadius))
+					{
+						bulletMesh->RemoveModel(kt->model);
+						Erase(enemybullets, kt->model);
+						enemyShots--;
+						loseHealthP2 = RemoveHeartP2;
+
+						if (loseHealthP2 == RemoveHeartP2)
+						{
+							removeHeartP2(myEngine, HealthP2);
+							loseHealthP2 = PauseP2;
+						}
+						break;
+					}
+
 					kt++;
 				}
 
@@ -654,8 +702,8 @@ void main()
 
 				}
 
-				Lives->Draw("Lives:", 70.0f, 23.0f, kCyan);
-				Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kGreen);
+				Lives->Draw("Lives:", 70.0f, 23.0f, kGreen);
+				
 
 				if (Health == Dead)
 				{
@@ -690,24 +738,24 @@ void main()
 				//**** P2 Hud Stuff ****
 
 				powerUpStateTextP2 << "    P2 Bullets: " << numBulletsP2;
-				myFont->Draw(powerUpStateTextP2.str(), 3015.0f, 70.0f, kWhite); //Game state text is set to go
+				myFont->Draw(powerUpStateTextP2.str(), 1415.0f, 70.0f, kWhite); //Game state text is set to go
 				powerUpStateTextP2.str(""); // Clear myStream
 
 				powerUpStateTextP2 << "    P2 Score: " << gPlayer2Score;
-				myFont->Draw(powerUpStateTextP2.str(), 3015.0f, 100.0f, kWhite); //Game state text is set to go
+				myFont->Draw(powerUpStateTextP2.str(), 1415.0f, 100.0f, kWhite); //Game state text is set to go
 				powerUpStateTextP2.str(""); // Clear myStream
 
 
 				tripleText << bulletDisplay;
-				myFont->Draw(tripleText.str(), 3168.95f, 155.0f, kWhite); //Game state text is set to go
+				myFont->Draw(tripleText.str(), 1668.95f, 155.0f, kWhite); //Game state text is set to go
 				tripleText.str(""); // Clear myStream
 
 				shieldText << shieldDisplay;
-				myFont->Draw(shieldText.str(), 3103.0f, 155.0f, kWhite); //Game state text is set to go
+				myFont->Draw(shieldText.str(), 1603.0f, 155.0f, kWhite); //Game state text is set to go
 				shieldText.str(""); // Clear myStream
 
 				speedText << speedDisplay;
-				myFont->Draw(speedText.str(), 3337.5f, 155.0f, kWhite); //Game state text is set to go
+				myFont->Draw(speedText.str(), 1837.5f, 155.0f, kWhite); //Game state text is set to go
 				speedText.str(""); // Clear myStream
 
 				if (moveCamTop != true && moveCamBehind != true)
@@ -1251,51 +1299,6 @@ void main()
 			endGame->SetPosition(0, 0);
 			if (myEngine->KeyHit(Key_Return))
 			{
-				//if (cameraPos == topDown)
-				//{
-				//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
-				//	}
-				//
-				//	for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
-				//	}
-				//
-				//	for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
-				//	}
-				//
-				//	for (auto it = TripleList.begin(); it != TripleList.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(50.0f * frameTime);
-				//	}
-				//}
-				//if (cameraPos == behind)
-				//{
-				//	for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
-				//	}
-				//
-				//	for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
-				//	}
-				//
-				//	for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
-				//	}
-				//
-				//	for (auto it = TripleList.begin(); it != TripleList.end(); it++)
-				//	{
-				//		(*it)->mModel->RotateLocalX(-50.0f * frameTime);
-				//	}
-				//}
-				//speedPowerUp->SetPosition(0.0f, -30.0f, 730.0f);
 				currentGameState = MainMenu;
 
 				playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);

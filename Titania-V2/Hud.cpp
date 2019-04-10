@@ -150,12 +150,12 @@ void removeHeartP2(I3DEngine*& myEngine, AmountLives& HealthP2)
 
 void SpawnSpritesP2(I3DEngine*& myEngine)
 {
-	speedPupP2 = myEngine->CreateSprite("Speed2.png", 1015.0f, POWER_UP_COORDS, 1.0f);
-	shieldPupP2 = myEngine->CreateSprite("Shield2.png", 1085.0f, POWER_UP_COORDS, 1.0f);
-	NospeedPupP2 = myEngine->CreateSprite("NoSpeed2.png", 1015.0f, POWER_UP_COORDS, 0.8f);
-	NoshieldPupP2 = myEngine->CreateSprite("NoShield2.png", 1085.0f, POWER_UP_COORDS, 0.8f);
-	NobulletPupP2 = myEngine->CreateSprite("NoBullets2.png", 1155.0f, POWER_UP_COORDS, 0.8f);
-	bulletPupP2 = myEngine->CreateSprite("Bullets2.png", 1155.0f, POWER_UP_COORDS, 1.0f);
+	speedPupP2 = myEngine->CreateSprite("Speed2.png", 1615.0f, POWER_UP_COORDS, 1.0f);
+	shieldPupP2 = myEngine->CreateSprite("Shield2.png", 1685.0f, POWER_UP_COORDS, 1.0f);
+	NospeedPupP2 = myEngine->CreateSprite("NoSpeed2.png", 1615.0f, POWER_UP_COORDS, 0.8f);
+	NoshieldPupP2 = myEngine->CreateSprite("NoShield2.png", 1685.0f, POWER_UP_COORDS, 0.8f);
+	NobulletPupP2 = myEngine->CreateSprite("NoBullets2.png", 1755.0f, POWER_UP_COORDS, 0.8f);
+	bulletPupP2 = myEngine->CreateSprite("Bullets2.png", 1755.0f, POWER_UP_COORDS, 1.0f);
 }
 
 void SpeedPowerUPP2(I3DEngine*& myEngine)
