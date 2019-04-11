@@ -23,7 +23,7 @@ public:
 	float mBulletSize;
 	float mBulletHealth;
 	float mBulletSpeed;
-	virtual void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh) = 0;
+	virtual void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh) = 0;
 private:
 
 };
@@ -52,7 +52,7 @@ public:
 	mBulletSpeed = 1.0f;
 
 }
-	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
+	void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CLightEnemyShip();
 
 private:
@@ -80,7 +80,7 @@ public:
 		mBulletHealth = 1.0f;
 		mBulletSpeed = 2.0f;
 	}
-	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
+	void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CMediumEnemyShip();
 
 private:
@@ -106,7 +106,7 @@ public:
 		mBulletHealth = 5.0f;
 		mBulletSpeed = 1.0f;
 	}
-	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
+	void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CHeavyEnemyShip();
 
 private:
@@ -129,7 +129,7 @@ public:
 		mBulletSpeed = 2.0f;
 
 	}
-	void ShipShooting(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
+	void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CLightEnemyShip();
 
 private:
@@ -163,8 +163,8 @@ private:
 //};
 
 void CreateEnemies(I3DEngine*& myEngine);
-void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, bool moveCamTop, bool moveCamBehind, float frameTime, IMesh*& bulletMesh, I3DEngine*& myEngine);
-void ActivateEnemies(bool moveCamTop, bool moveCamBehind, float frameTime, I3DEngine*& myEngine, IMesh*& bulletMesh);
+void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, IMesh*& bulletMesh, I3DEngine*& myEngine);
+void ActivateEnemies(I3DEngine*& myEngine, IMesh*& bulletMesh);
 //bool FindActive(deque <unique_ptr<CShips>>& current, string& active);
 void Erase(deque <CBulletData>& bullets, IModel* newBullet);
 void RandomEnemies(int& i, int& j, int& k);

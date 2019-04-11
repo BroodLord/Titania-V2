@@ -115,7 +115,7 @@ void RemoveShieldPowerUP(I3DEngine*& myEngine)
 
 void fullHealthP2(I3DEngine*& myEngine, AmountLives HealthP2)
 {
-	if (HealthP2 == ThreeLivesP2)
+	if (HealthP2 == ThreeLives)
 	{
 		firstHeartP2 = myEngine->CreateSprite("Heart2.png", 1600.0f, 25.0f);
 		secondHeartP2 = myEngine->CreateSprite("Heart2.png", 1630.0f, 25.0f);
@@ -125,26 +125,26 @@ void fullHealthP2(I3DEngine*& myEngine, AmountLives HealthP2)
 
 void removeHeartP2(I3DEngine*& myEngine, AmountLives& HealthP2)
 {
-	if (HealthP2 == ThreeLivesP2)
+	if (HealthP2 == ThreeLives)
 	{
 		myEngine->RemoveSprite(thirdHeartP2);
-		HealthP2 = TwoLivesP2;
+		HealthP2 = TwoLives;
 		ScreenCrack1 = myEngine->CreateSprite("smallGlass.png", -100.0f, -100.0f);
 		ScreenCrack3 = myEngine->CreateSprite("smallGlass2.png", 1700.0f, 0.0f);
 	}
-	else if (HealthP2 == TwoLivesP2)
+	else if (HealthP2 == TwoLives)
 	{
 		myEngine->RemoveSprite(secondHeartP2);
-		HealthP2 = OneLifeP2;
+		HealthP2 = OneLife;
 
 		ScreenCrack2 = myEngine->CreateSprite("Crack3.png", -300.0f, 700.0f);
 		ScreenCrack4 = myEngine->CreateSprite("Crack3.png", 500.0f, -900.0f);
 		ScreenCrack4 = myEngine->CreateSprite("Crack5.png", 1000.0f, 700.0f);
 	}
-	else if (HealthP2 == OneLifeP2)
+	else if (HealthP2 == OneLife)
 	{
 		myEngine->RemoveSprite(firstHeartP2);
-		HealthP2 = DeadP2;
+		HealthP2 = Dead;
 	}
 }
 

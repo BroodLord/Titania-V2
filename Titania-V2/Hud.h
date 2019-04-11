@@ -4,8 +4,8 @@
 using namespace tle;
 
 
-extern enum AmountLives { ThreeLives, TwoLives, OneLife, Dead, ThreeLivesP2, TwoLivesP2, OneLifeP2, DeadP2};
-extern enum RemoveLives { RemoveHeart, Pause, RemoveHeartP2, PauseP2};
+extern enum AmountLives { ThreeLives, TwoLives, OneLife, Dead};
+extern enum RemoveLives { RemoveHeart, Pause};
 
 void fullHealth(I3DEngine*& myEngine, AmountLives Health);
 void removeHeart(I3DEngine*& myEngine, AmountLives& Health);

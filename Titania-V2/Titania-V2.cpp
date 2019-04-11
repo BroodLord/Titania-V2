@@ -13,7 +13,9 @@
 
 using namespace tle;
 
-
+bool moveCamTop = false;
+bool moveCamBehind = false;
+float frameTime = 0.0f;
 
 sf::SoundBuffer shootingBuffer;
 sf::Sound shootingSound;
@@ -27,11 +29,10 @@ sf::SoundBuffer powerDownBuffer;
 sf::Sound powerDownMusic;
 
 enum PlayerShipState { Normal, RollingLeft, RollingRight };
-enum PlayerShipState2 { Normal2, RollingLeft2, RollingRight2 };
 
 enum GameState { MainMenu, Play };
 PlayerShipState currentPlayerShipState;
-PlayerShipState2 currentPlayerShipState2;
+PlayerShipState currentPlayerShipState2;
 
 EKeyCode camSwitch = Key_1;
 EKeyCode MoveUp = Key_W;
@@ -48,6 +49,8 @@ EKeyCode Exit = Key_Escape;
 EKeyCode RollRightKey = Key_E;
 EKeyCode RollLeftKey = Key_Q;
 EKeyCode kStartKey = Key_Return; //P key used to start the game
+EKeyCode p1Shooting = Key_Space;
+EKeyCode p2Shooting = Mouse_MButton;
 
 const float bulletSpeed = 6.0f;
 const float bulletSize = 0.008f;
@@ -153,10 +156,9 @@ void main()
 
 	float matrix[16];
 
-	bool moveCamTop = false;
+	
 	bool barrelRollColdDown = false;
 	bool barrelRollColdDown2 = false;
-	bool moveCamBehind = false;
 
 	float startingz = 802.0f;
 	float startingZ = -840.0f;
@@ -193,8 +195,8 @@ void main()
 	AmountLives Health = ThreeLives;
 	RemoveLives loseHealth = Pause;
 
-	AmountLives HealthP2 = ThreeLivesP2;
-	RemoveLives loseHealthP2 = PauseP2;
+	AmountLives HealthP2 = ThreeLives;
+	RemoveLives loseHealthP2 = Pause;
 
 	mainMenuBuffer.loadFromFile("Sound Affects\\mainMusic.wav");
 	menuMusic.setBuffer(mainMenuBuffer);
@@ -322,10 +324,11 @@ void main()
 	for (int i = 0; i < 100; i++)
 	{
 		number++;
+		//number = random(1, 3);
 		if (count == 3)
 		{
-			startingx -= 100.0f;
-			startingx -= 100;
+			startingx -= 200.0f;
+			
 		}
 		else
 		{
@@ -396,10 +399,10 @@ void main()
 		myEngine->DrawScene();
 		currentX = playerShip->GetLocalX();
 		currentX2 = playerShip2->GetLocalX();
-		float frameTime = myEngine->Timer();
+		frameTime = myEngine->Timer();
 		// Draw the scene
 
-		SpawnEnemies(numBullets, bullets, moveCamTop, moveCamBehind, frameTime, bulletMesh, myEngine);
+		SpawnEnemies(numBullets, bullets, bulletMesh, myEngine);
 		stringstream powerUpStateText; //Text altered to present gamestate
 		stringstream speedText; //Text altered to present gamestate
 		stringstream shieldText; //Text altered to present gamestate
@@ -495,7 +498,7 @@ void main()
 			if (gCoop)
 			{
 				Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kGreen);
-				if (HealthP2 == DeadP2)
+				if (HealthP2 == Dead)
 				{
 					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
 					//HealthP2 = ThreeLivesP2;
@@ -517,26 +520,22 @@ void main()
 						{
 							for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 							{
-								(*it)->mModel->ResetOrientation();
-								//(*it)->mModel->RotateLocalX(50.0f * frameTime);
+								(*it)->mModel->ResetOrientation();							
 							}
 
 							for (auto it = SpeedList.begin(); it != SpeedList.end(); it++)
 							{
-								(*it)->mModel->ResetOrientation();
-								//(*it)->mModel->RotateLocalX(50.0f * frameTime);
+								(*it)->mModel->ResetOrientation();							
 							}
 
 							for (auto it = ShieldList.begin(); it != ShieldList.end(); it++)
 							{
-								(*it)->mModel->ResetOrientation();
-								//(*it)->mModel->RotateLocalX(50.0f * frameTime);
+								(*it)->mModel->ResetOrientation();					
 							}
 
 							for (auto it = TripleList.begin(); it != TripleList.end(); it++)
 							{
 								(*it)->mModel->ResetOrientation();
-								//(*it)->mModel->RotateLocalY(50.0f * frameTime);
 							}
 						}
 						if (cameraPos == topDown)
@@ -581,25 +580,23 @@ void main()
 				}
 			}
 
-			if (test == true)
-			{
-
+			
 				if (Health != Dead)
 				{
-					if (moveCamBehind == false && moveCamTop == false)
+					if (!moveCamBehind && !moveCamTop)
 					{
-						Shooting(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound);
-						if (gCoop == true)
+						Shooting(myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound, p1Shooting, playerFireRate);
+						if (gCoop)
 						{
-							Shooting2(moveCamTop, moveCamBehind, frameTime, myEngine, playerShip2, bulletMesh, playerShipSpeed, shootingSound);
+							Shooting(myEngine, playerShip2, bulletMesh, playerShipSpeed, shootingSound, p2Shooting, player2FireRate);
 						}
-						ActivateEnemies(moveCamTop, moveCamBehind, frameTime, myEngine, bulletMesh);
-						MoveBullet(frameTime, bulletMesh, playerShip);
+						ActivateEnemies(myEngine, bulletMesh);
+						MoveBullet(bulletMesh, playerShip);
 						playerFireRate -= frameTime;
 						player2FireRate -= frameTime;
 					}
 
-				}
+				
 
 
 
@@ -663,12 +660,12 @@ void main()
 						bulletMesh->RemoveModel(kt->model);
 						Erase(enemybullets, kt->model);
 						enemyShots--;
-						loseHealthP2 = RemoveHeartP2;
+						loseHealthP2 = RemoveHeart;
 
-						if (loseHealthP2 == RemoveHeartP2)
+						if (loseHealthP2 == RemoveHeart)
 						{
 							removeHeartP2(myEngine, HealthP2);
-							loseHealthP2 = PauseP2;
+							loseHealthP2 = Pause;
 						}
 						break;
 					}
@@ -678,7 +675,7 @@ void main()
 
 				menuMusic.stop();
 
-				if (moveCamBehind == false && moveCamTop == false)
+				if (!moveCamBehind && !moveCamTop)
 				{
 					lightFireRate -= frameTime;
 					mediumFireRate -= frameTime;
@@ -735,30 +732,33 @@ void main()
 				myFont->Draw(speedText.str(), 37.5f, 155.0f, kWhite); //Game state text is set to go
 				speedText.str(""); // Clear myStream
 
-				//**** P2 Hud Stuff ****
+				if (gCoop)
+				{
+					//**** P2 Hud Stuff ****
 
-				powerUpStateTextP2 << "    P2 Bullets: " << numBulletsP2;
-				myFont->Draw(powerUpStateTextP2.str(), 1415.0f, 70.0f, kWhite); //Game state text is set to go
-				powerUpStateTextP2.str(""); // Clear myStream
+					powerUpStateTextP2 << "    P2 Bullets: " << numBulletsP2;
+					myFont->Draw(powerUpStateTextP2.str(), 1415.0f, 70.0f, kWhite); //Game state text is set to go
+					powerUpStateTextP2.str(""); // Clear myStream
 
-				powerUpStateTextP2 << "    P2 Score: " << gPlayer2Score;
-				myFont->Draw(powerUpStateTextP2.str(), 1415.0f, 100.0f, kWhite); //Game state text is set to go
-				powerUpStateTextP2.str(""); // Clear myStream
+					powerUpStateTextP2 << "    P2 Score: " << gPlayer2Score;
+					myFont->Draw(powerUpStateTextP2.str(), 1415.0f, 100.0f, kWhite); //Game state text is set to go
+					powerUpStateTextP2.str(""); // Clear myStream
 
 
-				tripleText << bulletDisplay;
-				myFont->Draw(tripleText.str(), 1668.95f, 155.0f, kWhite); //Game state text is set to go
-				tripleText.str(""); // Clear myStream
+					tripleText << bulletDisplay;
+					myFont->Draw(tripleText.str(), 1668.95f, 155.0f, kWhite); //Game state text is set to go
+					tripleText.str(""); // Clear myStream
 
-				shieldText << shieldDisplay;
-				myFont->Draw(shieldText.str(), 1603.0f, 155.0f, kWhite); //Game state text is set to go
-				shieldText.str(""); // Clear myStream
+					shieldText << shieldDisplay;
+					myFont->Draw(shieldText.str(), 1603.0f, 155.0f, kWhite); //Game state text is set to go
+					shieldText.str(""); // Clear myStream
 
-				speedText << speedDisplay;
-				myFont->Draw(speedText.str(), 1837.5f, 155.0f, kWhite); //Game state text is set to go
-				speedText.str(""); // Clear myStream
+					speedText << speedDisplay;
+					myFont->Draw(speedText.str(), 1837.5f, 155.0f, kWhite); //Game state text is set to go
+					speedText.str(""); // Clear myStream
+				}
 
-				if (moveCamTop != true && moveCamBehind != true)
+				if (!moveCamBehind && !moveCamTop)
 				{
 					int i = 0;
 					for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
@@ -922,7 +922,7 @@ void main()
 				}
 
 
-				if (moveCamTop != true && moveCamBehind != true)
+				if (!moveCamBehind && !moveCamTop)
 				{
 					if (barrelRollColdDown == false)
 					{
@@ -983,16 +983,16 @@ void main()
 							{
 								if (myEngine->KeyHit(player2RollRightKey))
 								{
-									currentPlayerShipState2 = RollingRight2;
+									currentPlayerShipState2 = RollingRight;
 								}
 
 								if (myEngine->KeyHit(player2RollLeftKey))
 								{
-									currentPlayerShipState2 = RollingLeft2;
+									currentPlayerShipState2 = RollingLeft;
 								}
 							}
 
-							if (currentPlayerShipState2 == RollingRight2)
+							if (currentPlayerShipState2 == RollingRight)
 							{
 								rollingTimer2 -= frameTime;
 								if (rollingTimer2 > 0)
@@ -1003,14 +1003,14 @@ void main()
 								if (rollingTimer2 <= 0)
 								{
 									rollingTimer2 = 0.4f;
-									currentPlayerShipState2 = Normal2;
+									currentPlayerShipState2 = Normal;
 									barrelRollColdDown2 = true;
 									playerShip2->ResetOrientation();
 									//player invunerable
 								}
 							}
 
-							if (currentPlayerShipState2 == RollingLeft2)
+							if (currentPlayerShipState2 == RollingLeft)
 							{
 								rollingTimer2 -= frameTime;
 								if (rollingTimer2 > 0)
@@ -1021,7 +1021,7 @@ void main()
 								if (rollingTimer2 <= 0)
 								{
 									rollingTimer2 = 0.4f;
-									currentPlayerShipState2 = Normal2;
+									currentPlayerShipState2 = Normal;
 									barrelRollColdDown2 = true;
 									playerShip->ResetOrientation();
 									//player invunerable
@@ -1093,7 +1093,7 @@ void main()
 						}
 						if (gCoop == true)
 						{
-							if (currentPlayerShipState2 != RollingLeft2 && currentPlayerShipState != RollingRight2)
+							if (currentPlayerShipState2 != RollingLeft && currentPlayerShipState != RollingRight)
 							{
 								if (myEngine->KeyHeld(player2MoveRight))
 								{
@@ -1199,7 +1199,7 @@ void main()
 						}
 						if (gCoop == true)
 						{
-							if (currentPlayerShipState2 != RollingLeft2 && currentPlayerShipState != RollingRight2)
+							if (currentPlayerShipState2 != RollingLeft && currentPlayerShipState != RollingRight)
 							{
 								if (myEngine->KeyHeld(player2MoveRight))
 								{
@@ -1304,7 +1304,7 @@ void main()
 				playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 				//cameraPos = behind;
 				Health = ThreeLives;
-				HealthP2 = ThreeLivesP2;
+				HealthP2 = ThreeLives;
 				gameOver = false;
 				test = false;
 				reset = true;
