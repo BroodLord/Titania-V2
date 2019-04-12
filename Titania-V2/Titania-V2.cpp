@@ -13,6 +13,8 @@
 
 using namespace tle;
 
+float GLOBAL_Y = -40.0f;
+
 bool moveCamTop = false;
 bool moveCamBehind = false;
 float frameTime = 0.0f;
@@ -101,6 +103,10 @@ int numBullets = 0;
 int numBulletsP2 = 0;
 bool gCoop = false;
 
+float FIRST_TOWER = 300.0f;
+float SECOND_TOWER = 200.0f;
+float THIRD_TOWER = 100.0f;
+
 string gCoopText = "(Disabled)";
 
 void main()
@@ -139,11 +145,12 @@ void main()
 	IModel* playerShip2;
 	IModel* flame;
 	IModel* floor;
+	IModel* floor2;
 	IModel* topDownCamBlock;
 	IModel* skyBox;
 	IModel* towerNine;
 	IModel* towerTwo;
-	IModel* Road[25];
+	IModel* Road[40];
 	//IModel* speedPowerUp;
 	//IModel* shieldPowerUp;
 	//IModel* bulletPowerUp;
@@ -161,8 +168,11 @@ void main()
 	bool barrelRollColdDown2 = false;
 
 	float startingz = 802.0f;
-	float startingZ = -840.0f;
+	float startingZ = -740.0f;
 	float startingx = 400.0f;
+	float road2MoveX = 1002.0f;
+
+
 	float countDown = 1.8f;
 	float currentX = 0.0f;
 	float currentX2 = 0.0f;
@@ -246,7 +256,11 @@ void main()
 	floor = floorMesh->CreateModel(0.0f, -130.0f, 0.0f);
 	floor->SetSkin("pavement.png");
 
-	topDownCamBlock = camBlockMesh->CreateModel(0.0f, -35.0f, 750.0f);
+	/*floor2 = floorMesh->CreateModel(0.0f, -130.0f, -2000.0f);
+	floor2->SetSkin("pavement.png");*/
+
+
+	topDownCamBlock = camBlockMesh->CreateModel(0.0f, GLOBAL_Y -5.0f, 750.0f);
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -281,7 +295,7 @@ void main()
 	bossFireRate = BossShipList.front()->mFireRate;
 
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 17; i++)
 	{
 		Road[i] = camBlockMesh->CreateModel(2.0f, 0.0f, startingz);
 		Road[i]->SetSkin("background-1_0.png");
@@ -290,6 +304,26 @@ void main()
 		startingz -= 100.0f;
 		Road[i]->AttachToParent(floor);
 	}
+
+	/*Road[20] = camBlockMesh->CreateModel(road2MoveX, 0.0f, 802.0f);
+	Road[20]->SetSkin("RoadT.jpg");
+	Road[20]->ScaleX(10.0f);
+	Road[20]->ScaleZ(10.0f);
+	Road[20]->RotateLocalY(-90.0f);
+	road2MoveX -= 100.0f;
+	Road[20]->AttachToParent(floor2);*/
+
+	for (int i = 21; i < 40; i++)
+	{
+		Road[i] = camBlockMesh->CreateModel(road2MoveX, 0.2f, -852.0f);
+		Road[i]->SetSkin("background-1_0.png");
+		Road[i]->ScaleX(10.0f);
+		Road[i]->ScaleZ(10.0f);
+		Road[i]->RotateLocalY(90.0f);
+		road2MoveX -= 100.0f;
+		Road[i]->AttachToParent(floor);
+	}
+
 
 	topDownCamBlock->Scale(0.01f);
 
@@ -304,7 +338,7 @@ void main()
 	cubetest->ScaleX(0.1f);*/
 
 	playerShipMesh = myEngine->LoadMesh("gunShip.x");
-	playerShip = playerShipMesh->CreateModel(0.0f, -30.0f, 785.0f);
+	playerShip = playerShipMesh->CreateModel(0.0f, GLOBAL_Y, 785.0f);
 	playerShip2Mesh = myEngine->LoadMesh("gunShip01.x");
 	playerShip2 = playerShip2Mesh->CreateModel(-10000.0f, -10030.0f, -100785.0f);
 
@@ -321,66 +355,98 @@ void main()
 	towerNineMesh = myEngine->LoadMesh("skyscraper04.x");
 	towerTwoMesh = myEngine->LoadMesh("skyscraper02.x");
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		number++;
-		//number = random(1, 3);
-		if (count == 3)
+		
+		for (int j = 0; j < 2; j++)
 		{
-			startingx -= 200.0f;
-			
-		}
-		else
-		{
-			startingx -= 100;
-		}
-		if (number == 1)
-		{
-
-			towerNine = towerNineMesh->CreateModel(startingx, 0.0f, startingZ);
-			towerNine->AttachToParent(floor);
+			towerNine = towerNineMesh->CreateModel(FIRST_TOWER, 0.0f, startingZ);
 			towerNine->ScaleY(0.4);
-		}
-		if (number == 2)
-		{
-			if (count == 3)
-			{
-				startingx += 25;
-			}
-			towerTwo = towerTwoMesh->CreateModel(startingx, 0.0f, startingZ);
-			towerTwo->AttachToParent(floor);
-			towerTwo->RotateLocalY(90);
+			towerNine->AttachToParent(floor);
+			towerTwo = towerTwoMesh->CreateModel(SECOND_TOWER, 0.0f, startingZ);
 			towerTwo->ScaleY(0.8);
-		}
-		count++;
-		if (count != 6)
-		{
-			if (number == 2)
-			{
-				number = 0;
-			}
-		}
-		if (count == 6)
-		{
-			count = 0;
-			if (number == 1)
-			{
-				number = 0;
-			}
-			if (number == 2)
-			{
-				number = 1;
-			}
-			startingZ += 100.0f;
-			startingx = 400.0f;
-		}
+			towerTwo->AttachToParent(floor);
+			towerNine = towerNineMesh->CreateModel(THIRD_TOWER, 0.0f, startingZ);
+			towerNine->ScaleY(0.4);
+			towerNine->AttachToParent(floor);
+			FIRST_TOWER = -FIRST_TOWER;
+			SECOND_TOWER = -SECOND_TOWER;
+			THIRD_TOWER = -THIRD_TOWER;
 
+		}		
+		startingZ = startingZ + 100.0f;
+
+		for (int j = 0; j < 2; j++)
+		{
+			towerTwo = towerTwoMesh->CreateModel(FIRST_TOWER, 0.0f, startingZ);
+			towerTwo->ScaleY(0.8);
+			towerTwo->AttachToParent(floor);
+			towerNine = towerNineMesh->CreateModel(SECOND_TOWER, 0.0f, startingZ);
+			towerNine->ScaleY(0.4);
+			towerNine->AttachToParent(floor);
+			towerTwo = towerTwoMesh->CreateModel(THIRD_TOWER, 0.0f, startingZ);
+			towerTwo->ScaleY(0.8);
+			towerTwo->AttachToParent(floor);
+			FIRST_TOWER = -FIRST_TOWER;
+			SECOND_TOWER = -SECOND_TOWER;
+			THIRD_TOWER = -THIRD_TOWER;
+
+		}
+		startingZ = startingZ + 100.0f;
 	}
+
+	towerNine = towerNineMesh->CreateModel(0.0f, 0.2f, -952.0f);
+	towerNine->ScaleY(0.4);
+	towerNine->AttachToParent(floor);
+
+
+	startingZ = -840.0f;
+
+	/*for (int i = 0; i < 10; i++)
+	{
+
+		for (int j = 0; j < 2; j++)
+		{
+			towerNine = towerNineMesh->CreateModel(FIRST_TOWER, 0.0f, startingZ);
+			towerNine->ScaleY(0.4);
+			towerNine->AttachToParent(floor2);
+			towerTwo = towerTwoMesh->CreateModel(SECOND_TOWER, 0.0f, startingZ);
+			towerTwo->ScaleY(0.8);
+			towerTwo->AttachToParent(floor2);
+			towerNine = towerNineMesh->CreateModel(THIRD_TOWER, 0.0f, startingZ);
+			towerNine->ScaleY(0.4);
+			towerNine->AttachToParent(floor2);
+			FIRST_TOWER = -FIRST_TOWER;
+			SECOND_TOWER = -SECOND_TOWER;
+			THIRD_TOWER = -THIRD_TOWER;
+
+		}
+		startingZ = startingZ + 100.0f;
+
+		for (int j = 0; j < 2; j++)
+		{
+			towerTwo = towerTwoMesh->CreateModel(FIRST_TOWER, 0.0f, startingZ);
+			towerTwo->ScaleY(0.8);
+			towerTwo->AttachToParent(floor2);
+			towerNine = towerNineMesh->CreateModel(SECOND_TOWER, 0.0f, startingZ);
+			towerNine->ScaleY(0.4);
+			towerNine->AttachToParent(floor2);
+			towerTwo = towerTwoMesh->CreateModel(THIRD_TOWER, 0.0f, startingZ);
+			towerTwo->ScaleY(0.8);
+			towerTwo->AttachToParent(floor2);
+			FIRST_TOWER = -FIRST_TOWER;
+			SECOND_TOWER = -SECOND_TOWER;
+			THIRD_TOWER = -THIRD_TOWER;
+
+		}
+		startingZ = startingZ + 100.0f;
+	}*/
 
 	bulletMesh = myEngine->LoadMesh("Flare.x");
 
 	skyBoxMesh = myEngine->LoadMesh("Skybox 01.x");
 	skyBox = skyBoxMesh->CreateModel(0.0f, -1050.0f, 0.0f);
+	skyBox->Scale(1.5f);
 
 	//fixedCamBlock->AttachToParent(playerShip);
 	eCameraPos cameraPos;
@@ -452,7 +518,7 @@ void main()
 				{
 					gCoop = true;
 					gCoopText = "(Enabled)";
-					playerShip2->SetPosition(0.0f, -30.0f, 785.0f);
+					playerShip2->SetPosition(0.0f, GLOBAL_Y, 785.0f);
 					ISprite* myUI2 = myEngine->CreateSprite("Player2Backdrop.png", 1405.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out for P2
 					SpawnSpritesP2(myEngine);
 					Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kCyan);
@@ -683,7 +749,7 @@ void main()
 					bossFireRate -= frameTime;
 				}
 
-				myEngine->StartMouseCapture();
+				//myEngine->StartMouseCapture();
 
 				if (myEngine->KeyHit(Key_L))
 				{
@@ -826,7 +892,7 @@ void main()
 					{
 						shieldDisplay = shieldPowerUpTimer + 1;
 
-						shield->SetY(-30.0f);
+						shield->SetY(GLOBAL_Y);
 						shield->RotateLocalY(250.0f * frameTime);
 						for (auto i = enemybullets.begin(); i != enemybullets.end(); i++)
 						{
@@ -1069,17 +1135,17 @@ void main()
 					playerCamera->LookAt(topDownCamBlock);
 					if (moveCamTop != true)
 					{
-						floor->MoveLocalZ(80.0f * frameTime);
+						//floor->MoveLocalZ(80.0f * frameTime);
 						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 						{
 							(*it)->mModel->RotateY(50.0f * frameTime);
 							(*it)->mModel->MoveZ(playerShipSpeed);
 						}
 
-						if (floorResert >= 200)
+						/*if (floorResert >= 200)
 						{
 							floor->SetLocalZ(0.0f);
-						}
+						}*/
 						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
 							if (myEngine->KeyHeld(MoveRight))
@@ -1107,16 +1173,7 @@ void main()
 						}
 						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
-							int oldMouseMoveX = myEngine->GetMouseMovementX();
-							int mouseMoveX = myEngine->GetMouseMovementX();
-							/*if (oldMouseMoveX < mouseMoveX)
-							{
-								playerShip->MoveX(playerShipSpeed * 6);
-							}
-							if (oldMouseMoveX > mouseMoveX)
-							{
-								playerShip->MoveX(-playerShipSpeed * 6);
-							}*/
+							
 
 						}
 
@@ -1174,7 +1231,7 @@ void main()
 				{
 					if (moveCamBehind != true)
 					{
-						floor->MoveLocalZ(80.0f * frameTime);
+						//floor->MoveLocalZ(80.0f * frameTime);
 
 						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 						{
@@ -1182,10 +1239,10 @@ void main()
 							(*it)->mModel->MoveZ(playerShipSpeed);
 						}
 
-						if (floorResert >= 200)
+						/*if (floorResert >= 200)
 						{
 							floor->SetLocalZ(0.0f);
-						}
+						}*/
 						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
 							if (myEngine->KeyHeld(MoveRight))
@@ -1213,16 +1270,7 @@ void main()
 						}
 						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
-							int oldMouseMoveX = myEngine->GetMouseMovementX();
-							int mouseMoveX = myEngine->GetMouseMovementX();
-							/*	if (oldMouseMoveX < mouseMoveX)
-							{
-							playerShip->MoveX(playerShipSpeed * 6);
-							}
-							if (oldMouseMoveX > mouseMoveX)
-							{
-							playerShip->MoveX(-playerShipSpeed * 6);
-							}*/
+						
 
 						}
 

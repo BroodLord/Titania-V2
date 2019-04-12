@@ -2,17 +2,26 @@
 #include "Defs.h"
 #include "Shooting.h"
 
+extern float GLOBAL_Y;
 static int lightCounter = 0;
 static int MedCounter = 0;
 static int HeavyCounter = 0;
 
 const float ENEMY_X = 120.0f;
-const float ENEMY_Y = -30.0f;
+const float ENEMY_Y = GLOBAL_Y;
 const float ENEMY_Z = 710.0f;
 
-//HeavyEnemyShip heavyShip;
-//MediumEnemyShip mediumShip;
-//LightEnemyShip lightShip;
+const float LEFT_LIST_X = 120.0f;
+const float LEFT_LIST_Y = GLOBAL_Y;
+const float LEFT_LIST_Z = 710.0f;
+
+const float RIGHT_LIST_X = -120.0f;
+const float RIGHT_LIST_Y = GLOBAL_Y;
+const float RIGHT_LIST_Z = 710.0f;
+
+const float MIDDLE_LIST_X = 0.0f;
+const float MIDDLE_LIST_Y = -10.0f;
+const float MIDDLE_LIST_Z = 850.0f;
 
 EnemyShipState currentEnemyShipState;
 
@@ -33,8 +42,8 @@ extern deque <unique_ptr <CShips>> MiddleList;
 extern deque <unique_ptr <CShips>> LeftList;
 extern deque <unique_ptr <CShips>> DeadList;
 
-int spawnArray[30] = { 1,3,2,1,2,3,3,1,2,1,3,2,2,1,3,2,1,1,3,2,3,2,1,2,3,1,2,3,2,1, };
 
+int spawnArray[30] = { 1,3,2,1,2,3,3,1,2,1,3,2,2,1,3,2,1,1,3,2,3,2,1,2,3,1,2,3,2,1, };
 int spawnCounter = 0;
 
 float closeCounter = 2, farCounter = 2.8, MidCounter = 2.4;
@@ -139,7 +148,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, IMesh*& bulletM
 
 				if (LeftList.front()->mDead == Deactivated)
 				{
-					LeftList.front()->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
+					LeftList.front()->mShipModel->SetPosition(120.0f, GLOBAL_Y, 700.0f);
 					//(*it)->mDead = Active;
 					//(*it)->mHealth = 2;
 					gPlayerScore = gPlayerScore + LeftList.front()->mScore;
@@ -169,7 +178,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, IMesh*& bulletM
 					}
 					if (RightList.front()->mDead == Deactivated)
 					{
-						RightList.front()->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
+						RightList.front()->mShipModel->SetPosition(120.0f, GLOBAL_Y, 700.0f);
 						//(*it)->mDead = Active;
 						//(*it)->mHealth = 6;
 						gPlayerScore = gPlayerScore + RightList.front()->mScore;
@@ -200,7 +209,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, IMesh*& bulletM
 
 					if (MiddleList.front()->mDead == Deactivated)
 					{
-						MiddleList.front()->mShipModel->SetPosition(120.0f, -30.0f, 700.0f);
+						MiddleList.front()->mShipModel->SetPosition(120.0f, GLOBAL_Y, 700.0f);
 						//(*it)->mDead = Active;
 						//(*it)->mHealth = 10;
 						gPlayerScore = gPlayerScore + MiddleList.front()->mScore;
@@ -242,29 +251,34 @@ void ActivateEnemies(I3DEngine*& myEngine, IMesh*& bulletMesh)
 	}
 		if (!MiddleList.empty())
 		{
-			if (MiddleList.front()->mShipModel->GetX() > 0.0f)
+
+			if (MiddleList.front()->mShipModel->GetZ() > 710.0f)
 			{
 
-				MiddleList.front()->mShipModel->MoveX(-50.0f * frameTime);
+				MiddleList.front()->mShipModel->MoveZ(-50.0f * frameTime);
+			}
+			else if (MiddleList.front()->mShipModel->GetY() > GLOBAL_Y)
+			{
+
+				MiddleList.front()->mShipModel->MoveY(-50.0f * frameTime);
 			}
 			else
 			{
 				if (heavyFireRate < 0.0f)
 				{
 					heavyFireRate = MiddleList.front()->mFireRate;
-					MiddleList.front()->mShipModel->SetX(0.0f);
+					MiddleList.front()->mShipModel->SetPosition(0.0f, GLOBAL_Y, 710.0f);
 					MiddleList.front()->ShipShooting(myEngine, MiddleList, bulletMesh);
 					
 				}
 			}
 		}
 
-
 		if (!RightList.empty())
 		{
-			if (RightList.front()->mShipModel->GetX() > -20.0f)
+			if (RightList.front()->mShipModel->GetX() < -20.0f)
 			{
-				RightList.front()->mShipModel->MoveX(-50.0f * frameTime);
+				RightList.front()->mShipModel->MoveX(50.0f * frameTime);
 			}
 			else
 			{
@@ -279,13 +293,13 @@ void ActivateEnemies(I3DEngine*& myEngine, IMesh*& bulletMesh)
 		}
 		if (RightList.empty() == true && MiddleList.empty() == true && LeftList.empty() == true)
 		{
-			if (BossShipList.front()->mShipModel->GetY() > -30.0f)
+			if (BossShipList.front()->mShipModel->GetY() > GLOBAL_Y)
 			{
 				BossShipList.front()->mShipModel->MoveLocalY(-50.0f * frameTime);
 			}
 			if (bossFireRate < 0.0f)
 			{
-				BossShipList.front()->mShipModel->SetY(-30.0f);
+				BossShipList.front()->mShipModel->SetY(GLOBAL_Y);
 				BossShipList.front()->ShipShooting(myEngine, BossShipList, bulletMesh);
 				bossFireRate = BossShipList.front()->mFireRate;
 			}
@@ -335,6 +349,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!LightShipList.empty() && RightList.empty())
 			{
+				LightShipList.front()->mShipModel->SetPosition(RIGHT_LIST_X, RIGHT_LIST_Y, RIGHT_LIST_Z);
 				RightList.push_back(move(LightShipList.front()));
 				LightShipList.pop_front();
 			}
@@ -347,6 +362,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!MediumShipList.empty() && RightList.empty())
 			{
+				MediumShipList.front()->mShipModel->SetPosition(RIGHT_LIST_X, RIGHT_LIST_Y, RIGHT_LIST_Z);
 				RightList.push_back(move(MediumShipList.front()));
 				MediumShipList.pop_front();
 			}
@@ -359,6 +375,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!HeavyShipList.empty() && RightList.empty())
 			{
+				HeavyShipList.front()->mShipModel->SetPosition(RIGHT_LIST_X, RIGHT_LIST_Y, RIGHT_LIST_Z);
 				RightList.push_back(move(HeavyShipList.front()));
 				HeavyShipList.pop_front();
 			}
@@ -372,6 +389,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!LightShipList.empty() && MiddleList.empty())
 			{
+				LightShipList.front()->mShipModel->SetPosition(MIDDLE_LIST_X, MIDDLE_LIST_Y, MIDDLE_LIST_Z);
 				MiddleList.push_back(move(LightShipList.front()));
 				LightShipList.pop_front();
 			}
@@ -384,6 +402,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!MediumShipList.empty() && MiddleList.empty())
 			{
+				MediumShipList.front()->mShipModel->SetPosition(MIDDLE_LIST_X, MIDDLE_LIST_Y, MIDDLE_LIST_Z);
 				MiddleList.push_back(move(MediumShipList.front()));
 				MediumShipList.pop_front();
 			}
@@ -396,6 +415,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!HeavyShipList.empty() && MiddleList.empty())
 			{
+				HeavyShipList.front()->mShipModel->SetPosition(MIDDLE_LIST_X, MIDDLE_LIST_Y, MIDDLE_LIST_Z);
 				MiddleList.push_back(move(HeavyShipList.front()));
 				HeavyShipList.pop_front();
 			}
@@ -409,6 +429,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!LightShipList.empty() && LeftList.empty())
 			{
+				LightShipList.front()->mShipModel->SetPosition(LEFT_LIST_X, LEFT_LIST_Y, LEFT_LIST_Z);
 				LeftList.push_back(move(LightShipList.front()));
 				LightShipList.pop_front();
 			}
@@ -421,6 +442,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!MediumShipList.empty() && LeftList.empty())
 			{
+				MediumShipList.front()->mShipModel->SetPosition(LEFT_LIST_X, LEFT_LIST_Y, LEFT_LIST_Z);
 				LeftList.push_back(move(MediumShipList.front()));
 				MediumShipList.pop_front();
 			}
@@ -433,6 +455,7 @@ void RandomEnemies(int& i, int& j, int& k)
 		{
 			if (!HeavyShipList.empty() && LeftList.empty())
 			{
+				HeavyShipList.front()->mShipModel->SetPosition(LEFT_LIST_X, LEFT_LIST_Y, LEFT_LIST_Z);
 				LeftList.push_back(move(HeavyShipList.front()));
 				HeavyShipList.pop_front();
 			}
