@@ -13,6 +13,7 @@ ISprite* ScreenCrack1;
 ISprite* ScreenCrack2;
 ISprite* ScreenCrack3;
 ISprite* ScreenCrack4;
+ISprite* ScreenCrack5;
 
 ISprite* speedPup;
 ISprite* shieldPup;
@@ -41,6 +42,15 @@ void fullHealth(I3DEngine*& myEngine, AmountLives Health)
 	}
 }
 
+void resetCracks(I3DEngine*& myEngine)
+{
+	myEngine->RemoveSprite(ScreenCrack1);
+	myEngine->RemoveSprite(ScreenCrack2);
+	myEngine->RemoveSprite(ScreenCrack3);
+	myEngine->RemoveSprite(ScreenCrack4);
+	myEngine->RemoveSprite(ScreenCrack5);
+}
+
 void removeHeart(I3DEngine*& myEngine, AmountLives& Health)
 {
 	if (Health == ThreeLives)
@@ -57,7 +67,7 @@ void removeHeart(I3DEngine*& myEngine, AmountLives& Health)
 		
 		ScreenCrack2 = myEngine->CreateSprite("Crack3.png", -300.0f, 700.0f);
 		ScreenCrack4 = myEngine->CreateSprite("Crack3.png", 500.0f, -900.0f);
-		ScreenCrack4 = myEngine->CreateSprite("Crack5.png", 1000.0f, 700.0f);
+		ScreenCrack5 = myEngine->CreateSprite("Crack5.png", 1000.0f, 700.0f);
 	}
 	else if (Health == OneLife)
 	{

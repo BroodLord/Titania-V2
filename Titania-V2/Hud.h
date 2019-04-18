@@ -7,8 +7,11 @@ using namespace tle;
 extern enum AmountLives { ThreeLives, TwoLives, OneLife, Dead};
 extern enum RemoveLives { RemoveHeart, Pause};
 
+
+
 void fullHealth(I3DEngine*& myEngine, AmountLives Health);
 void removeHeart(I3DEngine*& myEngine, AmountLives& Health);
+void resetCracks(I3DEngine*& myEngine);
 
 void fullHealthP2(I3DEngine*& myEngine, AmountLives HealthP2);
 void removeHeartP2(I3DEngine*& myEngine, AmountLives& HealthP2);

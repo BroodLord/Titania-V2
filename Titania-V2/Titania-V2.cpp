@@ -69,7 +69,7 @@ float player2FireRate = 0.0f;
 deque <CBulletData> bullets;
 deque <CBulletData> bullets2;
 deque <CBulletData> lightBullets;
-deque <CBulletData>  mediumBullets;
+deque <CBulletData> mediumBullets;
 deque <CBulletData> heavyBullets;
 deque <CBulletData> bossBullets;
 
@@ -1348,7 +1348,6 @@ void main()
 			if (myEngine->KeyHit(Key_Return))
 			{
 				currentGameState = MainMenu;
-
 				playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 				//cameraPos = behind;
 				Health = ThreeLives;
@@ -1356,6 +1355,34 @@ void main()
 				gameOver = false;
 				test = false;
 				reset = true;
+
+				for (auto PlayerShots = bullets.begin(); PlayerShots != bullets.end(); PlayerShots++)
+				{
+					PlayerShots->life = 0;
+				}
+				for (auto PlayerShots2 = bullets2.begin(); PlayerShots2 != bullets2.end(); PlayerShots2++)
+				{
+					PlayerShots2->life = 0;
+				}
+				for (auto enemyShots = enemybullets.begin(); enemyShots != enemybullets.end(); enemyShots++)
+				{
+					enemyShots->life = 0;
+				}
+				LightShipList.clear();
+				MediumShipList.clear();
+				HeavyShipList.clear();
+				BossShipList.clear();
+				RightList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
+				RightList.clear();
+				MiddleList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
+				MiddleList.clear();
+				LeftList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
+				LeftList.clear();
+				resetCracks(myEngine);
+				CreateEnemies(myEngine);
+
+
+
 
 			}
 		}
