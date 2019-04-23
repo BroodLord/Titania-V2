@@ -44,6 +44,7 @@ void fullHealth(I3DEngine*& myEngine, AmountLives Health)
 
 void resetCracks(I3DEngine*& myEngine)
 {
+
 	myEngine->RemoveSprite(ScreenCrack1);
 	myEngine->RemoveSprite(ScreenCrack2);
 	myEngine->RemoveSprite(ScreenCrack3);

@@ -1,6 +1,8 @@
 // Titania-V2.cpp: A program using the TL-Engine
 #include <TL-Engine.h>	// TL-Engine include file and namespace
 #include <iostream>
+#include <memory>
+#include <vector>
 #include <sstream>
 #include <cstdlib>
 #include <cmath>
@@ -108,6 +110,10 @@ float SECOND_TOWER = 200.0f;
 float THIRD_TOWER = 100.0f;
 
 string gCoopText = "(Disabled)";
+vector <LeaderBoardClass*> leaderboard;
+LeaderBoardClass* ptr = new LeaderBoardClass;
+
+
 
 void main()
 {
@@ -186,7 +192,10 @@ void main()
 	float bulletPowerUpTimer = 0.0f;
 	float rollingTimer = 0.4f;
 	float rollingTimer2 = 0.4f;
+	float TimerFloat = 0.0f;
 
+	string name;
+    string test2;
 
 	int speedDisplay = 0;
 	int shieldDisplay = 0;
@@ -215,7 +224,7 @@ void main()
 
 	battleBuffer.loadFromFile("Sound Affects\\Night.ogg");
 	battleMusic.setBuffer(battleBuffer);
-	battleMusic.setVolume(30.0f);
+	battleMusic.setVolume(10.0f);
 	battleMusic.setLoop(true);
 
 	shootingBuffer.loadFromFile("Sound Affects\\shoot.wav");
@@ -238,9 +247,12 @@ void main()
 	ISprite* endGame = myEngine->CreateSprite("gameover.png", 1000.f, 10000.f);
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
-	IFont* deathFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
+	IFont* Timer = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
+	IFont* deathFont = myEngine->LoadFont("Arial", 50); //Loading in a font to use in text strings
+	IFont* NameFont = myEngine->LoadFont("Arial", 50); //Loading in a font to use in text strings
 	IFont* preGameFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 
+	ptr->LeaderBoardRead(leaderboard);
 
 	/* QUICK NOTE, Because of the camera being flipped the pluses and minus are swaped. (going left is pos)(going right is negative) */
 
@@ -488,6 +500,10 @@ void main()
 
 		//POWERUPS - DANNY LOOK AT THIS
 		stringstream preGameText;
+		stringstream TimerStream;
+		stringstream EndScore;
+		stringstream nameStream;
+		TimerStream.precision(3);
 
 		string kPlayText = "Press Enter to Start";
 		string kCoopText = "Press Space to Toggle Coop:";
@@ -552,6 +568,10 @@ void main()
 
 		if (currentGameState == Play && gameOver == false)
 		{
+			TimerFloat = TimerFloat += frameTime;
+			TimerStream << "Timer: " << TimerFloat;
+			Timer->Draw(TimerStream.str(), 230.0f, 70.0f, kWhite); //Game state text is set to go)
+			TimerStream.str("");
 			if (numBullets <= 0)
 			{
 				numBullets = 0;
@@ -879,7 +899,7 @@ void main()
 								powerDownMusic.play();
 							}
 						}
-						else if (speedPowerUpTimer < 0.0f)
+						else if (speedPowerUpTimer <= 0.0f)
 						{
 							RemoveSpeedPowerUP(myEngine);
 							//speedPowerUpTimer = 5.0f;
@@ -912,7 +932,7 @@ void main()
 								powerDownMusic.play();
 							}
 						}
-						else if (shieldPowerUpTimer < 0.0f)
+						else if (shieldPowerUpTimer <= 0.0f)
 						{
 							RemoveShieldPowerUP(myEngine);
 							//shieldPowerUpTimer = 9.0f;
@@ -934,7 +954,7 @@ void main()
 								powerDownMusic.play();
 							}
 						}
-						else if (bulletPowerUpTimer < 0.0f)
+						else if (bulletPowerUpTimer <= 0.0f)
 						{
 							RemoveBulletPowerUP(myEngine);
 							//bulletPowerUpTimer = 5.0f;
@@ -1345,8 +1365,49 @@ void main()
 		if (gameOver == true && Health == Dead)
 		{
 			endGame->SetPosition(0, 0);
+			int totalScorce = gPlayerScore * (int)TimerFloat;
+			EndScore << "Scorce: " << gPlayerScore << "\n" << "Time: " << TimerFloat << "\n" << "Total Score: " << totalScorce;
+			deathFont->Draw(EndScore.str(), 800.0f, 300.0f, kWhite);
+			preGameText << "Enter you name here!";
+			deathFont->Draw(preGameText.str(), 700.0f, 500.0f, kWhite);
+
+			if (myEngine->AnyKeyHit())
+			{
+				test2 = keyEnter(myEngine);
+				name = name += test2;
+			}
+			if (myEngine->KeyHit(Key_Back))
+			{
+				if (!name.empty())
+				{
+					string newname;
+					for (int i = 0; i < name.size() - 2; i++)
+					{
+						newname += name[i];
+					}
+					if (!newname.empty())
+					{
+						name = newname;
+					}
+				}
+
+			}
+			nameStream << name;
+			NameFont->Draw(nameStream.str(), 700.0f, 600.0f, kWhite);
+
 			if (myEngine->KeyHit(Key_Return))
 			{
+				ptr->setter(name, totalScorce, TimerFloat);
+				leaderboard.push_back(ptr);
+				ptr->LeaderBoardWrite(leaderboard);
+				name = "";
+				nameStream.str("");
+				preGameText.str("");
+				EndScore.str("");
+				TimerFloat = 0.0f;
+				speedPowerUpTimer = 0.0f;
+				shieldPowerUpTimer = 0.0f;
+				bulletPowerUpTimer = 0.0f;
 				currentGameState = MainMenu;
 				playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 				//cameraPos = behind;
@@ -1355,7 +1416,6 @@ void main()
 				gameOver = false;
 				test = false;
 				reset = true;
-
 				for (auto PlayerShots = bullets.begin(); PlayerShots != bullets.end(); PlayerShots++)
 				{
 					PlayerShots->life = 0;
@@ -1380,10 +1440,6 @@ void main()
 				LeftList.clear();
 				resetCracks(myEngine);
 				CreateEnemies(myEngine);
-
-
-
-
 			}
 		}
 
