@@ -88,7 +88,7 @@ void CreateEnemies(I3DEngine*& myEngine)
 	}
 	
 		unique_ptr <CBossEnemyShip> bossTemp(new CBossEnemyShip(myEngine));
-		bossTemp->mShipModel = bossTemp->mShipMesh->CreateModel(0.0f, 30.0f, 690);
+		bossTemp->mShipModel = bossTemp->mShipMesh->CreateModel(MIDDLE_LIST_X, MIDDLE_LIST_Y, MIDDLE_LIST_Z);
 		bossTemp->mShipModel->Scale(5.0f);
 		bossTemp->mShipModel->RotateY(180.0f);
 		BossShipList.push_back(move(bossTemp));
@@ -204,7 +204,7 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, IMesh*& bulletM
 					if (MiddleList.front()->mHealth <= 0)
 					{
 						MiddleList.front()->mDead = Deactivated;
-                    						SpawnPowerUp(random(0, 6), MiddleList.front()->mShipModel, myEngine);
+						SpawnPowerUp(random(0, 6), MiddleList.front()->mShipModel, myEngine);
 					}
 
 					if (MiddleList.front()->mDead == Deactivated)
@@ -292,28 +292,37 @@ void ActivateEnemies(I3DEngine*& myEngine, IMesh*& bulletMesh)
 				else if(moveLeft)
 				{
 					MiddleList.front()->mShipModel->MoveX(40.0f * frameTime);					
-					if (MiddleList.front()->mShipModel->GetX() > 30.0f)
+					if (MiddleList.front()->mShipModel->GetX() > 40.0f)
 					{
 						moveLeft = false;
-					}					
+					}		
+					if (heavyFireRate < 0.0f)
+					{
+						heavyFireRate = MiddleList.front()->mFireRate;
+
+						MiddleList.front()->ShipShooting(myEngine, MiddleList, bulletMesh);
+
+					}
+
 				}
 				else if (!moveLeft)
 				{
 					MiddleList.front()->mShipModel->MoveX(-40.0f * frameTime);
-					if (MiddleList.front()->mShipModel->GetX() < -30.0f)
+					if (MiddleList.front()->mShipModel->GetX() < -40.0f)
 					{
 						moveLeft = true;
 					}
+					if (heavyFireRate < 0.0f)
+					{
+						heavyFireRate = MiddleList.front()->mFireRate;
+
+						MiddleList.front()->ShipShooting(myEngine, MiddleList, bulletMesh);
+
+					}
+
 				}
 
-				if (heavyFireRate < 0.0f)
-				{
-					heavyFireRate = MiddleList.front()->mFireRate;
-					
-					MiddleList.front()->ShipShooting(myEngine, MiddleList, bulletMesh);
-
-				}
-
+				
 			}
 		}
 

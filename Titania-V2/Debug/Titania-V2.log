@@ -1,4 +1,4 @@
-﻿  Spawn.cpp
+﻿  Shooting.cpp
 d:\kclifford1\documents\github\titania-v2\titania-v2\defs.h(45): warning C4101: 'ptr': unreferenced local variable
 d:\kclifford1\documents\github\titania-v2\titania-v2\defs.h(46): warning C4101: 'ptr2': unreferenced local variable
 d:\kclifford1\documents\github\titania-v2\titania-v2\hud.h(7): warning C4091: 'extern ': ignored on left of 'AmountLives' when no variable is declared
@@ -7,23 +7,26 @@ d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(51): warning C4244:
 d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(80): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(107): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(130): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(97): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(98): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(99): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(107): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(108): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(109): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(146): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(177): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(207): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(407): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(420): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(433): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(447): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(460): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(473): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(487): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(500): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(513): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(178): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(238): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(243): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(271): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(295): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(320): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(344): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(368): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(392): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(416): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(467): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(496): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(523): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(550): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(577): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(640): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(668): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(692): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(817): warning C4018: '>': signed/unsigned mismatch
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(834): warning C4018: '>': signed/unsigned mismatch
+d:\kclifford1\documents\github\titania-v2\titania-v2\shooting.cpp(843): warning C4018: '>': signed/unsigned mismatch
   Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
   Copying DLLs & shaders...
