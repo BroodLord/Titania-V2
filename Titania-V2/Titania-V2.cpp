@@ -407,9 +407,9 @@ void main()
 		startingZ = startingZ + 100.0f;
 	}
 
-	towerNine = towerNineMesh->CreateModel(0.0f, 0.2f, -952.0f);
-	towerNine->ScaleY(0.4);
-	towerNine->AttachToParent(floor);
+	//towerNine = towerNineMesh->CreateModel(0.0f, 0.2f, -952.0f);
+	//towerNine->ScaleY(0.4);
+	//towerNine->AttachToParent(floor);
 
 
 	startingZ = -840.0f;
@@ -1171,17 +1171,17 @@ void main()
 					playerCamera->LookAt(topDownCamBlock);
 					if (moveCamTop != true)
 					{
-						//floor->MoveLocalZ(80.0f * frameTime);
+						floor->MoveLocalZ(80.0f * frameTime);
 						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 						{
 							(*it)->mModel->RotateY(50.0f * frameTime);
 							(*it)->mModel->MoveZ(playerShipSpeed);
 						}
 
-						/*if (floorResert >= 200)
+						if (floorResert >= 200)
 						{
 							floor->SetLocalZ(0.0f);
-						}*/
+						}
 						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
 							if (myEngine->KeyHeld(MoveRight))
@@ -1267,7 +1267,7 @@ void main()
 				{
 					if (moveCamBehind != true)
 					{
-						//floor->MoveLocalZ(80.0f * frameTime);
+						floor->MoveLocalZ(80.0f * frameTime);
 
 						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 						{
@@ -1275,10 +1275,10 @@ void main()
 							(*it)->mModel->MoveZ(playerShipSpeed);
 						}
 
-						/*if (floorResert >= 200)
+						if (floorResert >= 200)
 						{
 							floor->SetLocalZ(0.0f);
-						}*/
+						}
 						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
 							if (myEngine->KeyHeld(MoveRight))
