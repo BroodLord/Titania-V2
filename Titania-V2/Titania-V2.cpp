@@ -1380,8 +1380,16 @@ void main()
 
 		if (gameOver == true && Health == Dead)
 		{
+			static int totalScorce = 0;
 			endGame->SetPosition(0, 0);
-			int totalScorce = gPlayerScore;
+			if (gCoop != true)
+			{
+				totalScorce = gPlayerScore;
+			}
+			else
+			{
+				totalScorce = gPlayerScore += gPlayer2Score;
+			}
 			EndScore << "Scorce: " << gPlayerScore << "\n" << "Time: " << TimerFloat << "\n" << "Total Score: " << totalScorce;
 			deathFont->Draw(EndScore.str(), 800.0f, 300.0f, kWhite);
 			preGameText << "Enter you name here!";
@@ -1434,6 +1442,9 @@ void main()
 				preGameText.str("");
 				EndScore.str("");
 				TimerFloat = 0.0f;
+				totalScorce = 0;
+				gPlayer2Score = 0;
+				gPlayerScore = 0;
 				speedPowerUpTimer = 0.0f;
 				shieldPowerUpTimer = 0.0f;
 				bulletPowerUpTimer = 0.0f;
