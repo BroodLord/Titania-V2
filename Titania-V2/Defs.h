@@ -3,69 +3,97 @@
 #include <SFML/Audio.hpp>
 #include <deque>
 #include  <memory>
+#include <string>
+//#include <algorithm>
 #include <fstream>
 
 using namespace tle;
 
+
+
 class LeaderBoardClass
 {
 public:
+	string name;
+	int score;
+	int time;
+
 	void setter(string n, int s, int t)
 	{
 		name = n;
 		score = s;
 		time = t;
 	}
+
 	void LeaderBoardRead(std::vector<LeaderBoardClass*> &leaderboard)
 	{
 		ifstream infile("LeaderBoard.txt");
 		while (infile.is_open())
 		{
+			static int count = 0;
 			LeaderBoardClass* ptr = new LeaderBoardClass();
-			string name = "";
+			string name;
 			int score = 0;
 			int timer = 0;
 			infile >> name;
+			name.erase(remove_if(name.begin(), name.end(), isspace), name.end());
 			infile >> score;
 			infile >> timer;
 			ptr->setter(name, score, timer);
 			leaderboard.push_back(ptr);
+			count++;
 
-			if (infile.end)
+			if (count == 10)
 			{
+				count = 0;
 				infile.close();
 			}
 		}
 	}
 
+	bool comp(LeaderBoardClass* v1, LeaderBoardClass* v2)
+	{
+		return v1->score < v2->score;
+	}
+
+
 	void LeaderBoardWrite(std::vector<LeaderBoardClass*> &leaderboard)
 	{
 		ofstream infile("LeaderBoard.txt");
 		int counter = 0;
-		LeaderBoardClass* ptr;
-		LeaderBoardClass* ptr2;
-		sort(leaderboard.begin(), leaderboard.end());
-		for (auto i = leaderboard.begin(); i != leaderboard.end();)
+		LeaderBoardClass* ptr = new LeaderBoardClass;
+		LeaderBoardClass* ptr2 = new LeaderBoardClass;
+		
+		//std::sort(leaderboard.begin(), leaderboard.end(), comp);
+
+		std::sort(leaderboard.begin(),
+			leaderboard.end(),
+			[](const LeaderBoardClass* lhs, const LeaderBoardClass* rhs)
+		{
+			return lhs->score > rhs->score;
+		});
+
+		for (auto i = leaderboard.begin(); i != leaderboard.end(); ++i)
 		{
 			counter++;
 			string n = (*i)->name;
 			int s = (*i)->score;
 			int t = (*i)->time;
-			infile << n;
-			infile << s;
-			infile << t;
+			char schar = s - '0';
+			char tchar = t - '0';
+
+			infile << n.c_str() << " " << s << " " << t << " " << endl;
 			if (counter == 10)
 			{
 				counter = 0;
+				leaderboard.clear();
+				ptr->LeaderBoardRead(leaderboard);
 				break;
 			}
 		}
 	}
 
-protected:
-	string name;
-	int score;
-	int time;
+	
 };
 
 
