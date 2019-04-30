@@ -52,3 +52,25 @@ void CTriple::Power(I3DEngine*& myEngine, int current)
 	//CurrentlySpawned[0]->mModel->SetPosition(0.0f, 500.0f, 785.0f);
 	//TripleList.push_back(move(CurrentlySpawned[0]));
 }
+
+void CSpeed::PowerP2(I3DEngine*& myEngine, int current)
+{
+	SpeedPowerUPP2(myEngine);
+	mModel->SetPosition(0.0f, 500.0f, 900.0f);
+	//SpeedList.push_back(move(CurrentlySpawned[0]));
+}
+
+void CShield::PowerP2(I3DEngine*& myEngine, int current)
+{
+	ShieldPowerUPP2(myEngine);
+	mModel->SetPosition(0.0f, 500.0f, 900.0f);
+	//ShieldList.push_back(move(CurrentlySpawned[0]));
+}
+
+void CTriple::PowerP2(I3DEngine*& myEngine, int current)
+{
+	BulletPowerUPP2(myEngine);
+	mModel->SetPosition(0.0f, 500.0f, 900.0f);
+	//CurrentlySpawned[0]->mModel->SetPosition(0.0f, 500.0f, 785.0f);
+	//TripleList.push_back(move(CurrentlySpawned[0]));
+}

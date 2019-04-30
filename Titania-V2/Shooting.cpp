@@ -5,7 +5,6 @@
 float matrix[16];
 const float bulletSize = 0.008f;
 const float bulletSpeed = 6.0f;
-extern bool tripleBullet;
 extern int enemyShots;
 extern sf::SoundBuffer shootingBuffer;
 extern sf::Sound shootingSound;
@@ -21,7 +20,8 @@ extern bool moveCamTop;
 extern bool moveCamBehind;
 extern float frameTime;
 
-void Shooting(I3DEngine*& myEngine, IModel* playerShip, IMesh*& bulletMesh, float playerShipSpeed, sf::Sound& shootingSound, EKeyCode shootKey, float& playerFireRate)
+void Shooting(I3DEngine*& myEngine, IModel* playerShip, IMesh*& bulletMesh, 
+	float playerShipSpeed, sf::Sound& shootingSound, EKeyCode shootKey, float& playerFireRate, bool tripleShot)
 {
 	float x = playerShip->GetX() - 0.015f * matrix[0] + 0.01f * matrix[8];
 	float y = playerShip->GetY() - 0.015f * matrix[1] + 0.01f * matrix[9];
@@ -119,7 +119,7 @@ void Shooting(I3DEngine*& myEngine, IModel* playerShip, IMesh*& bulletMesh, floa
 			bullets.push_back(temp2);
 
 
-			if (tripleBullet && numBullets < maxBullets)
+			if (tripleShot && numBullets < maxBullets)
 			{
 				// bullet 3
 				temp3.model = bulletMesh->CreateModel(x, y - 1.0f, z - 4.5f);

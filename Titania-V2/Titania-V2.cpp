@@ -63,6 +63,7 @@ const float kMouseWheelMove = 10.0f; // distance for wheel movement z axis
 const float kMouseRotation = 0.3f; // distance (in degrees) for rotation of the camera
 bool mouseCaptureActive = false; // state of mouse capture
 bool tripleBullet = false;
+bool tripleBulletP2 = false;
 //bool gCoop = false;
 
 float playerFireRate = 0.0f;
@@ -145,6 +146,7 @@ void main()
 	//IMesh* shieldPowerUpMesh;
 	//IMesh* bulletPowerUpMesh;
 	IMesh* sphereMesh;
+	IMesh* sphereMesh2;
 
 	//** Models
 	IModel* playerShip;
@@ -160,7 +162,8 @@ void main()
 	//IModel* speedPowerUp;
 	//IModel* shieldPowerUp;
 	//IModel* bulletPowerUp;
-	IModel* shield;
+	IModel* bubbleShield;
+	IModel* bubbleShield2;
 
 
 	//BulletData bullets[maxBullets];
@@ -184,12 +187,12 @@ void main()
 	float currentX2 = 0.0f;
 	float barrelRollCountDown = 2.0f;
 	float barrelRollCountDown2 = 2.0f;
-	//float shieldPowerUpTimer = 9.0f;
-	//float speedPowerUpTimer = 5.0f;
-	//float bulletPowerUpTimer = 5.0f;
 	float shieldPowerUpTimer = 0.0f;
 	float speedPowerUpTimer = 0.0f;
 	float bulletPowerUpTimer = 0.0f;
+	float shieldPowerUpTimerP2 = 0.0f;
+	float speedPowerUpTimerP2 = 0.0f;
+	float bulletPowerUpTimerP2 = 0.0f;
 	float rollingTimer = 0.4f;
 	float rollingTimer2 = 0.4f;
 	float TimerFloat = 0.0f;
@@ -201,6 +204,10 @@ void main()
 	int shieldDisplay = 0;
 	int bulletDisplay = 0;
 
+	int speedDisplayP2 = 0;
+	int shieldDisplayP2 = 0;
+	int bulletDisplayP2 = 0;
+
 	bool gameOver = false;
 	bool reset = false;
 	bool test = false;
@@ -209,6 +216,11 @@ void main()
 	PowerUpState currentShieldPowerUpState = None;
 	PowerUpState currentBulletPowerUpState = None;
 	PowerUpState currentPowerUpState = None;
+
+	PowerUpState currentSpeedPowerUpStateP2 = None;
+	PowerUpState currentShieldPowerUpStateP2 = None;
+	PowerUpState currentBulletPowerUpStateP2 = None;
+	PowerUpState currentPowerUpStateP2 = None;
 
 	//**** Hud Things ****
 	AmountLives Health = ThreeLives;
@@ -355,9 +367,14 @@ void main()
 	playerShip2 = playerShip2Mesh->CreateModel(-10000.0f, -10030.0f, -100785.0f);
 
 	sphereMesh = myEngine->LoadMesh("Sphere.x");
-	shield = sphereMesh->CreateModel(0.0f, 500.0f, 0.0f);
-	shield->AttachToParent(playerShip);
-	shield->Scale(0.6f);
+	bubbleShield = sphereMesh->CreateModel(0.0f, 500.0f, 0.0f);
+	bubbleShield->AttachToParent(playerShip);
+	bubbleShield->Scale(0.6f);
+
+	sphereMesh2 = myEngine->LoadMesh("Sphere2.x");
+	bubbleShield2 = sphereMesh2->CreateModel(0.0f, 500.0f, 0.0f);
+	bubbleShield2->AttachToParent(playerShip2);
+	bubbleShield2->Scale(0.6f);
 
 	playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 	playerCamera->RotateLocalX(90.0f);
@@ -671,10 +688,10 @@ void main()
 				{
 					if (!moveCamBehind && !moveCamTop)
 					{
-						Shooting(myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound, p1Shooting, playerFireRate);
+						Shooting(myEngine, playerShip, bulletMesh, playerShipSpeed, shootingSound, p1Shooting, playerFireRate, tripleBullet);
 						if (gCoop)
 						{
-							Shooting(myEngine, playerShip2, bulletMesh, playerShipSpeed, shootingSound, p2Shooting, player2FireRate);
+							Shooting(myEngine, playerShip2, bulletMesh, playerShipSpeed, shootingSound, p2Shooting, player2FireRate, tripleBulletP2);
 						}
 						ActivateEnemies(myEngine, bulletMesh);
 						MoveBullet(bulletMesh, playerShip);
@@ -826,22 +843,22 @@ void main()
 					myFont->Draw(powerUpStateTextP2.str(), 1415.0f, 70.0f, kWhite); //Game state text is set to go
 					powerUpStateTextP2.str(""); // Clear myStream
 
-					powerUpStateTextP2 << "    P2 Score: " << gPlayer2Score;
+					//powerUpStateTextP2 << "    P2 Score: " << gPlayer2Score;
 					myFont->Draw(powerUpStateTextP2.str(), 1415.0f, 100.0f, kWhite); //Game state text is set to go
 					powerUpStateTextP2.str(""); // Clear myStream
 
 
-					tripleText << bulletDisplay;
-					myFont->Draw(tripleText.str(), 1668.95f, 155.0f, kWhite); //Game state text is set to go
-					tripleText.str(""); // Clear myStream
+					tripleTextP2 << bulletDisplayP2;
+					myFont->Draw(tripleTextP2.str(), 1603.0f, 155.0f, kWhite); //Game state text is set to go //Game state text is set to go
+					tripleTextP2.str(""); // Clear myStream
+					
+					shieldTextP2 << shieldDisplayP2;
+					myFont->Draw(shieldTextP2.str(), 1538.5f, 155.0f, kWhite);  //Game state text is set to go
+					shieldTextP2.str(""); // Clear myStream
 
-					shieldText << shieldDisplay;
-					myFont->Draw(shieldText.str(), 1603.0f, 155.0f, kWhite); //Game state text is set to go
-					shieldText.str(""); // Clear myStream
-
-					speedText << speedDisplay;
-					myFont->Draw(speedText.str(), 1837.5f, 155.0f, kWhite); //Game state text is set to go
-					speedText.str(""); // Clear myStream
+					speedTextP2 << speedDisplayP2;
+					myFont->Draw(speedTextP2.str(), 1472.25f, 155.0f, kWhite);
+					speedTextP2.str(""); // Clear myStream
 				}
 
 				if (!moveCamBehind && !moveCamTop)
@@ -861,26 +878,59 @@ void main()
 							//CurrentlySpawned.pop_front();
 						}
 
-						i++;
+						
 						if (currentPowerUpState == Speed)
 						{
 							currentSpeedPowerUpState = Speed;
 							speedPowerUpTimer = 5.0f;
+							break;
 						}
 						else if (currentPowerUpState == Shield)
 						{
 							currentShieldPowerUpState = Shield;
 							shieldPowerUpTimer = 9.0f;
+							break;
 						}
 						else if (currentPowerUpState == Bullet)
 						{
 							currentBulletPowerUpState = Bullet;
 							bulletPowerUpTimer = 5.0f;
+							break;
 						}
+
+						//** Power Up Collision **
+						if (sphere2sphere(playerShip2, (*it)->mModel, PLAYERSHIPRADIUS, PLACEMENTPOWERUPRADIUS)) //Collision with powerup
+						{
+							(*it)->mModel->SetY(500.0f);
+							currentPowerUpStateP2 = (*it)->mPowerType;
+							powerUpMusic.play();
+							(*it)->PowerP2(myEngine, i);
+							//Erase(CurrentlySpawned, (*it)->mPowerType);
+							//CurrentlySpawned.pop_front();
+						}
+
+						i++;
+						if (currentPowerUpStateP2 == Speed)
+						{
+							currentSpeedPowerUpStateP2 = Speed;
+							speedPowerUpTimerP2 = 5.0f;
+						}
+						else if (currentPowerUpStateP2 == Shield)
+						{
+							currentShieldPowerUpStateP2 = Shield;
+							shieldPowerUpTimerP2 = 9.0f;
+						}
+						else if (currentPowerUpStateP2 == Bullet)
+						{
+							currentBulletPowerUpStateP2 = Bullet;
+							bulletPowerUpTimerP2 = 5.0f;
+						}
+
+
 					}
 
-
 					currentPowerUpState = None;
+					currentPowerUpStateP2 = None;
 
 					if (currentSpeedPowerUpState == Speed)
 					{
@@ -912,8 +962,8 @@ void main()
 					{
 						shieldDisplay = shieldPowerUpTimer + 1;
 
-						shield->SetY(GLOBAL_Y);
-						shield->RotateLocalY(250.0f * frameTime);
+						bubbleShield->SetY(GLOBAL_Y);
+						bubbleShield->RotateLocalY(250.0f * frameTime);
 						for (auto i = enemybullets.begin(); i != enemybullets.end(); i++)
 						{
 							if (sphere2sphere(playerShip, (*i).model, 8.0f, i->mRadius))
@@ -937,7 +987,7 @@ void main()
 							RemoveShieldPowerUP(myEngine);
 							//shieldPowerUpTimer = 9.0f;
 							shieldDisplay = 0;
-							shield->SetY(500.0f);
+							bubbleShield->SetY(500.0f);
 							currentShieldPowerUpState = None;
 						}
 					}
@@ -961,6 +1011,90 @@ void main()
 							bulletDisplay = 0;
 							currentBulletPowerUpState = None;
 							tripleBullet = false;
+						}
+					}
+
+					// Player 2 *******
+
+					if (currentSpeedPowerUpStateP2 == Speed)
+					{
+						speedDisplayP2 = speedPowerUpTimerP2 + 1;
+						if (speedPowerUpTimerP2 > 0.0f)
+						{
+							playerShipSpeed = 75.0f * frameTime;
+							for (auto bulletIT = bullets.begin(); bulletIT != bullets.end(); bulletIT++)
+							{
+								bulletIT->zVel = bulletIT->zVel + 75.0f * frameTime;
+							}
+
+							speedPowerUpTimerP2 -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (speedPowerUpTimerP2 <= 0.0f)
+						{
+							RemoveSpeedPowerUPP2(myEngine);
+							//speedPowerUpTimer = 5.0f;
+							speedDisplayP2 = 0;
+							currentSpeedPowerUpStateP2 = None;
+						}
+					}
+
+					if (currentShieldPowerUpStateP2 == Shield)
+					{
+						shieldDisplayP2 = shieldPowerUpTimerP2 + 1;
+
+						bubbleShield2->SetY(GLOBAL_Y);
+						bubbleShield2->RotateLocalY(250.0f * frameTime);
+						for (auto i = enemybullets.begin(); i != enemybullets.end(); i++)
+						{
+							if (sphere2sphere(playerShip2, (*i).model, 8.0f, i->mRadius))
+							{
+								bulletMesh->RemoveModel((*i).model);
+								Erase(enemybullets, (*i).model);
+								enemyShots--;
+								break;
+							}
+						}
+						if (shieldPowerUpTimerP2 > 0.0f)
+						{
+							shieldPowerUpTimerP2 -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (shieldPowerUpTimerP2 <= 0.0f)
+						{
+							RemoveShieldPowerUPP2(myEngine);
+							//shieldPowerUpTimer = 9.0f;
+							shieldDisplayP2 = 0;
+							bubbleShield2->SetY(500.0f);
+							currentShieldPowerUpStateP2 = None;
+						}
+					}
+
+					if (currentBulletPowerUpStateP2 == Bullet)
+					{
+						tripleBulletP2 = true;
+						bulletDisplayP2 = bulletPowerUpTimerP2 + 1;
+						if (bulletPowerUpTimerP2 > 0.0f)
+						{
+							bulletPowerUpTimerP2 -= frameTime;
+							if (powerDownMusic.getStatus() == powerDownMusic.Stopped)
+							{
+								powerDownMusic.play();
+							}
+						}
+						else if (bulletPowerUpTimerP2 <= 0.0f)
+						{
+							RemoveBulletPowerUPP2(myEngine);
+							//bulletPowerUpTimer = 5.0f;
+							bulletDisplayP2 = 0;
+							currentBulletPowerUpStateP2 = None;
+							tripleBulletP2 = false;
 						}
 					}
 

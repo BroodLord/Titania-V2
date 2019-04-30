@@ -18,6 +18,7 @@ public:
 	IMesh* mMesh;
 	float mTimer;
 	virtual void Power(I3DEngine*& myEngine, int current) = 0;
+	virtual void PowerP2(I3DEngine*& myEngine, int current) = 0;
 private:
 
 };
@@ -43,6 +44,7 @@ public:
 	}
 	//~CSpeed();
 	void Power(I3DEngine*& myEngine, int current);
+	void PowerP2(I3DEngine*& myEngine, int current);
 private:
 
 };
@@ -65,6 +67,7 @@ public:
 	}
 	//~CShield();
 	void Power(I3DEngine*& myEngine, int current);
+	void PowerP2(I3DEngine*& myEngine, int current);
 private:
 
 };
@@ -89,11 +92,10 @@ public:
 	}
 	//~CTriple();
 	void Power(I3DEngine*& myEngine, int current);
+	void PowerP2(I3DEngine*& myEngine, int current);
 private:
 
 };
-
-
 
 //CTriple::~CTriple()
 //{
