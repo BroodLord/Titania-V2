@@ -20,6 +20,7 @@ float GLOBAL_Y = -40.0f;
 bool moveCamTop = false;
 bool moveCamBehind = false;
 float frameTime = 0.0f;
+bool vic = false;
 
 sf::SoundBuffer shootingBuffer;
 sf::Sound shootingSound;
@@ -226,7 +227,7 @@ void main()
 	AmountLives Health = ThreeLives;
 	RemoveLives loseHealth = Pause;
 
-	AmountLives HealthP2 = ThreeLives;
+	AmountLives HealthP2 = Dead;
 	RemoveLives loseHealthP2 = Pause;
 
 	mainMenuBuffer.loadFromFile("Sound Affects\\mainMusic.wav");
@@ -424,9 +425,9 @@ void main()
 		startingZ = startingZ + 100.0f;
 	}
 
-	towerNine = towerNineMesh->CreateModel(0.0f, 0.2f, -952.0f);
-	towerNine->ScaleY(0.4);
-	towerNine->AttachToParent(floor);
+	//towerNine = towerNineMesh->CreateModel(0.0f, 0.2f, -952.0f);
+	//towerNine->ScaleY(0.4);
+	//towerNine->AttachToParent(floor);
 
 
 	startingZ = -840.0f;
@@ -571,12 +572,17 @@ void main()
 					ISprite* myUI2 = myEngine->CreateSprite("Player2Backdrop.png", 1405.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out for P2
 					SpawnSpritesP2(myEngine);
 					Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kCyan);
+					HealthP2 = ThreeLives;
+					Health = ThreeLives;
+					playerShip->SetPosition(0.0f, GLOBAL_Y, 785.0f);
 				}
 				else
 				{
 					gCoop = false;
 					gCoopText = "(Disabled)";
 					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
+					HealthP2 = Dead;
+					playerShip->SetPosition(0.0f, GLOBAL_Y, 785.0f);
 				}
 
 				
@@ -620,6 +626,12 @@ void main()
 				if (HealthP2 == Dead)
 				{
 					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
+					//HealthP2 = ThreeLivesP2;
+				}
+
+				if (Health == Dead)
+				{
+					playerShip->SetPosition(0.0f, -300000.0f, 785.0f);
 					//HealthP2 = ThreeLivesP2;
 				}
 			}
@@ -700,7 +712,7 @@ void main()
 			}
 
 			
-				if (Health != Dead)
+				if (Health != Dead || HealthP2 != Dead)
 				{
 					if (!moveCamBehind && !moveCamTop)
 					{
@@ -821,7 +833,7 @@ void main()
 				Lives->Draw("Lives:", 70.0f, 23.0f, kGreen);
 				
 
-				if (Health == Dead)
+				if (Health == Dead && HealthP2 == Dead)
 				{
 
 
@@ -1305,17 +1317,17 @@ void main()
 					playerCamera->LookAt(topDownCamBlock);
 					if (moveCamTop != true)
 					{
-						//floor->MoveLocalZ(80.0f * frameTime);
+						floor->MoveLocalZ(80.0f * frameTime);
 						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 						{
 							(*it)->mModel->RotateY(50.0f * frameTime);
 							(*it)->mModel->MoveZ(playerShipSpeed);
 						}
 
-						/*if (floorResert >= 200)
+						if (floorResert >= 200)
 						{
 							floor->SetLocalZ(0.0f);
-						}*/
+						}
 						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
 							if (myEngine->KeyHeld(MoveRight))
@@ -1401,7 +1413,7 @@ void main()
 				{
 					if (moveCamBehind != true)
 					{
-						//floor->MoveLocalZ(80.0f * frameTime);
+						floor->MoveLocalZ(80.0f * frameTime);
 
 						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 						{
@@ -1409,10 +1421,10 @@ void main()
 							(*it)->mModel->MoveZ(playerShipSpeed);
 						}
 
-						/*if (floorResert >= 200)
+						if (floorResert >= 200)
 						{
 							floor->SetLocalZ(0.0f);
-						}*/
+						}
 						if (currentPlayerShipState != RollingLeft && currentPlayerShipState != RollingRight)
 						{
 							if (myEngine->KeyHeld(MoveRight))
@@ -1509,13 +1521,28 @@ void main()
 					}
 				}
 			}
+		
+		if (LeftList.empty() && MiddleList.empty() && RightList.empty()/* && !BossShipList.empty()*/)
+		{
+			gameOver = true;
+			Health = Dead;
+			HealthP2 = Dead;
+			vic = true;
+		}
 		}
 
 
-		if (gameOver == true && Health == Dead)
+		if (gameOver == true && Health == Dead && HealthP2 == Dead)
 		{
 			static int totalScorce = 0;
-			endGame->SetPosition(0, 0);
+			if (vic == false)
+			{
+				endGame->SetPosition(0, 0);
+			}
+			else
+			{
+				backGround->SetPosition(0, 0);
+			}
 			if (gCoop != true)
 			{
 				totalScorce = gPlayerScore;
@@ -1567,6 +1594,21 @@ void main()
 
 			if (myEngine->KeyHit(Key_Return))
 			{
+				if (!RightList.empty())
+				{
+					RightList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
+				}
+				if (!MiddleList.empty())
+				{
+					MiddleList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
+				}
+				if (!LeftList.empty())
+				{
+					LeftList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
+				}
+				RightList.clear();
+				MiddleList.clear();
+				LeftList.clear();
 				nameCounter = 0;
 				ptr->setter(name, totalScorce, TimerFloat);
 				leaderboard.push_back(ptr);
@@ -1586,7 +1628,8 @@ void main()
 				playerCamera->SetLocalPosition(0.0f, 49.0f, 771.0f);
 				//cameraPos = behind;
 				Health = ThreeLives;
-				HealthP2 = ThreeLives;
+				SpawnSprites(myEngine);
+				HealthP2 = Dead;
 				gameOver = false;
 				test = false;
 				reset = true;
@@ -1602,17 +1645,34 @@ void main()
 				{
 					enemyShots->life = 0;
 				}
-				LightShipList.clear();
-				MediumShipList.clear();
-				HeavyShipList.clear();
-				BossShipList.clear();
-				RightList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
-				RightList.clear();
-				MiddleList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
-				MiddleList.clear();
-				LeftList.front()->mShipModel->SetLocalPosition(120.0f, GLOBAL_Y, 700.0f);
-				LeftList.clear();
-				resetCracks(myEngine);
+
+				
+
+				//for (auto reset = DeadList.begin(); reset != DeadList.end(); reset++)
+				//{
+				//	if ((*reset)->mName == "LightShip")
+				//	{
+				//		LightShipList.push_back(move(DeadList.front()));
+				//		DeadList.pop_front();					
+				//	}
+				//	if ((*reset)->mName == "MediumShip")
+				//	{
+				//		MediumShipList.push_back(move(DeadList.front()));
+				//		DeadList.pop_front();
+				//	}
+				//	if ((*reset)->mName == "HeavyShip")
+				//	{
+				//		HeavyShipList.push_back(move(DeadList.front()));
+				//		DeadList.pop_front();
+				//	}
+				//	if ((*reset)->mName == "BossShip")
+				//	{
+				//		BossShipList.push_back(move(DeadList.front()));
+				//		DeadList.pop_front();
+				//	}
+				//}
+
+				//resetCracks(myEngine);
 				CreateEnemies(myEngine);
 			}
 		}

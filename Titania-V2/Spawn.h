@@ -23,6 +23,7 @@ public:
 	float mBulletSize;
 	float mBulletHealth;
 	float mBulletSpeed;
+	float ShipRadius;
 	virtual void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh) = 0;
 private:
 
@@ -40,18 +41,18 @@ class CLightEnemyShip : public CShips
 {
 public:
 	CLightEnemyShip(I3DEngine*& myEngine)
-{
+	{
 		mName = "LightShip";
-	mShipMesh = myEngine->LoadMesh("enemyShip.x");
-	mHealth = 4;
-	mFireRate = 2.0f;
-	mScore = 1;
-	mBulletRadius = 1.0f;
-	mBulletSize = mBulletRadius * 0.6;
-	mBulletHealth = 3.0f;
-	mBulletSpeed = 1.0f;
-
-}
+		mShipMesh = myEngine->LoadMesh("enemyShip.x");
+		mHealth = 4;
+		mFireRate = 2.0f;
+		mScore = 1;
+		mBulletRadius = 1.0f;
+		mBulletSize = mBulletRadius * 0.6;
+		mBulletHealth = 3.0f;
+		mBulletSpeed = 1.0f;
+		ShipRadius = 6.0f;
+	}
 	void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CLightEnemyShip();
 
@@ -79,6 +80,7 @@ public:
 		mBulletSize = mBulletRadius * 0.6;
 		mBulletHealth = 1.0f;
 		mBulletSpeed = 2.0f;
+		ShipRadius = 6.0f;
 	}
 	void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CMediumEnemyShip();
@@ -105,6 +107,7 @@ public:
 		mBulletSize = mBulletRadius * 0.6;
 		mBulletHealth = 5.0f;
 		mBulletSpeed = 1.0f;
+		ShipRadius = 6.0f;
 	}
 	void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
 	//~CHeavyEnemyShip();
@@ -120,13 +123,14 @@ public:
 	{
 		mName = "BossShip";
 		mShipMesh = myEngine->LoadMesh("Boss.x");
-		mHealth = 200;
+		mHealth = 50;
 		mFireRate = 0.5f;
 		mScore = 100;
 		mBulletRadius = 1.0f;
 		mBulletSize = mBulletRadius * 1.0;
 		mBulletHealth = 3.0f;
 		mBulletSpeed = 2.0f;
+		ShipRadius = 20.0f;
 
 	}
 	void ShipShooting(I3DEngine*& myEngine, deque <unique_ptr <CShips>>& ship, IMesh*& bulletMesh);
