@@ -1,85 +1,29 @@
-﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  Defs.cpp
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.h(45): warning C4101: 'ptr': unreferenced local variable
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.h(46): warning C4101: 'ptr2': unreferenced local variable
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(53): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(54): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(55): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(57): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(58): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(59): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(61): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(62): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(63): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.cpp(49): warning C4715: 'keyEnter': not all control paths return a value
-  Compiling...
-  Titania-V2.cpp
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.h(45): warning C4101: 'ptr': unreferenced local variable
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\defs.h(46): warning C4101: 'ptr2': unreferenced local variable
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\hud.h(7): warning C4091: 'extern ': ignored on left of 'AmountLives' when no variable is declared
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\hud.h(8): warning C4091: 'extern ': ignored on left of 'RemoveLives' when no variable is declared
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\spawn.h(50): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\spawn.h(79): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\spawn.h(105): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\spawn.h(127): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(525): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(540): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(573): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(586): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(601): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(602): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(788): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(801): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(805): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(810): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(814): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(818): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(826): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(830): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(835): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(839): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(843): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(887): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(913): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(948): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1215): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1216): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1310): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1311): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1370): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1372): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1384): warning C4018: '<': signed/unsigned mismatch
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1396): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(1400): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(139): warning C4101: 'flameMesh': unreferenced local variable
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(170): warning C4101: 'matrix': unreferenced local variable
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(154): warning C4101: 'floor2': unreferenced local variable
-d:\dkavanagh2\documents\github\titania-v2\titania-v2\titania-v2.cpp(152): warning C4101: 'flame': unreferenced local variable
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Spawn.cpp
-  Shooting.cpp
-  PowerUp.cpp
-  Hud.cpp
-TL-Engine2017Debug.lib(TL-Engine.obj) : warning LNK4099: PDB 'TL-Engine.pdb' was not found with 'TL-Engine2017Debug.lib(TL-Engine.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\TL-Engine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(Errors.obj) : warning LNK4099: PDB 'Common.pdb' was not found with 'TL-Engine2017Debug.lib(Errors.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\Common.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXSprite.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXSprite.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXSceneNode.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXSceneNode.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXModelNode.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXModelNode.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXModel.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXModel.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXMesh.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXMesh.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXLight.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXLight.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXFont.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXFont.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXEngine.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXEngine.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(TLXCamera.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(TLXCamera.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(IrrlichtSceneNode.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(IrrlichtSceneNode.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(IrrlichtModel.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(IrrlichtModel.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(IrrlichtMesh.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(IrrlichtMesh.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(IrrlichtLight.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(IrrlichtLight.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(IrrlichtInput.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(IrrlichtInput.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(IrrlichtFont.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(IrrlichtFont.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(IrrlichtEngine.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(IrrlichtEngine.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-TL-Engine2017Debug.lib(IrrlichtCamera.obj) : warning LNK4099: PDB '3DEngine.pdb' was not found with 'TL-Engine2017Debug.lib(IrrlichtCamera.obj)' or at 'D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\3DEngine.pdb'; linking object as if no debug info
-  Titania-V2.vcxproj -> D:\DKavanagh2\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
+﻿  Spawn.cpp
+d:\kclifford1\documents\github\titania-v2\titania-v2\defs.h(45): warning C4101: 'ptr': unreferenced local variable
+d:\kclifford1\documents\github\titania-v2\titania-v2\defs.h(46): warning C4101: 'ptr2': unreferenced local variable
+d:\kclifford1\documents\github\titania-v2\titania-v2\hud.h(7): warning C4091: 'extern ': ignored on left of 'AmountLives' when no variable is declared
+d:\kclifford1\documents\github\titania-v2\titania-v2\hud.h(8): warning C4091: 'extern ': ignored on left of 'RemoveLives' when no variable is declared
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(80): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(107): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.h(130): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(97): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(98): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(99): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(107): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(108): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(109): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(146): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(177): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(207): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(407): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(420): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(433): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(447): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(460): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(473): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(487): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(500): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\kclifford1\documents\github\titania-v2\titania-v2\spawn.cpp(513): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Titania-V2.vcxproj -> D:\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
   Copying DLLs & shaders...
