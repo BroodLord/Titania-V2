@@ -212,10 +212,14 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, IMesh*& bulletM
 					MiddleList.front()->mHealth = MiddleList.front()->mHealth - 1;
 
 
-					if (MiddleList.front()->mHealth <= 0)
+					if (MiddleList.front()->mHealth <= 0 && MiddleList.front()->mName != "Boss")
+					{						
+						SpawnPowerUp(random(0, 6), MiddleList.front()->mShipModel, myEngine);
+					}
+
+					if (MiddleList.front()->mHealth <= 0 )
 					{
 						MiddleList.front()->mDead = Deactivated;
-						SpawnPowerUp(random(0, 6), MiddleList.front()->mShipModel, myEngine);
 					}
 
 					if (MiddleList.front()->mDead == Deactivated)
