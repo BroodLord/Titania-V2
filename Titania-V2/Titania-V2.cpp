@@ -500,6 +500,7 @@ void main()
 
 		//POWERUPS - DANNY LOOK AT THIS
 		stringstream preGameText;
+		stringstream LeaderBoardText;
 		stringstream TimerStream;
 		stringstream EndScore;
 		stringstream nameStream;
@@ -507,6 +508,7 @@ void main()
 
 		string kPlayText = "Press Enter to Start";
 		string kCoopText = "Press Space to Toggle Coop:";
+		string kLeaderBoard = "Press L to display leaderboard.";
 		string kQuitText = "Press Esc to Quit";
 
 
@@ -521,11 +523,25 @@ void main()
 			menuMusic.setLoop(true);
 			backGround->SetPosition(0, 0);
 			playerCamera->LookAt(topDownCamBlock);
-			preGameText << kPlayText << "\n" << kCoopText << " " << gCoopText << "\n" << kQuitText;
+			preGameText << kPlayText << "\n" << kCoopText << " " << gCoopText << "\n" << kLeaderBoard << "\n" << kQuitText;
 			preGameFont->Draw(preGameText.str(), 400.0f, 300.0f, kWhite); //Game state text is set to go
 			preGameText.str(""); // Clear myStream
 
-			
+			if (myEngine->KeyHeld(Key_L))
+			{
+				float height = 450.0f;
+				for (auto it = leaderboard.begin(); it != leaderboard.end(); it++)
+				{
+					string name = (*it)->name;
+					string score = to_string((*it)->score);
+					string time = to_string((*it)->time);
+					string place = name + " " + score + " " + time;
+					LeaderBoardText << place << endl;
+					preGameFont->Draw(LeaderBoardText.str(), 400.0f, height, kWhite);
+					LeaderBoardText.str("");
+					height += 50.0f;
+				}
+			}
 
 
 			if (myEngine->KeyHit(Key_Space))
@@ -1365,38 +1381,51 @@ void main()
 		if (gameOver == true && Health == Dead)
 		{
 			endGame->SetPosition(0, 0);
-			int totalScorce = gPlayerScore * (int)TimerFloat;
+			int totalScorce = gPlayerScore;
 			EndScore << "Scorce: " << gPlayerScore << "\n" << "Time: " << TimerFloat << "\n" << "Total Score: " << totalScorce;
 			deathFont->Draw(EndScore.str(), 800.0f, 300.0f, kWhite);
 			preGameText << "Enter you name here!";
 			deathFont->Draw(preGameText.str(), 700.0f, 500.0f, kWhite);
 
+			static int nameCounter = 0;
+
 			if (myEngine->AnyKeyHit())
 			{
-				test2 = keyEnter(myEngine);
-				name = name += test2;
+
+					test2 = keyEnter(myEngine);
+					if (nameCounter < 8)
+					{
+						name = name += test2;
+						nameCounter++;
+					}
+
 			}
 			if (myEngine->KeyHit(Key_Back))
 			{
-				if (!name.empty())
+				if (nameCounter > 0)
+				{
+					nameCounter -= 2;
+				}
+				if (nameCounter > 0)
 				{
 					string newname;
 					for (int i = 0; i < name.size() - 2; i++)
 					{
 						newname += name[i];
 					}
-					if (!newname.empty())
-					{
-						name = newname;
-					}
+					name = newname;
 				}
-
+				//else
+				//{
+				//	name = "";
+				//}
 			}
 			nameStream << name;
 			NameFont->Draw(nameStream.str(), 700.0f, 600.0f, kWhite);
 
 			if (myEngine->KeyHit(Key_Return))
 			{
+				nameCounter = 0;
 				ptr->setter(name, totalScorce, TimerFloat);
 				leaderboard.push_back(ptr);
 				ptr->LeaderBoardWrite(leaderboard);
