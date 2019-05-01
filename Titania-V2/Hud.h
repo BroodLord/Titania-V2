@@ -11,7 +11,9 @@ extern enum RemoveLives { RemoveHeart, Pause};
 
 void fullHealth(I3DEngine*& myEngine, AmountLives Health);
 void removeHeart(I3DEngine*& myEngine, AmountLives& Health);
-void resetCracks(I3DEngine*& myEngine);
+void resetCracks(I3DEngine*& myEngine, AmountLives& Health);
+void ResetHealth(I3DEngine*& myEngine, AmountLives Health);
+void ResetHealthP2(I3DEngine*& myEngine, AmountLives Health);
 
 void fullHealthP2(I3DEngine*& myEngine, AmountLives HealthP2);
 void removeHeartP2(I3DEngine*& myEngine, AmountLives& HealthP2);

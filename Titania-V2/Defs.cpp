@@ -101,3 +101,19 @@ CBulletData::~CBulletData()
 //CNormalBullet::~CNormalBullet()
 //{
 //}
+
+
+//void Erase(deque <unique_ptr <CShips>> ship, IModel* newBullet)
+//{
+//	auto p = ship.begin(); // set p to the beginning of the loop
+//	while (p != ship.end()) // while not at the end of the loop
+//	{
+//		if ((*p)->model == newBullet)
+//		{
+//			bullets.erase(p);
+//			break;
+//		}
+//		p++;
+//
+//	}
+//}

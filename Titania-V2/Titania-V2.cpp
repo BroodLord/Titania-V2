@@ -122,7 +122,6 @@ void main()
 	// Create a 3D engine (using TLX engine here) and open a window for it
 	I3DEngine* myEngine = New3DEngine(kTLX);
 	myEngine->StartFullscreen(1920, 1080);
-
 	// Add default folder for meshes and other media
 	myEngine->AddMediaFolder(".\\Media");
 	//myEngine->AddMediaFolder("C:\\Users\\danny\\Desktop\\Titania-V2\\Titania-V2\\Media");
@@ -165,7 +164,6 @@ void main()
 	//IModel* bulletPowerUp;
 	IModel* bubbleShield;
 	IModel* bubbleShield2;
-
 
 	//BulletData bullets[maxBullets];
 
@@ -230,6 +228,8 @@ void main()
 	AmountLives HealthP2 = Dead;
 	RemoveLives loseHealthP2 = Pause;
 
+	
+
 	mainMenuBuffer.loadFromFile("Sound Affects\\mainMusic.wav");
 	menuMusic.setBuffer(mainMenuBuffer);
 	menuMusic.setVolume(30.0f);
@@ -255,9 +255,11 @@ void main()
 
 
 	IFont* Lives = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
+	IFont* LivesP2 = myEngine->LoadFont("Arial", 28); //Loading in a font to use in text strings
 
 	ISprite* backGround = myEngine->CreateSprite("background.jpg", 0.0f, 0.0f); //Simple box used as UI to make text stand out
 	ISprite* endGame = myEngine->CreateSprite("gameover.png", 1000.f, 10000.f);
+	ISprite* myUI2 = myEngine->CreateSprite("Player2Backdrop.png", 1405.0f, -15.0f, 1.0f); //Simple box used as UI to make text stand out for P2;
 
 	IFont* myFont = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
 	IFont* Timer = myEngine->LoadFont("Arial", 36); //Loading in a font to use in text strings
@@ -352,6 +354,7 @@ void main()
 
 	topDownCamBlock->Scale(0.01f);
 
+	
 
 	//powerupthing = myEngine->LoadMesh("PowerUpMiddle.x");
 	//cubetest = powerupthing->CreateModel(0.0f, 0.0f, 0.0f);
@@ -488,11 +491,16 @@ void main()
 	//NoPowerUP(myEngine);
 	SpawnSprites(myEngine);
 
+	fullHealth(myEngine, Health);
+	fullHealthP2(myEngine, HealthP2);
+	SpawnSpritesP2(myEngine);
+	NoPowerUPP2(myEngine);
+	
+
 	// The main game loop, repeat until engine is stopped
 	myEngine->Timer();
 	while (myEngine->IsRunning())
-	{
-		myEngine->DrawScene();
+	{		myEngine->DrawScene();
 		currentX = playerShip->GetLocalX();
 		currentX2 = playerShip2->GetLocalX();
 		frameTime = myEngine->Timer();
@@ -569,15 +577,17 @@ void main()
 					gCoop = true;
 					gCoopText = "(Enabled)";
 					playerShip2->SetPosition(0.0f, GLOBAL_Y, 785.0f);
-					ISprite* myUI2 = myEngine->CreateSprite("Player2Backdrop.png", 1405.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out for P2
+					myUI2 = myEngine->CreateSprite("Player2Backdrop.png", 1405.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out for P2
 					SpawnSpritesP2(myEngine);
-					Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kCyan);
+					//Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kCyan);
 					HealthP2 = ThreeLives;
 					Health = ThreeLives;
 					playerShip->SetPosition(0.0f, GLOBAL_Y, 785.0f);
 				}
 				else
 				{
+					NoPowerUPP2(myEngine);
+					myUI2->SetZ(1.0f);
 					gCoop = false;
 					gCoopText = "(Disabled)";
 					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
@@ -593,11 +603,12 @@ void main()
 			{
 				backGround->SetPosition(100000, 100000);
 				currentGameState = Play;
-				fullHealth(myEngine, Health);
+				ResetHealth(myEngine, Health);
 				ISprite* myUI = myEngine->CreateSprite("backdrop2.png", -30.0f, -15.0f, 0.9f); //Simple box used as UI to make text stand out
 				if (gCoop == true)
 				{
-					fullHealthP2(myEngine, HealthP2);
+
+					ResetHealthP2(myEngine, HealthP2);
 				}
 
 			}
@@ -622,7 +633,7 @@ void main()
 
 			if (gCoop)
 			{
-				Lives->Draw("P2 Lives:", 1480.0f, 23.0f, kGreen);
+				LivesP2->Draw("P2 Lives:", 1480.0f, 23.0f, kGreen);
 				if (HealthP2 == Dead)
 				{
 					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
@@ -635,6 +646,7 @@ void main()
 					//HealthP2 = ThreeLivesP2;
 				}
 			}
+			
 
 
 			if (test == false)
@@ -815,13 +827,6 @@ void main()
 				}
 
 				//myEngine->StartMouseCapture();
-
-				if (myEngine->KeyHit(Key_L))
-				{
-					RightList.clear();
-					MiddleList.clear();
-					LeftList.clear();
-				}
 
 
 				if (battleMusic.getStatus() == battleMusic.Stopped)
@@ -1186,25 +1191,27 @@ void main()
 								currentPlayerShipState = RollingLeft;
 							}
 						}
-
-						if (currentPlayerShipState == RollingRight)
+						if (barrelRollColdDown == false)
 						{
-							rollingTimer -= frameTime;
-							if (rollingTimer > 0)
+							if (currentPlayerShipState == RollingRight)
 							{
-								playerShip->RotateZ(900.0f * frameTime);
-								playerShip->MoveX(-playerShipSpeed);
-							}
-							if (rollingTimer <= 0)
-							{
-								rollingTimer = 0.4f;
-								currentPlayerShipState = Normal;
-								barrelRollColdDown = true;
-								playerShip->ResetOrientation();
-								//player invunerable
+								rollingTimer -= frameTime;
+								if (rollingTimer > 0)
+								{
+									playerShip->RotateZ(900.0f * frameTime);
+									playerShip->MoveX(-playerShipSpeed);
+								}
+								if (rollingTimer <= 0)
+								{
+									rollingTimer = 0.4f;
+									currentPlayerShipState = Normal;
+									barrelRollColdDown = true;
+									playerShip->ResetOrientation();
+									//player invunerable
+								}
 							}
 						}
-						if (barrelRollColdDown2 == false)
+						if (barrelRollColdDown == false)
 						{
 							if (currentPlayerShipState == RollingLeft)
 							{
@@ -1240,39 +1247,44 @@ void main()
 								}
 							}
 
-							if (currentPlayerShipState2 == RollingRight)
+							if (barrelRollColdDown2 == false)
 							{
-								rollingTimer2 -= frameTime;
-								if (rollingTimer2 > 0)
+								if (currentPlayerShipState2 == RollingRight)
 								{
-									playerShip2->RotateZ(900.0f * frameTime);
-									playerShip2->MoveX(-playerShipSpeed);
-								}
-								if (rollingTimer2 <= 0)
-								{
-									rollingTimer2 = 0.4f;
-									currentPlayerShipState2 = Normal;
-									barrelRollColdDown2 = true;
-									playerShip2->ResetOrientation();
-									//player invunerable
+									rollingTimer2 -= frameTime;
+									if (rollingTimer2 > 0)
+									{
+										playerShip2->RotateZ(900.0f * frameTime);
+										playerShip2->MoveX(-playerShipSpeed);
+									}
+									if (rollingTimer2 < 0)
+									{
+										rollingTimer2 = 0.4f;
+										currentPlayerShipState2 = Normal;
+										barrelRollColdDown2 = true;
+										playerShip2->ResetOrientation();
+										//player invunerable
+									}
 								}
 							}
-
-							if (currentPlayerShipState2 == RollingLeft)
+							if (barrelRollColdDown2 == false)
 							{
-								rollingTimer2 -= frameTime;
-								if (rollingTimer2 > 0)
+								if (currentPlayerShipState2 == RollingLeft)
 								{
-									playerShip2->RotateZ(-900.0f * frameTime);
-									playerShip2->MoveX(50.0f * frameTime);
-								}
-								if (rollingTimer2 <= 0)
-								{
-									rollingTimer2 = 0.4f;
-									currentPlayerShipState2 = Normal;
-									barrelRollColdDown2 = true;
-									playerShip->ResetOrientation();
-									//player invunerable
+									rollingTimer2 -= frameTime;
+									if (rollingTimer2 > 0)
+									{
+										playerShip2->RotateZ(-900.0f * frameTime);
+										playerShip2->MoveX(50.0f * frameTime);
+									}
+									if (rollingTimer2 <= 0)
+									{
+										rollingTimer2 = 0.4f;
+										currentPlayerShipState2 = Normal;
+										barrelRollColdDown2 = true;
+										playerShip->ResetOrientation();
+										//player invunerable
+									}
 								}
 							}
 						}
@@ -1545,11 +1557,11 @@ void main()
 			}
 			if (gCoop != true)
 			{
-				totalScorce = gPlayerScore;
+				totalScorce = gPlayerScore * (int)TimerFloat;
 			}
 			else
 			{
-				totalScorce = gPlayerScore += gPlayer2Score;
+				totalScorce = gPlayerScore += gPlayer2Score * (int)TimerFloat;
 			}
 			EndScore << "Scorce: " << gPlayerScore << "\n" << "Time: " << TimerFloat << "\n" << "Total Score: " << totalScorce;
 			deathFont->Draw(EndScore.str(), 800.0f, 300.0f, kWhite);
@@ -1609,7 +1621,10 @@ void main()
 				RightList.clear();
 				MiddleList.clear();
 				LeftList.clear();
+				BossShipList.clear();
 				nameCounter = 0;
+				gCoop = false;
+				gCoopText = "(Disabled)";
 				ptr->setter(name, totalScorce, TimerFloat);
 				leaderboard.push_back(ptr);
 				ptr->LeaderBoardWrite(leaderboard);
@@ -1633,6 +1648,14 @@ void main()
 				gameOver = false;
 				test = false;
 				reset = true;
+				playerShip->SetPosition(0.0f, GLOBAL_Y, 785.0f);
+				if (!gCoop)
+				{
+					playerShip2->SetPosition(0.0f, -300000.0f, 785.0f);
+					NoPowerUPP2(myEngine);
+					myUI2->SetZ(1.0f);
+				}
+
 				for (auto PlayerShots = bullets.begin(); PlayerShots != bullets.end(); PlayerShots++)
 				{
 					PlayerShots->life = 0;
@@ -1653,26 +1676,28 @@ void main()
 				//	if ((*reset)->mName == "LightShip")
 				//	{
 				//		LightShipList.push_back(move(DeadList.front()));
-				//		DeadList.pop_front();					
+				//		//DeadList.pop_front();					
 				//	}
 				//	if ((*reset)->mName == "MediumShip")
 				//	{
-				//		MediumShipList.push_back(move(DeadList.front()));
-				//		DeadList.pop_front();
+				//		MediumShipList.push_back(move((*reset)));
+				//		//DeadList.pop_front();
 				//	}
 				//	if ((*reset)->mName == "HeavyShip")
 				//	{
-				//		HeavyShipList.push_back(move(DeadList.front()));
-				//		DeadList.pop_front();
+				//		HeavyShipList.push_back(move((*reset)));
+				//		//DeadList.pop_front();
 				//	}
 				//	if ((*reset)->mName == "BossShip")
 				//	{
-				//		BossShipList.push_back(move(DeadList.front()));
-				//		DeadList.pop_front();
+				//		BossShipList.push_back(move((*reset)));
+				//		//DeadList.pop_front();
 				//	}
 				//}
 
-				//resetCracks(myEngine);
+				DeadList.clear();
+
+				resetCracks(myEngine, Health);
 				CreateEnemies(myEngine);
 			}
 		}
@@ -1727,3 +1752,5 @@ void main()
 	// Delete the 3D engine now we are finished with it
 	myEngine->Delete();
 }
+
+

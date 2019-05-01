@@ -32,47 +32,57 @@ ISprite* NobulletPupP2;
 
 const float POWER_UP_COORDS = 150.0f;
 
+
+
 void fullHealth(I3DEngine*& myEngine, AmountLives Health)
 {
 	if (Health == ThreeLives)
 	{
 		firstHeart = myEngine->CreateSprite("Heart2.png", 140.0f, 25.0f);
 		secondHeart = myEngine->CreateSprite("Heart2.png", 170.0f, 25.0f);
-		thirdHeart = myEngine->CreateSprite("Heart2.png", 200.0f, 25.0f);		
+		thirdHeart = myEngine->CreateSprite("Heart2.png", 200.0f, 25.0f);
 	}
+
+	ScreenCrack1 = myEngine->CreateSprite("smallGlass.png", -100.0f, -100.0f, 1.0f);
+	ScreenCrack3 = myEngine->CreateSprite("smallGlass2.png", 1700.0f, 0.0f, 1.0f);
+	ScreenCrack2 = myEngine->CreateSprite("Crack3.png", -300.0f, 700.0f, 1.0f);
+	ScreenCrack4 = myEngine->CreateSprite("Crack3.png", 500.0f, -900.0f, 1.0f);
+	ScreenCrack5 = myEngine->CreateSprite("Crack5.png", 1000.0f, 700.0f, 1.0f);
+
 }
 
-void resetCracks(I3DEngine*& myEngine)
+void resetCracks(I3DEngine*& myEngine, AmountLives& Health)
 {
-
-	myEngine->RemoveSprite(ScreenCrack1);
-	myEngine->RemoveSprite(ScreenCrack2);
-	myEngine->RemoveSprite(ScreenCrack3);
-	myEngine->RemoveSprite(ScreenCrack4);
-	myEngine->RemoveSprite(ScreenCrack5);
+	
+		ScreenCrack1->SetZ(1.0f);
+		ScreenCrack2->SetZ(1.0f);
+		ScreenCrack3->SetZ(1.0f);
+		ScreenCrack4->SetZ(1.0f);
+		ScreenCrack5->SetZ(1.0f);
+	
 }
 
 void removeHeart(I3DEngine*& myEngine, AmountLives& Health)
 {
 	if (Health == ThreeLives)
 	{
-		myEngine->RemoveSprite(thirdHeart);
+		thirdHeart->SetZ(1.0f);
 		Health = TwoLives;
-		ScreenCrack1 = myEngine->CreateSprite("smallGlass.png", -100.0f, -100.0f);
-		ScreenCrack3 = myEngine->CreateSprite("smallGlass2.png", 1700.0f, 0.0f);
+		ScreenCrack1->SetZ(0.6f);
+		ScreenCrack3->SetZ(0.6f);
 	}
 	else if (Health == TwoLives)
 	{
-		myEngine->RemoveSprite(secondHeart);
+		secondHeart->SetZ(1.0f);
 		Health = OneLife;
-		
-		ScreenCrack2 = myEngine->CreateSprite("Crack3.png", -300.0f, 700.0f);
-		ScreenCrack4 = myEngine->CreateSprite("Crack3.png", 500.0f, -900.0f);
-		ScreenCrack5 = myEngine->CreateSprite("Crack5.png", 1000.0f, 700.0f);
+
+		ScreenCrack2->SetZ(0.6f);
+		ScreenCrack4->SetZ(0.6f);
+		ScreenCrack5->SetZ(0.6f);
 	}
 	else if (Health == OneLife)
 	{
-		myEngine->RemoveSprite(firstHeart);
+		firstHeart->SetZ(1.0f);
 		Health = Dead;
 	}
 }
@@ -109,7 +119,7 @@ void RemoveBulletPowerUP(I3DEngine*& myEngine)
 
 void NoPowerUP(I3DEngine*& myEngine)
 {
-	
+
 }
 
 void ShieldPowerUP(I3DEngine*& myEngine)
@@ -126,35 +136,30 @@ void RemoveShieldPowerUP(I3DEngine*& myEngine)
 
 void fullHealthP2(I3DEngine*& myEngine, AmountLives HealthP2)
 {
-	if (HealthP2 == ThreeLives)
-	{
+	
 		firstHeartP2 = myEngine->CreateSprite("Heart2.png", 1600.0f, 25.0f);
 		secondHeartP2 = myEngine->CreateSprite("Heart2.png", 1630.0f, 25.0f);
 		thirdHeartP2 = myEngine->CreateSprite("Heart2.png", 1660.0f, 25.0f);
-	}
+	
 }
 
 void removeHeartP2(I3DEngine*& myEngine, AmountLives& HealthP2)
 {
 	if (HealthP2 == ThreeLives)
 	{
-		myEngine->RemoveSprite(thirdHeartP2);
+		thirdHeartP2->SetZ(1.0f);
 		HealthP2 = TwoLives;
-		ScreenCrack1 = myEngine->CreateSprite("smallGlass.png", -100.0f, -100.0f);
-		ScreenCrack3 = myEngine->CreateSprite("smallGlass2.png", 1700.0f, 0.0f);
 	}
 	else if (HealthP2 == TwoLives)
 	{
-		myEngine->RemoveSprite(secondHeartP2);
+		secondHeartP2->SetZ(1.0f);
+		
 		HealthP2 = OneLife;
-
-		ScreenCrack2 = myEngine->CreateSprite("Crack3.png", -300.0f, 700.0f);
-		ScreenCrack4 = myEngine->CreateSprite("Crack3.png", 500.0f, -900.0f);
-		ScreenCrack4 = myEngine->CreateSprite("Crack5.png", 1000.0f, 700.0f);
 	}
 	else if (HealthP2 == OneLife)
 	{
-		myEngine->RemoveSprite(firstHeartP2);
+		firstHeartP2->SetZ(1.0f);
+		
 		HealthP2 = Dead;
 	}
 }
@@ -191,7 +196,12 @@ void RemoveBulletPowerUPP2(I3DEngine*& myEngine)
 
 void NoPowerUPP2(I3DEngine*& myEngine)
 {
-
+	NoshieldPupP2->SetZ(1.0f);
+	NobulletPupP2->SetZ(1.0f);
+	NospeedPupP2->SetZ(1.0f);
+	firstHeartP2->SetZ(1.0f);
+	secondHeartP2->SetZ(1.0f);
+	thirdHeartP2->SetZ(1.0f);
 }
 
 void ShieldPowerUPP2(I3DEngine*& myEngine)
@@ -202,4 +212,18 @@ void ShieldPowerUPP2(I3DEngine*& myEngine)
 void RemoveShieldPowerUPP2(I3DEngine*& myEngine)
 {
 	shieldPupP2->SetZ(1.0f);
+}
+
+void ResetHealth(I3DEngine*& myEngine, AmountLives Health)
+{
+	firstHeart->SetZ(0.7f);
+	secondHeart->SetZ(0.7f);
+	thirdHeart->SetZ(0.7f);
+}
+
+void ResetHealthP2(I3DEngine*& myEngine, AmountLives Health)
+{
+	firstHeartP2->SetZ(0.7f);
+	secondHeartP2->SetZ(0.7f);
+	thirdHeartP2->SetZ(0.7f);
 }

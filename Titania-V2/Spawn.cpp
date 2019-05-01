@@ -212,10 +212,14 @@ void SpawnEnemies(int& numBullets, deque <CBulletData>& bullets, IMesh*& bulletM
 					MiddleList.front()->mHealth = MiddleList.front()->mHealth - 1;
 
 
-					if (MiddleList.front()->mHealth <= 0)
+					if (MiddleList.front()->mHealth <= 0 && MiddleList.front()->mName != "Boss")
+					{						
+						SpawnPowerUp(random(0, 6), MiddleList.front()->mShipModel, myEngine);
+					}
+
+					if (MiddleList.front()->mHealth <= 0 )
 					{
 						MiddleList.front()->mDead = Deactivated;
-						SpawnPowerUp(random(0, 6), MiddleList.front()->mShipModel, myEngine);
 					}
 
 					if (MiddleList.front()->mDead == Deactivated)
@@ -365,7 +369,7 @@ void ActivateEnemies(I3DEngine*& myEngine, IMesh*& bulletMesh)
 	if (RightList.empty() == true && MiddleList.empty() == true && LeftList.empty() == true && !BossShipList.empty())
 	{
 
-		if (LeftList.empty() && MiddleList.empty() && RightList.empty())
+		if (LeftList.empty() && MiddleList.empty() && RightList.empty() && !BossShipList.empty())
 		{
 			BossShipList.front()->mShipModel->RotateLocalY(180.0f);
 			MiddleList.push_back(move(BossShipList.front()));
