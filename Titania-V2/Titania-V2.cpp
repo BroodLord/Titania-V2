@@ -147,6 +147,7 @@ void main()
 	//IMesh* bulletPowerUpMesh;
 	IMesh* sphereMesh;
 	IMesh* sphereMesh2;
+	IMesh* pedShipMesh;
 
 	//** Models
 	IModel* playerShip;
@@ -164,7 +165,11 @@ void main()
 	//IModel* bulletPowerUp;
 	IModel* bubbleShield;
 	IModel* bubbleShield2;
+	IModel* pedShip;
+	IModel* pedShip2;
 
+	IModel* pedShip3;
+	IModel* pedShip4;
 	//BulletData bullets[maxBullets];
 
 	//BulletData bullets2[maxBullets];
@@ -195,6 +200,7 @@ void main()
 	float rollingTimer = 0.4f;
 	float rollingTimer2 = 0.4f;
 	float TimerFloat = 0.0f;
+	float pedShipTimer = 15.0f;
 
 	string name;
     string test2;
@@ -286,6 +292,14 @@ void main()
 	/*floor2 = floorMesh->CreateModel(0.0f, -130.0f, -2000.0f);
 	floor2->SetSkin("pavement.png");*/
 
+	pedShipMesh = myEngine->LoadMesh("enemyShip.x");
+	pedShip = pedShipMesh->CreateModel(-20.0f, -120.0f, -650.0f);
+	pedShip->RotateY(180.0f);
+	pedShip2 = pedShipMesh->CreateModel(-5.0f, -120.0f, -660.0f);
+	pedShip2->RotateY(180.0f);
+
+	pedShip3 = pedShipMesh->CreateModel(10.0f, -120.0f, 1360.0f);
+	pedShip4 = pedShipMesh->CreateModel(25.0f, -120.0f, 1350.0f);
 
 	topDownCamBlock = camBlockMesh->CreateModel(0.0f, GLOBAL_Y -5.0f, 750.0f);
 
@@ -534,7 +548,7 @@ void main()
 
 		string kPlayText = "Press Enter to Start";
 		string kCoopText = "Press Space to Toggle Coop:";
-		string kLeaderBoard = "Press L to display leaderboard.";
+		string kLeaderBoard = "Hold L to Display Leaderboard";
 		string kQuitText = "Press Esc to Quit";
 
 
@@ -561,7 +575,7 @@ void main()
 					string name = (*it)->name;
 					string score = to_string((*it)->score);
 					string time = to_string((*it)->time);
-					string place = name + " " + score + " " + time;
+					string place = name + " Total Score: " + score + " Time: " + time;
 					LeaderBoardText << place << endl;
 					preGameFont->Draw(LeaderBoardText.str(), 400.0f, height, kWhite);
 					LeaderBoardText.str("");
@@ -618,6 +632,17 @@ void main()
 
 		if (currentGameState == Play && gameOver == false)
 		{
+			pedShipTimer -= frameTime;
+			if (pedShipTimer < 0.0f)
+			{
+				pedShipTimer = 15.0f;
+				pedShip->SetPosition(-20.0f, -120.0f, -850.0f);
+				pedShip2->SetPosition(-5.0f, -120.0f, -860.0f);
+
+				pedShip3->SetPosition(10.0f, -120.0f, 1360.0f);
+				pedShip4->SetPosition(25.0f, -120.0f, 1350.0f);
+			}
+
 			TimerFloat = TimerFloat += frameTime;
 			TimerStream << "Timer: " << TimerFloat;
 			Timer->Draw(TimerStream.str(), 230.0f, 70.0f, kWhite); //Game state text is set to go)
@@ -1329,6 +1354,12 @@ void main()
 					playerCamera->LookAt(topDownCamBlock);
 					if (moveCamTop != true)
 					{
+						pedShip->MoveLocalZ(-160.0f * frameTime);
+						pedShip2->MoveLocalZ(-180.0f * frameTime);
+
+						pedShip3->MoveLocalZ(-100.0f * frameTime);
+						pedShip4->MoveLocalZ(-120.0f * frameTime);
+
 						floor->MoveLocalZ(80.0f * frameTime);
 						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
 						{
@@ -1425,6 +1456,12 @@ void main()
 				{
 					if (moveCamBehind != true)
 					{
+						pedShip->MoveLocalZ(-160.0f * frameTime);
+						pedShip2->MoveLocalZ(-180.0f * frameTime);
+
+						pedShip3->MoveLocalZ(-100.0f * frameTime);
+						pedShip4->MoveLocalZ(-120.0f * frameTime);
+
 						floor->MoveLocalZ(80.0f * frameTime);
 
 						for (auto it = CurrentlySpawned.begin(); it != CurrentlySpawned.end(); it++)
@@ -1546,7 +1583,7 @@ void main()
 
 		if (gameOver == true && Health == Dead && HealthP2 == Dead)
 		{
-			static int totalScorce = 0;
+			static int totalScore = 0;
 			if (vic == false)
 			{
 				endGame->SetPosition(0, 0);
@@ -1557,13 +1594,13 @@ void main()
 			}
 			if (gCoop != true)
 			{
-				totalScorce = gPlayerScore * (int)TimerFloat;
+				totalScore = gPlayerScore * (int)TimerFloat;
 			}
 			else
 			{
-				totalScorce = gPlayerScore += gPlayer2Score * (int)TimerFloat;
+				totalScore = gPlayerScore += gPlayer2Score * (int)TimerFloat;
 			}
-			EndScore << "Scorce: " << gPlayerScore << "\n" << "Time: " << TimerFloat << "\n" << "Total Score: " << totalScorce;
+			EndScore << "Score: " << gPlayerScore << "\n" << "Time: " << TimerFloat << "\n" << "Total Score: " << totalScore;
 			deathFont->Draw(EndScore.str(), 800.0f, 300.0f, kWhite);
 			preGameText << "Enter you name here!";
 			deathFont->Draw(preGameText.str(), 700.0f, 500.0f, kWhite);
@@ -1625,7 +1662,7 @@ void main()
 				nameCounter = 0;
 				gCoop = false;
 				gCoopText = "(Disabled)";
-				ptr->setter(name, totalScorce, TimerFloat);
+				ptr->setter(name, totalScore, TimerFloat);
 				leaderboard.push_back(ptr);
 				ptr->LeaderBoardWrite(leaderboard);
 				name = "";
@@ -1633,7 +1670,7 @@ void main()
 				preGameText.str("");
 				EndScore.str("");
 				TimerFloat = 0.0f;
-				totalScorce = 0;
+				totalScore = 0;
 				gPlayer2Score = 0;
 				gPlayerScore = 0;
 				speedPowerUpTimer = 0.0f;
