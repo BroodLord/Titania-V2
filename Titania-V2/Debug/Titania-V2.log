@@ -1,45 +1,153 @@
-﻿  Titania-V2.cpp
-d:\pskidmore\documents\github\titania-v2\titania-v2\hud.h(7): warning C4091: 'extern ': ignored on left of 'AmountLives' when no variable is declared
-d:\pskidmore\documents\github\titania-v2\titania-v2\hud.h(8): warning C4091: 'extern ': ignored on left of 'RemoveLives' when no variable is declared
-d:\pskidmore\documents\github\titania-v2\titania-v2\spawn.h(51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\spawn.h(80): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\spawn.h(107): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\spawn.h(130): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(567): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(580): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(648): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(661): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(683): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(684): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(863): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(876): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(880): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(885): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(889): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(893): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(901): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(905): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(910): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(914): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(918): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(995): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1021): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1056): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1079): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1105): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1140): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1420): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1421): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1521): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1522): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1604): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1606): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1630): warning C4018: '<': signed/unsigned mismatch
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1642): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(1665): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(140): warning C4101: 'flameMesh': unreferenced local variable
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(177): warning C4101: 'matrix': unreferenced local variable
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(157): warning C4101: 'floor2': unreferenced local variable
-d:\pskidmore\documents\github\titania-v2\titania-v2\titania-v2.cpp(155): warning C4101: 'flame': unreferenced local variable
-  Titania-V2.vcxproj -> D:\PSkidmore\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2Debug.exe
-  Titania-V2.vcxproj -> D:\PSkidmore\Documents\GitHub\Titania-V2\Titania-V2\\Titania-V2.pdb (Full PDB)
+﻿  cl : Command line warning D9035 : option 'Gm' has been deprecated and will be removed in a future release
+  Titania-V2.cpp
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Hud.h(7,63): warning C4091:  'extern ': ignored on left of 'AmountLives' when no variable is declared
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Hud.h(8,46): warning C4091:  'extern ': ignored on left of 'RemoveLives' when no variable is declared
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Spawn.h(51,31): warning C4244:  '=': conversion from 'double' to 'float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Spawn.h(80,31): warning C4244:  '=': conversion from 'double' to 'float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Spawn.h(107,31): warning C4244:  '=': conversion from 'double' to 'float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Spawn.h(130,31): warning C4244:  '=': conversion from 'double' to 'float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(239,2): error C2065:  'mainMenuBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(240,2): error C2065:  'menuMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(240,22): error C2065:  'mainMenuBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(241,2): error C2065:  'menuMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(242,2): error C2065:  'menuMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(244,2): error C2065:  'battleBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(245,2): error C2065:  'battleMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(245,24): error C2065:  'battleBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(246,2): error C2065:  'battleMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(247,2): error C2065:  'battleMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(249,2): error C2065:  'shootingBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(250,2): error C2065:  'shootingSound': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(250,26): error C2065:  'shootingBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(251,2): error C2065:  'shootingSound': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(252,2): error C2065:  'shootingSound': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(254,2): error C2065:  'powerUpBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(255,2): error C2065:  'powerUpMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(255,25): error C2065:  'powerUpBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(256,2): error C2065:  'powerUpMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(258,2): error C2065:  'powerDownBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(259,2): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(259,27): error C2065:  'powerDownBuffer': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(260,2): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(558,4): error C2065:  'battleMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(559,8): error C2065:  'menuMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(559,33): error C2065:  'menuMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(561,5): error C2065:  'menuMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(563,4): error C2065:  'menuMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(567,49): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(567,41): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(580,55): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(580,47): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(648,43): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(648,35): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(661,41): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(661,32): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(683,37): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(684,35): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(756,67): error C2065:  'shootingSound': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(759,69): error C2065:  'shootingSound': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(844,5): error C2065:  'menuMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(857,9): error C2065:  'battleMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(857,36): error C2065:  'battleMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(859,6): error C2065:  'battleMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(863,34): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(863,27): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(876,49): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(876,42): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(880,49): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(880,42): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(885,45): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(885,36): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(889,44): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(889,36): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(893,42): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(893,35): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(901,54): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(901,45): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(905,54): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(905,45): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(910,48): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(910,39): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(914,48): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(914,39): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(918,48): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(918,38): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(933,8): error C2065:  'powerUpMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(964,8): error C2065:  'powerUpMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(995,40): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1005,12): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1005,42): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1007,9): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1021,42): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1038,12): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1038,42): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1040,9): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1056,42): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1060,12): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1060,42): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1062,9): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1079,44): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1089,12): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1089,42): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1091,9): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1105,46): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1122,12): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1122,42): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1124,9): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1140,46): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1144,12): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1144,42): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1146,9): error C2065:  'powerDownMusic': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1420,38): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1421,36): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1521,37): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1522,37): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1604,44): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1604,36): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1606,47): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1606,39): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1630,24): warning C4018:  '<': signed/unsigned mismatch
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1642,45): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1642,37): warning C4244:  'argument': conversion from 'float' to 'const int', possible loss of data
+  Shooting.cpp
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Titania-V2.cpp(1665,35): warning C4244:  'argument': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Hud.h(7,63): warning C4091:  'extern ': ignored on left of 'AmountLives' when no variable is declared
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Hud.h(8,46): warning C4091:  'extern ': ignored on left of 'RemoveLives' when no variable is declared
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Spawn.h(51,31): warning C4244:  '=': conversion from 'double' to 'float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Spawn.h(80,31): warning C4244:  '=': conversion from 'double' to 'float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Spawn.h(107,31): warning C4244:  '=': conversion from 'double' to 'float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Spawn.h(130,31): warning C4244:  '=': conversion from 'double' to 'float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(9,24): error C2653:  'sf': is not a class or namespace name
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(9,38): error C4430:  missing type specifier - int assumed. Note: C++ does not support default-int
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(9,24): error C2146:  syntax error: missing ';' before identifier 'shootingBuffer'
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(10,18): error C2653:  'sf': is not a class or namespace name
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(10,31): error C4430:  missing type specifier - int assumed. Note: C++ does not support default-int
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(10,18): error C2146:  syntax error: missing ';' before identifier 'shootingSound'
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(24,34): error C2653:  'sf': is not a class or namespace name
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(24,34): error C2061:  syntax error: identifier 'Sound'
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(78,26): error C2065:  'shootKey': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(78,71): error C2065:  'playerFireRate': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(80,4): error C2065:  'playerFireRate': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(122,8): error C2065:  'tripleShot': undeclared identifier
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(179,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(239,51): warning C4244:  'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(244,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(272,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(296,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(321,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(345,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(369,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(393,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(417,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(468,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(497,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(524,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(551,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(578,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(641,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(669,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(693,13): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(818,28): warning C4018:  '>': signed/unsigned mismatch
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(835,28): warning C4018:  '>': signed/unsigned mismatch
+  Generating Code...
+D:\Users\KClifford1\Documents\GitHub\Titania-V2\Titania-V2\Shooting.cpp(844,33): warning C4018:  '>': signed/unsigned mismatch

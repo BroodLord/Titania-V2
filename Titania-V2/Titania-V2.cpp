@@ -22,16 +22,16 @@ bool moveCamBehind = false;
 float frameTime = 0.0f;
 bool vic = false;
 
-sf::SoundBuffer shootingBuffer;
-sf::Sound shootingSound;
-sf::SoundBuffer mainMenuBuffer;
-sf::Sound menuMusic;
-sf::SoundBuffer battleBuffer;
-sf::Sound battleMusic;
-sf::SoundBuffer powerUpBuffer;
-sf::Sound powerUpMusic;
-sf::SoundBuffer powerDownBuffer;
-sf::Sound powerDownMusic;
+//sf::SoundBuffer shootingBuffer;
+//sf::Sound shootingSound;
+//sf::SoundBuffer mainMenuBuffer;
+//sf::Sound menuMusic;
+//sf::SoundBuffer battleBuffer;
+//sf::Sound battleMusic;
+//sf::SoundBuffer powerUpBuffer;
+//sf::Sound powerUpMusic;
+//sf::SoundBuffer powerDownBuffer;
+//sf::Sound powerDownMusic;
 
 enum PlayerShipState { Normal, RollingLeft, RollingRight };
 

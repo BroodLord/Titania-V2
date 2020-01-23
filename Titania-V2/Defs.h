@@ -1,12 +1,12 @@
 #pragma once
 #include <TL-Engine.h>	// TL-Engine include file and namespace
-#include <SFML/Audio.hpp>
+//#include <SFML/Audio.hpp>
 #include <deque>
 #include  <memory>
 #include <string>
-//#include <algorithm>
+#include <algorithm>
 #include <fstream>
-
+#include <vector>
 using namespace tle;
 
 
